@@ -17,26 +17,46 @@ func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
 		ParseTreeVisitor: &parser.BaseAbacusVisitor{},
 		trace:            []string{},
+		vars:             make(map[string]*big.Float),
 	}
 }
 
 func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 	switch val := tree.(type) {
-	case *parser.StartContext:
+	case *parser.RootContext:
 		a.trace = append(a.trace, "root")
+		return val.Accept(a)
+
+	case *parser.DeclarationContext:
+		a.trace = append(a.trace, "declaration")
+		return val.Accept(a)
+
+	case *parser.ExpressionContext:
+		a.trace = append(a.trace, "expression")
 		return val.Accept(a)
 	}
 	return nil
 }
 
-func (a *AbacusVisitor) VisitStart(c *parser.StartContext) interface{} {
-	a.trace = append(a.trace, "start")
-	return c.Expression().Accept(a)
+func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
+	a.trace = append(a.trace, "root")
+
+	if c.Expression() != nil {
+		return c.Expression().Accept(a)
+	}
+	if c.Declaration() != nil {
+		return c.Declaration().Accept(a)
+	}
+	return nil
 }
 
-func (a *AbacusVisitor) VisitExpression(c *parser.ExpressionContext) interface{} {
-	a.trace = append(a.trace, "expression")
-	return c.Accept(a)
+func (a *AbacusVisitor) VisitDeclaration(c *parser.DeclarationContext) interface{} {
+	a.trace = append(a.trace, "declaration")
+	variableName := c.VARIABLE().GetText()
+	value := c.Expression().Accept(a).(*big.Float)
+
+	a.vars[variableName] = value
+	return value
 }
 
 func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {

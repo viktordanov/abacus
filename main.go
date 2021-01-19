@@ -42,7 +42,7 @@ func main() {
 			stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
 			p := parser.NewAbacusParser(stream)
-			tree := p.Start()
+			tree := p.Root()
 			ans := visitor.Visit(tree)
 			switch val := ans.(type) {
 			case *big.Float:
