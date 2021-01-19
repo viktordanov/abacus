@@ -56,7 +56,7 @@ func (a *AbacusVisitor) VisitDeclaration(c *parser.DeclarationContext) interface
 	value := c.Expression().Accept(a).(*big.Float)
 
 	a.vars[variableName] = value
-	return value
+	return variableAssignment{newValue: value}
 }
 
 func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) interface{} {

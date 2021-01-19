@@ -14,8 +14,17 @@ import (
 	"math/big"
 )
 
-var historyFile = filepath.Join(os.TempDir(), ".abacus_history")
-var precision *int
+var (
+	precision   *int
+	historyFile = filepath.Join(os.TempDir(), ".abacus_history")
+	funcs       = []string{
+		"sqrt", "ln", "floor", "ceil", "exp", "sin", "cos", "tan", "round", "log", "min", "max", "pi", "e", "phi",
+	}
+)
+
+type variableAssignment struct {
+	newValue *big.Float
+}
 
 func main() {
 	precision = flag.Int("prec", 32, "precision bits to calculate for")
@@ -41,6 +50,7 @@ func main() {
 		line.WriteHistory(f)
 		f.Close()
 	}
+	updateCompletions(line, visitor)
 
 	for {
 		savedPrecision := *precision
@@ -54,6 +64,13 @@ func main() {
 			tree := p.Root()
 			ans := visitor.Visit(tree)
 			switch val := ans.(type) {
+			case variableAssignment:
+				updateCompletions(line, visitor)
+				if *isColored {
+					numberPrinter.Println(val.newValue.Text('g', *precision))
+				} else {
+					defaultPrinter.Println(val.newValue.Text('g', *precision))
+				}
 			case *big.Float:
 				if *isColored {
 					numberPrinter.Println(val.Text('g', *precision))
@@ -82,7 +99,13 @@ func main() {
 	}
 }
 
-func updateCompletions(line *liner.State, completions []string) {
+func updateCompletions(line *liner.State, a *AbacusVisitor) {
+	completions := make([]string,0)
+	completions = append(completions, funcs...)
+	for k := range a.vars {
+		completions = append(completions, k)
+	}
+
 	line.SetCompleter(func(line string) (c []string) {
 		for _, n := range completions {
 			if strings.HasPrefix(n, strings.ToLower(line)) {
