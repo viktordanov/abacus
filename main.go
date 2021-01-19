@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/fatih/color"
 	"github.com/peterh/liner"
@@ -14,11 +15,18 @@ import (
 )
 
 var historyFile = filepath.Join(os.TempDir(), ".abacus_history")
+var precision *int
 
 func main() {
+	precision = flag.Int("prec", 32, "precision bits to calculate for")
+	isColored := flag.Bool("color", true, "color the output")
+	flag.Parse()
+
 	visitor := NewAbacusVisitor()
 	line := liner.NewLiner()
-	answerPrinter := color.New(color.FgGreen)
+	numberPrinter := color.New(color.FgGreen)
+	booleanPrinter := color.New(color.FgMagenta)
+	defaultPrinter := color.New(color.FgWhite)
 	defer line.Close()
 
 	line.SetCtrlCAborts(true)
@@ -35,6 +43,7 @@ func main() {
 	}
 
 	for {
+		savedPrecision := *precision
 		if name, err := line.Prompt("> "); err == nil {
 			line.AppendHistory(name)
 			is := antlr.NewInputStream(name)
@@ -46,14 +55,30 @@ func main() {
 			ans := visitor.Visit(tree)
 			switch val := ans.(type) {
 			case *big.Float:
-				answerPrinter.Println(val.Text('g', 256))
+				if *isColored {
+					numberPrinter.Println(val.Text('g', *precision))
+				} else {
+					defaultPrinter.Println(val.Text('g', *precision))
+				}
+			case string:
+				if *isColored {
+					numberPrinter.Println(val)
+				} else {
+					defaultPrinter.Println(val)
+				}
+			case bool:
+				if *isColored {
+					booleanPrinter.Println(val)
+				} else {
+					defaultPrinter.Println(val)
+				}
 			}
 		} else if err == liner.ErrPromptAborted {
 			os.Exit(0)
 		} else {
 			log.Print("Error reading line: ", err)
 		}
-
+		*precision = savedPrecision
 	}
 }
 
