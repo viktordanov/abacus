@@ -29,9 +29,39 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#Parentheses.
 	VisitParentheses(ctx *ParenthesesContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#FuncExpr.
+	VisitFuncExpr(ctx *FuncExprContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Constant.
+	VisitConstant(ctx *ConstantContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#Number.
 	VisitNumber(ctx *NumberContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#Variable.
 	VisitVariable(ctx *VariableContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#SqrtFunction.
+	VisitSqrtFunction(ctx *SqrtFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LnFunction.
+	VisitLnFunction(ctx *LnFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#FloorFunction.
+	VisitFloorFunction(ctx *FloorFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#CeilFunction.
+	VisitCeilFunction(ctx *CeilFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#ExpFunction.
+	VisitExpFunction(ctx *ExpFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#SinFunction.
+	VisitSinFunction(ctx *SinFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#CosFunction.
+	VisitCosFunction(ctx *CosFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#TanFunction.
+	VisitTanFunction(ctx *TanFunctionContext) interface{}
 }

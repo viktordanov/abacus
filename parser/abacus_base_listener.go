@@ -63,6 +63,18 @@ func (s *BaseAbacusListener) EnterParentheses(ctx *ParenthesesContext) {}
 // ExitParentheses is called when production Parentheses is exited.
 func (s *BaseAbacusListener) ExitParentheses(ctx *ParenthesesContext) {}
 
+// EnterFuncExpr is called when production FuncExpr is entered.
+func (s *BaseAbacusListener) EnterFuncExpr(ctx *FuncExprContext) {}
+
+// ExitFuncExpr is called when production FuncExpr is exited.
+func (s *BaseAbacusListener) ExitFuncExpr(ctx *FuncExprContext) {}
+
+// EnterConstant is called when production Constant is entered.
+func (s *BaseAbacusListener) EnterConstant(ctx *ConstantContext) {}
+
+// ExitConstant is called when production Constant is exited.
+func (s *BaseAbacusListener) ExitConstant(ctx *ConstantContext) {}
+
 // EnterNumber is called when production Number is entered.
 func (s *BaseAbacusListener) EnterNumber(ctx *NumberContext) {}
 
@@ -74,3 +86,51 @@ func (s *BaseAbacusListener) EnterVariable(ctx *VariableContext) {}
 
 // ExitVariable is called when production Variable is exited.
 func (s *BaseAbacusListener) ExitVariable(ctx *VariableContext) {}
+
+// EnterSqrtFunction is called when production SqrtFunction is entered.
+func (s *BaseAbacusListener) EnterSqrtFunction(ctx *SqrtFunctionContext) {}
+
+// ExitSqrtFunction is called when production SqrtFunction is exited.
+func (s *BaseAbacusListener) ExitSqrtFunction(ctx *SqrtFunctionContext) {}
+
+// EnterLnFunction is called when production LnFunction is entered.
+func (s *BaseAbacusListener) EnterLnFunction(ctx *LnFunctionContext) {}
+
+// ExitLnFunction is called when production LnFunction is exited.
+func (s *BaseAbacusListener) ExitLnFunction(ctx *LnFunctionContext) {}
+
+// EnterFloorFunction is called when production FloorFunction is entered.
+func (s *BaseAbacusListener) EnterFloorFunction(ctx *FloorFunctionContext) {}
+
+// ExitFloorFunction is called when production FloorFunction is exited.
+func (s *BaseAbacusListener) ExitFloorFunction(ctx *FloorFunctionContext) {}
+
+// EnterCeilFunction is called when production CeilFunction is entered.
+func (s *BaseAbacusListener) EnterCeilFunction(ctx *CeilFunctionContext) {}
+
+// ExitCeilFunction is called when production CeilFunction is exited.
+func (s *BaseAbacusListener) ExitCeilFunction(ctx *CeilFunctionContext) {}
+
+// EnterExpFunction is called when production ExpFunction is entered.
+func (s *BaseAbacusListener) EnterExpFunction(ctx *ExpFunctionContext) {}
+
+// ExitExpFunction is called when production ExpFunction is exited.
+func (s *BaseAbacusListener) ExitExpFunction(ctx *ExpFunctionContext) {}
+
+// EnterSinFunction is called when production SinFunction is entered.
+func (s *BaseAbacusListener) EnterSinFunction(ctx *SinFunctionContext) {}
+
+// ExitSinFunction is called when production SinFunction is exited.
+func (s *BaseAbacusListener) ExitSinFunction(ctx *SinFunctionContext) {}
+
+// EnterCosFunction is called when production CosFunction is entered.
+func (s *BaseAbacusListener) EnterCosFunction(ctx *CosFunctionContext) {}
+
+// ExitCosFunction is called when production CosFunction is exited.
+func (s *BaseAbacusListener) ExitCosFunction(ctx *CosFunctionContext) {}
+
+// EnterTanFunction is called when production TanFunction is entered.
+func (s *BaseAbacusListener) EnterTanFunction(ctx *TanFunctionContext) {}
+
+// ExitTanFunction is called when production TanFunction is exited.
+func (s *BaseAbacusListener) ExitTanFunction(ctx *TanFunctionContext) {}

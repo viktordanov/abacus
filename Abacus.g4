@@ -39,10 +39,27 @@ LPAREN: '(';
 RPAREN: ')';
 
 atom
-    : SCIENTIFIC_NUMBER # Number
+    : function          # FuncExpr
+    | CONSTANT          # Constant
+    | SCIENTIFIC_NUMBER # Number
     | VARIABLE          # Variable
     ;
 
+
+function
+    : 'sqrt' LPAREN expression RPAREN   # SqrtFunction
+    | 'ln' LPAREN expression RPAREN     # LnFunction
+    | 'floor' LPAREN expression RPAREN  # FloorFunction
+    | 'ceil' LPAREN expression RPAREN   # CeilFunction
+    | 'exp' LPAREN expression RPAREN    # ExpFunction
+    | 'sin' LPAREN expression RPAREN    # SinFunction
+    | 'cos' LPAREN expression RPAREN    # CosFunction
+    | 'tan' LPAREN expression RPAREN    # TanFunction
+    ;
+
+
+CONSTANT
+    : 'pi' | 'e' | 'phi';
 
 SCIENTIFIC_NUMBER
    : NUMBER

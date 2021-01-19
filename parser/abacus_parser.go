@@ -16,37 +16,59 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 14, 49, 4,
-	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 3, 2, 3, 2, 3, 2, 3, 2, 3,
-	2, 3, 2, 5, 2, 17, 10, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 4, 3, 4, 3,
-	4, 3, 4, 3, 4, 5, 4, 29, 10, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
-	4, 3, 4, 3, 4, 7, 4, 40, 10, 4, 12, 4, 14, 4, 43, 11, 4, 3, 5, 3, 5, 5,
-	5, 47, 10, 5, 3, 5, 2, 3, 6, 6, 2, 4, 6, 8, 2, 4, 3, 2, 5, 6, 3, 2, 7,
-	8, 2, 50, 2, 16, 3, 2, 2, 2, 4, 18, 3, 2, 2, 2, 6, 28, 3, 2, 2, 2, 8, 46,
-	3, 2, 2, 2, 10, 11, 5, 4, 3, 2, 11, 12, 7, 2, 2, 3, 12, 17, 3, 2, 2, 2,
-	13, 14, 5, 6, 4, 2, 14, 15, 7, 2, 2, 3, 15, 17, 3, 2, 2, 2, 16, 10, 3,
-	2, 2, 2, 16, 13, 3, 2, 2, 2, 17, 3, 3, 2, 2, 2, 18, 19, 7, 13, 2, 2, 19,
-	20, 7, 3, 2, 2, 20, 21, 5, 6, 4, 2, 21, 5, 3, 2, 2, 2, 22, 23, 8, 4, 1,
-	2, 23, 24, 7, 10, 2, 2, 24, 25, 5, 6, 4, 2, 25, 26, 7, 11, 2, 2, 26, 29,
-	3, 2, 2, 2, 27, 29, 5, 8, 5, 2, 28, 22, 3, 2, 2, 2, 28, 27, 3, 2, 2, 2,
-	29, 41, 3, 2, 2, 2, 30, 31, 12, 7, 2, 2, 31, 32, 7, 4, 2, 2, 32, 40, 5,
-	6, 4, 8, 33, 34, 12, 6, 2, 2, 34, 35, 9, 2, 2, 2, 35, 40, 5, 6, 4, 7, 36,
-	37, 12, 5, 2, 2, 37, 38, 9, 3, 2, 2, 38, 40, 5, 6, 4, 6, 39, 30, 3, 2,
-	2, 2, 39, 33, 3, 2, 2, 2, 39, 36, 3, 2, 2, 2, 40, 43, 3, 2, 2, 2, 41, 39,
-	3, 2, 2, 2, 41, 42, 3, 2, 2, 2, 42, 7, 3, 2, 2, 2, 43, 41, 3, 2, 2, 2,
-	44, 47, 7, 12, 2, 2, 45, 47, 7, 13, 2, 2, 46, 44, 3, 2, 2, 2, 46, 45, 3,
-	2, 2, 2, 47, 9, 3, 2, 2, 2, 7, 16, 28, 39, 41, 46,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 23, 95, 4,
+	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 3, 2, 3, 2, 3,
+	2, 3, 2, 3, 2, 3, 2, 5, 2, 19, 10, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3,
+	4, 3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 31, 10, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+	4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 42, 10, 4, 12, 4, 14, 4, 45, 11, 4, 3,
+	5, 3, 5, 3, 5, 3, 5, 5, 5, 51, 10, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3,
+	6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3,
+	6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3,
+	6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 5, 6, 93,
+	10, 6, 3, 6, 2, 3, 6, 7, 2, 4, 6, 8, 10, 2, 4, 3, 2, 13, 14, 3, 2, 15,
+	16, 2, 104, 2, 18, 3, 2, 2, 2, 4, 20, 3, 2, 2, 2, 6, 30, 3, 2, 2, 2, 8,
+	50, 3, 2, 2, 2, 10, 92, 3, 2, 2, 2, 12, 13, 5, 4, 3, 2, 13, 14, 7, 2, 2,
+	3, 14, 19, 3, 2, 2, 2, 15, 16, 5, 6, 4, 2, 16, 17, 7, 2, 2, 3, 17, 19,
+	3, 2, 2, 2, 18, 12, 3, 2, 2, 2, 18, 15, 3, 2, 2, 2, 19, 3, 3, 2, 2, 2,
+	20, 21, 7, 22, 2, 2, 21, 22, 7, 11, 2, 2, 22, 23, 5, 6, 4, 2, 23, 5, 3,
+	2, 2, 2, 24, 25, 8, 4, 1, 2, 25, 26, 7, 18, 2, 2, 26, 27, 5, 6, 4, 2, 27,
+	28, 7, 19, 2, 2, 28, 31, 3, 2, 2, 2, 29, 31, 5, 8, 5, 2, 30, 24, 3, 2,
+	2, 2, 30, 29, 3, 2, 2, 2, 31, 43, 3, 2, 2, 2, 32, 33, 12, 7, 2, 2, 33,
+	34, 7, 12, 2, 2, 34, 42, 5, 6, 4, 8, 35, 36, 12, 6, 2, 2, 36, 37, 9, 2,
+	2, 2, 37, 42, 5, 6, 4, 7, 38, 39, 12, 5, 2, 2, 39, 40, 9, 3, 2, 2, 40,
+	42, 5, 6, 4, 6, 41, 32, 3, 2, 2, 2, 41, 35, 3, 2, 2, 2, 41, 38, 3, 2, 2,
+	2, 42, 45, 3, 2, 2, 2, 43, 41, 3, 2, 2, 2, 43, 44, 3, 2, 2, 2, 44, 7, 3,
+	2, 2, 2, 45, 43, 3, 2, 2, 2, 46, 51, 5, 10, 6, 2, 47, 51, 7, 20, 2, 2,
+	48, 51, 7, 21, 2, 2, 49, 51, 7, 22, 2, 2, 50, 46, 3, 2, 2, 2, 50, 47, 3,
+	2, 2, 2, 50, 48, 3, 2, 2, 2, 50, 49, 3, 2, 2, 2, 51, 9, 3, 2, 2, 2, 52,
+	53, 7, 3, 2, 2, 53, 54, 7, 18, 2, 2, 54, 55, 5, 6, 4, 2, 55, 56, 7, 19,
+	2, 2, 56, 93, 3, 2, 2, 2, 57, 58, 7, 4, 2, 2, 58, 59, 7, 18, 2, 2, 59,
+	60, 5, 6, 4, 2, 60, 61, 7, 19, 2, 2, 61, 93, 3, 2, 2, 2, 62, 63, 7, 5,
+	2, 2, 63, 64, 7, 18, 2, 2, 64, 65, 5, 6, 4, 2, 65, 66, 7, 19, 2, 2, 66,
+	93, 3, 2, 2, 2, 67, 68, 7, 6, 2, 2, 68, 69, 7, 18, 2, 2, 69, 70, 5, 6,
+	4, 2, 70, 71, 7, 19, 2, 2, 71, 93, 3, 2, 2, 2, 72, 73, 7, 7, 2, 2, 73,
+	74, 7, 18, 2, 2, 74, 75, 5, 6, 4, 2, 75, 76, 7, 19, 2, 2, 76, 93, 3, 2,
+	2, 2, 77, 78, 7, 8, 2, 2, 78, 79, 7, 18, 2, 2, 79, 80, 5, 6, 4, 2, 80,
+	81, 7, 19, 2, 2, 81, 93, 3, 2, 2, 2, 82, 83, 7, 9, 2, 2, 83, 84, 7, 18,
+	2, 2, 84, 85, 5, 6, 4, 2, 85, 86, 7, 19, 2, 2, 86, 93, 3, 2, 2, 2, 87,
+	88, 7, 10, 2, 2, 88, 89, 7, 18, 2, 2, 89, 90, 5, 6, 4, 2, 90, 91, 7, 19,
+	2, 2, 91, 93, 3, 2, 2, 2, 92, 52, 3, 2, 2, 2, 92, 57, 3, 2, 2, 2, 92, 62,
+	3, 2, 2, 2, 92, 67, 3, 2, 2, 2, 92, 72, 3, 2, 2, 2, 92, 77, 3, 2, 2, 2,
+	92, 82, 3, 2, 2, 2, 92, 87, 3, 2, 2, 2, 93, 11, 3, 2, 2, 2, 8, 18, 30,
+	41, 43, 50, 92,
 }
 var literalNames = []string{
-	"", "'='", "", "'*'", "'/'", "'+'", "'-'", "'.'", "'('", "')'",
+	"", "'sqrt'", "'ln'", "'floor'", "'ceil'", "'exp'", "'sin'", "'cos'", "'tan'",
+	"'='", "", "'*'", "'/'", "'+'", "'-'", "'.'", "'('", "')'",
 }
 var symbolicNames = []string{
-	"", "EQ", "POW", "MUL", "DIV", "ADD", "SUB", "POINT", "LPAREN", "RPAREN",
-	"SCIENTIFIC_NUMBER", "VARIABLE", "WHITESPACE",
+	"", "", "", "", "", "", "", "", "", "EQ", "POW", "MUL", "DIV", "ADD", "SUB",
+	"POINT", "LPAREN", "RPAREN", "CONSTANT", "SCIENTIFIC_NUMBER", "VARIABLE",
+	"WHITESPACE",
 }
 
 var ruleNames = []string{
-	"root", "declaration", "expression", "atom",
+	"root", "declaration", "expression", "atom", "function",
 }
 
 type AbacusParser struct {
@@ -81,18 +103,27 @@ func NewAbacusParser(input antlr.TokenStream) *AbacusParser {
 // AbacusParser tokens.
 const (
 	AbacusParserEOF               = antlr.TokenEOF
-	AbacusParserEQ                = 1
-	AbacusParserPOW               = 2
-	AbacusParserMUL               = 3
-	AbacusParserDIV               = 4
-	AbacusParserADD               = 5
-	AbacusParserSUB               = 6
-	AbacusParserPOINT             = 7
-	AbacusParserLPAREN            = 8
-	AbacusParserRPAREN            = 9
-	AbacusParserSCIENTIFIC_NUMBER = 10
-	AbacusParserVARIABLE          = 11
-	AbacusParserWHITESPACE        = 12
+	AbacusParserT__0              = 1
+	AbacusParserT__1              = 2
+	AbacusParserT__2              = 3
+	AbacusParserT__3              = 4
+	AbacusParserT__4              = 5
+	AbacusParserT__5              = 6
+	AbacusParserT__6              = 7
+	AbacusParserT__7              = 8
+	AbacusParserEQ                = 9
+	AbacusParserPOW               = 10
+	AbacusParserMUL               = 11
+	AbacusParserDIV               = 12
+	AbacusParserADD               = 13
+	AbacusParserSUB               = 14
+	AbacusParserPOINT             = 15
+	AbacusParserLPAREN            = 16
+	AbacusParserRPAREN            = 17
+	AbacusParserCONSTANT          = 18
+	AbacusParserSCIENTIFIC_NUMBER = 19
+	AbacusParserVARIABLE          = 20
+	AbacusParserWHITESPACE        = 21
 )
 
 // AbacusParser rules.
@@ -101,6 +132,7 @@ const (
 	AbacusParserRULE_declaration = 1
 	AbacusParserRULE_expression  = 2
 	AbacusParserRULE_atom        = 3
+	AbacusParserRULE_function    = 4
 )
 
 // IRootContext is an interface to support dynamic dispatch.
@@ -215,28 +247,28 @@ func (p *AbacusParser) Root() (localctx IRootContext) {
 		}
 	}()
 
-	p.SetState(14)
+	p.SetState(16)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(8)
+			p.SetState(10)
 			p.Declaration()
 		}
 		{
-			p.SetState(9)
+			p.SetState(11)
 			p.Match(AbacusParserEOF)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(11)
+			p.SetState(13)
 			p.expression(0)
 		}
 		{
-			p.SetState(12)
+			p.SetState(14)
 			p.Match(AbacusParserEOF)
 		}
 
@@ -353,15 +385,15 @@ func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(16)
+		p.SetState(18)
 		p.Match(AbacusParserVARIABLE)
 	}
 	{
-		p.SetState(17)
+		p.SetState(19)
 		p.Match(AbacusParserEQ)
 	}
 	{
-		p.SetState(18)
+		p.SetState(20)
 		p.expression(0)
 	}
 
@@ -778,7 +810,7 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(26)
+	p.SetState(28)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -788,24 +820,24 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		_prevctx = localctx
 
 		{
-			p.SetState(21)
+			p.SetState(23)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(22)
+			p.SetState(24)
 			p.expression(0)
 		}
 		{
-			p.SetState(23)
+			p.SetState(25)
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case AbacusParserSCIENTIFIC_NUMBER, AbacusParserVARIABLE:
+	case AbacusParserT__0, AbacusParserT__1, AbacusParserT__2, AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7, AbacusParserCONSTANT, AbacusParserSCIENTIFIC_NUMBER, AbacusParserVARIABLE:
 		localctx = NewAtomExprContext(p, localctx)
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(25)
+			p.SetState(27)
 			p.Atom()
 		}
 
@@ -813,7 +845,7 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(39)
+	p.SetState(41)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
 
@@ -823,36 +855,36 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(37)
+			p.SetState(39)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewPowContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(28)
+				p.SetState(30)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(29)
+					p.SetState(31)
 					p.Match(AbacusParserPOW)
 				}
 				{
-					p.SetState(30)
+					p.SetState(32)
 					p.expression(6)
 				}
 
 			case 2:
 				localctx = NewMulDivContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(31)
+				p.SetState(33)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(32)
+					p.SetState(34)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -870,20 +902,20 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(33)
+					p.SetState(35)
 					p.expression(5)
 				}
 
 			case 3:
 				localctx = NewAddSubContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(34)
+				p.SetState(36)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(35)
+					p.SetState(37)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -901,14 +933,14 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(36)
+					p.SetState(38)
 					p.expression(4)
 				}
 
 			}
 
 		}
-		p.SetState(41)
+		p.SetState(43)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
 	}
@@ -1054,6 +1086,100 @@ func (s *NumberContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	}
 }
 
+type ConstantContext struct {
+	*AtomContext
+}
+
+func NewConstantContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ConstantContext {
+	var p = new(ConstantContext)
+
+	p.AtomContext = NewEmptyAtomContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*AtomContext))
+
+	return p
+}
+
+func (s *ConstantContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ConstantContext) CONSTANT() antlr.TerminalNode {
+	return s.GetToken(AbacusParserCONSTANT, 0)
+}
+
+func (s *ConstantContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterConstant(s)
+	}
+}
+
+func (s *ConstantContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitConstant(s)
+	}
+}
+
+func (s *ConstantContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitConstant(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type FuncExprContext struct {
+	*AtomContext
+}
+
+func NewFuncExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *FuncExprContext {
+	var p = new(FuncExprContext)
+
+	p.AtomContext = NewEmptyAtomContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*AtomContext))
+
+	return p
+}
+
+func (s *FuncExprContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FuncExprContext) Function() IFunctionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFunctionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFunctionContext)
+}
+
+func (s *FuncExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterFuncExpr(s)
+	}
+}
+
+func (s *FuncExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitFuncExpr(s)
+	}
+}
+
+func (s *FuncExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitFuncExpr(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AbacusParser) Atom() (localctx IAtomContext) {
 	localctx = NewAtomContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, AbacusParserRULE_atom)
@@ -1074,24 +1200,745 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		}
 	}()
 
-	p.SetState(44)
+	p.SetState(48)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case AbacusParserSCIENTIFIC_NUMBER:
-		localctx = NewNumberContext(p, localctx)
+	case AbacusParserT__0, AbacusParserT__1, AbacusParserT__2, AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7:
+		localctx = NewFuncExprContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(42)
+			p.SetState(44)
+			p.Function()
+		}
+
+	case AbacusParserCONSTANT:
+		localctx = NewConstantContext(p, localctx)
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(45)
+			p.Match(AbacusParserCONSTANT)
+		}
+
+	case AbacusParserSCIENTIFIC_NUMBER:
+		localctx = NewNumberContext(p, localctx)
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(46)
 			p.Match(AbacusParserSCIENTIFIC_NUMBER)
 		}
 
 	case AbacusParserVARIABLE:
 		localctx = NewVariableContext(p, localctx)
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(47)
+			p.Match(AbacusParserVARIABLE)
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// IFunctionContext is an interface to support dynamic dispatch.
+type IFunctionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsFunctionContext differentiates from other interfaces.
+	IsFunctionContext()
+}
+
+type FunctionContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyFunctionContext() *FunctionContext {
+	var p = new(FunctionContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AbacusParserRULE_function
+	return p
+}
+
+func (*FunctionContext) IsFunctionContext() {}
+
+func NewFunctionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FunctionContext {
+	var p = new(FunctionContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AbacusParserRULE_function
+
+	return p
+}
+
+func (s *FunctionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FunctionContext) CopyFrom(ctx *FunctionContext) {
+	s.BaseParserRuleContext.CopyFrom(ctx.BaseParserRuleContext)
+}
+
+func (s *FunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FunctionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+type SqrtFunctionContext struct {
+	*FunctionContext
+}
+
+func NewSqrtFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *SqrtFunctionContext {
+	var p = new(SqrtFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *SqrtFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *SqrtFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *SqrtFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *SqrtFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *SqrtFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterSqrtFunction(s)
+	}
+}
+
+func (s *SqrtFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitSqrtFunction(s)
+	}
+}
+
+func (s *SqrtFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitSqrtFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type LnFunctionContext struct {
+	*FunctionContext
+}
+
+func NewLnFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *LnFunctionContext {
+	var p = new(LnFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *LnFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *LnFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *LnFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *LnFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *LnFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterLnFunction(s)
+	}
+}
+
+func (s *LnFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitLnFunction(s)
+	}
+}
+
+func (s *LnFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitLnFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type CosFunctionContext struct {
+	*FunctionContext
+}
+
+func NewCosFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *CosFunctionContext {
+	var p = new(CosFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *CosFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *CosFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *CosFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *CosFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *CosFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterCosFunction(s)
+	}
+}
+
+func (s *CosFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitCosFunction(s)
+	}
+}
+
+func (s *CosFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitCosFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type SinFunctionContext struct {
+	*FunctionContext
+}
+
+func NewSinFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *SinFunctionContext {
+	var p = new(SinFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *SinFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *SinFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *SinFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *SinFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *SinFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterSinFunction(s)
+	}
+}
+
+func (s *SinFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitSinFunction(s)
+	}
+}
+
+func (s *SinFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitSinFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type TanFunctionContext struct {
+	*FunctionContext
+}
+
+func NewTanFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *TanFunctionContext {
+	var p = new(TanFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *TanFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TanFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *TanFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *TanFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *TanFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterTanFunction(s)
+	}
+}
+
+func (s *TanFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitTanFunction(s)
+	}
+}
+
+func (s *TanFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitTanFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type CeilFunctionContext struct {
+	*FunctionContext
+}
+
+func NewCeilFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *CeilFunctionContext {
+	var p = new(CeilFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *CeilFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *CeilFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *CeilFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *CeilFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *CeilFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterCeilFunction(s)
+	}
+}
+
+func (s *CeilFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitCeilFunction(s)
+	}
+}
+
+func (s *CeilFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitCeilFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type FloorFunctionContext struct {
+	*FunctionContext
+}
+
+func NewFloorFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *FloorFunctionContext {
+	var p = new(FloorFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *FloorFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FloorFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *FloorFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *FloorFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *FloorFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterFloorFunction(s)
+	}
+}
+
+func (s *FloorFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitFloorFunction(s)
+	}
+}
+
+func (s *FloorFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitFloorFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type ExpFunctionContext struct {
+	*FunctionContext
+}
+
+func NewExpFunctionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ExpFunctionContext {
+	var p = new(ExpFunctionContext)
+
+	p.FunctionContext = NewEmptyFunctionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*FunctionContext))
+
+	return p
+}
+
+func (s *ExpFunctionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ExpFunctionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *ExpFunctionContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *ExpFunctionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *ExpFunctionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterExpFunction(s)
+	}
+}
+
+func (s *ExpFunctionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitExpFunction(s)
+	}
+}
+
+func (s *ExpFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitExpFunction(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *AbacusParser) Function() (localctx IFunctionContext) {
+	localctx = NewFunctionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 8, AbacusParserRULE_function)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(90)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AbacusParserT__0:
+		localctx = NewSqrtFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(50)
+			p.Match(AbacusParserT__0)
+		}
+		{
+			p.SetState(51)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(52)
+			p.expression(0)
+		}
+		{
+			p.SetState(53)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__1:
+		localctx = NewLnFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(43)
-			p.Match(AbacusParserVARIABLE)
+			p.SetState(55)
+			p.Match(AbacusParserT__1)
+		}
+		{
+			p.SetState(56)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(57)
+			p.expression(0)
+		}
+		{
+			p.SetState(58)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__2:
+		localctx = NewFloorFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(60)
+			p.Match(AbacusParserT__2)
+		}
+		{
+			p.SetState(61)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(62)
+			p.expression(0)
+		}
+		{
+			p.SetState(63)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__3:
+		localctx = NewCeilFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(65)
+			p.Match(AbacusParserT__3)
+		}
+		{
+			p.SetState(66)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(67)
+			p.expression(0)
+		}
+		{
+			p.SetState(68)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__4:
+		localctx = NewExpFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(70)
+			p.Match(AbacusParserT__4)
+		}
+		{
+			p.SetState(71)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(72)
+			p.expression(0)
+		}
+		{
+			p.SetState(73)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__5:
+		localctx = NewSinFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 6)
+		{
+			p.SetState(75)
+			p.Match(AbacusParserT__5)
+		}
+		{
+			p.SetState(76)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(77)
+			p.expression(0)
+		}
+		{
+			p.SetState(78)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__6:
+		localctx = NewCosFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 7)
+		{
+			p.SetState(80)
+			p.Match(AbacusParserT__6)
+		}
+		{
+			p.SetState(81)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(82)
+			p.expression(0)
+		}
+		{
+			p.SetState(83)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case AbacusParserT__7:
+		localctx = NewTanFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 8)
+		{
+			p.SetState(85)
+			p.Match(AbacusParserT__7)
+		}
+		{
+			p.SetState(86)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(87)
+			p.expression(0)
+		}
+		{
+			p.SetState(88)
+			p.Match(AbacusParserRPAREN)
 		}
 
 	default:
