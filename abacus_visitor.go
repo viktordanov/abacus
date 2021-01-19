@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/ALTree/bigfloat"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
+	"math"
 	"math/big"
 )
 
@@ -101,6 +103,74 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 
 func (a *AbacusVisitor) VisitAtomExpr(c *parser.AtomExprContext) interface{} {
 	return c.Atom().Accept(a)
+}
+
+func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
+	return c.Function().Accept(a)
+}
+
+func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	return bigfloat.Sqrt(arg)
+}
+
+func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	return bigfloat.Log(arg)
+}
+func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := arg.Float64()
+	return big.NewFloat(math.Floor(toFloat))
+}
+
+func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := arg.Float64()
+	return big.NewFloat(math.Ceil(toFloat))
+}
+func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := arg.Float64()
+	return big.NewFloat(math.Sin(toFloat))
+}
+func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := arg.Float64()
+	return big.NewFloat(math.Cos(toFloat))
+}
+func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := arg.Float64()
+	return big.NewFloat(math.Tan(toFloat))
+}
+func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
+	a.trace = append(a.trace, "sqrt")
+	arg := c.Expression().Accept(a).(*big.Float)
+	return bigfloat.Exp(arg)
+}
+
+func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
+	a.trace = append(a.trace, "const")
+
+	switch c.CONSTANT().GetText() {
+	case "pi":
+		return big.NewFloat(math.Pi)
+	case "phi":
+		return big.NewFloat(math.Phi)
+	case "e":
+		return big.NewFloat(math.E)
+
+	}
+
+	return 0
 }
 
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {

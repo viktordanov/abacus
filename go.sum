@@ -1,3 +1,5 @@
+github.com/ALTree/bigfloat v0.0.0-20201218142103-4a33235224ec h1:tPYYUIlnk8STUTx7TEcZqCgk0zvxL6KH6eDSTa38zBI=
+github.com/ALTree/bigfloat v0.0.0-20201218142103-4a33235224ec/go.mod h1:+NaH2gLeY6RPBPPQf4aRotPPStg+eXc8f9ZaE4vRfD4=
 github.com/antlr/antlr4 v0.0.0-20210114010855-d34d2e1c271a h1:gXj02obcEEw9NVyvbn4PGQn1pPX3s7rCetf3Pzue/6U=
 github.com/antlr/antlr4 v0.0.0-20210114010855-d34d2e1c271a/go.mod h1:T7PbCXFs94rrTttyxjbyT5+/1V8T2TYDejxUfHJjw1Y=
 github.com/fatih/color v1.10.0 h1:s36xzo75JdqLaaWoiEHk767eHiwo0598uUxyfiPkDsg=
