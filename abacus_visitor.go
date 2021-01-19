@@ -3,8 +3,7 @@ package main
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
-	"math"
-	"strconv"
+	"math/big"
 )
 
 type AbacusVisitor struct {
@@ -41,37 +40,37 @@ func (a *AbacusVisitor) VisitExpression(c *parser.ExpressionContext) interface{}
 
 func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {
 	a.trace = append(a.trace, "muldiv")
-	first := c.Expression(0).Accept(a).(float64)
-	second := c.Expression(1).Accept(a).(float64)
+	first := c.Expression(0).Accept(a).(*big.Float)
+	second := c.Expression(1).Accept(a).(*big.Float)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserMUL:
-		return first * second
+		return Mul(first, second)
 	case parser.AbacusLexerDIV:
-		return first / second
+		return Div(first, second)
 	}
 	return 0
 }
 
 func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
 	a.trace = append(a.trace, "addsub")
-	first := c.Expression(0).Accept(a).(float64)
-	second := c.Expression(1).Accept(a).(float64)
+	first := c.Expression(0).Accept(a).(*big.Float)
+	second := c.Expression(1).Accept(a).(*big.Float)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserADD:
-		return first + second
+		return Add(first, second)
 	case parser.AbacusLexerSUB:
-		return first - second
+		return Sub(first, second)
 	}
 	return nil
 }
 
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
 	a.trace = append(a.trace, "pow")
-	first := c.Expression(0).Accept(a).(float64)
-	second := c.Expression(1).Accept(a).(float64)
-	return math.Pow(first, second)
+	first := c.Expression(0).Accept(a).(*big.Float)
+	second, _ := c.Expression(1).Accept(a).(*big.Float).Int64()
+	return Pow(first, uint64(second))
 }
 
 func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface{} {
@@ -81,8 +80,8 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
 	a.trace = append(a.trace, "num")
-	first := c.NUMBER().GetText()
-	out, err := strconv.ParseFloat(first, 64)
+
+	out, _, err := big.ParseFloat(c.NUMBER().GetText(), 10, 256, big.ToNearestEven)
 	if err != nil {
 		panic(err)
 	}

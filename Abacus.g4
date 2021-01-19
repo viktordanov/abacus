@@ -16,9 +16,7 @@ expression
    ;
 
 
-POW: '^';
-
-
+POW: '^' | '**';
 MUL: '*';
 DIV: '/';
 ADD: '+';

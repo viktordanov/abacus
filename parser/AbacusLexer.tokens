@@ -7,7 +7,6 @@ LPAREN=6
 RPAREN=7
 NUMBER=8
 WHITESPACE=9
-'^'=1
 '*'=2
 '/'=3
 '+'=4

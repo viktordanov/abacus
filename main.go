@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
+	"math/big"
 	"os"
 )
 
@@ -21,6 +22,10 @@ func main() {
 
 		p := parser.NewAbacusParser(stream)
 		tree := p.Start()
-		fmt.Println(visitor.Visit(tree))
+		ans := visitor.Visit(tree)
+		switch val := ans.(type) {
+		case *big.Float:
+			fmt.Println(val.Text('g', 256))
+		}
 	}
 }

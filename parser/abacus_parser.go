@@ -32,7 +32,7 @@ var parserATN = []uint16{
 	5, 15, 26, 28,
 }
 var literalNames = []string{
-	"", "'^'", "'*'", "'/'", "'+'", "'-'", "'('", "')'",
+	"", "", "'*'", "'/'", "'+'", "'-'", "'('", "')'",
 }
 var symbolicNames = []string{
 	"", "POW", "MUL", "DIV", "ADD", "SUB", "LPAREN", "RPAREN", "NUMBER", "WHITESPACE",
