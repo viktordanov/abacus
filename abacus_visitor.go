@@ -10,6 +10,7 @@ type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
 
 	trace []string
+	vars  map[string]*big.Float
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
@@ -78,12 +79,28 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 	return c.Expression().Accept(a)
 }
 
+func (a *AbacusVisitor) VisitAtomExpr(c *parser.AtomExprContext) interface{} {
+	return c.Atom().Accept(a)
+}
+
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
 	a.trace = append(a.trace, "num")
 
-	out, _, err := big.ParseFloat(c.NUMBER().GetText(), 10, 256, big.ToNearestEven)
+	out, _, err := big.ParseFloat(c.SCIENTIFIC_NUMBER().GetText(), 10, 256, big.ToNearestEven)
 	if err != nil {
 		panic(err)
 	}
 	return out
+}
+
+func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
+	a.trace = append(a.trace, "var")
+
+	var value *big.Float
+	ok := false
+	if value, ok = a.vars[c.VARIABLE().GetText()]; !ok {
+		return big.NewFloat(0)
+	}
+
+	return value
 }
