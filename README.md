@@ -4,7 +4,8 @@ Abacus is a simple interactive calculator CLI with support for variables, compar
 
 ```
 λ abacus -h
-abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions
+abacus - a simple interactive calculator CLI with support for variables, comparison 
+checks, and math functions
 Usage: 
   -color
         color the output (default true)
