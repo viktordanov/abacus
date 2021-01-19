@@ -14,6 +14,21 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#declaration.
 	VisitDeclaration(ctx *DeclarationContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#EqualComparison.
+	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LessComparison.
+	VisitLessComparison(ctx *LessComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#GreaterComparison.
+	VisitGreaterComparison(ctx *GreaterComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LessOrEqualComparison.
+	VisitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
+	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#MulDiv.
 	VisitMulDiv(ctx *MulDivContext) interface{}
 
@@ -64,4 +79,19 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#TanFunction.
 	VisitTanFunction(ctx *TanFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#RoundDefFunction.
+	VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Round2Function.
+	VisitRound2Function(ctx *Round2FunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LogFunction.
+	VisitLogFunction(ctx *LogFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#MinFunction.
+	VisitMinFunction(ctx *MinFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#MaxFunction.
+	VisitMaxFunction(ctx *MaxFunctionContext) interface{}
 }

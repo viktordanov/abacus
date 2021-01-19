@@ -33,6 +33,36 @@ func (s *BaseAbacusListener) EnterDeclaration(ctx *DeclarationContext) {}
 // ExitDeclaration is called when production declaration is exited.
 func (s *BaseAbacusListener) ExitDeclaration(ctx *DeclarationContext) {}
 
+// EnterEqualComparison is called when production EqualComparison is entered.
+func (s *BaseAbacusListener) EnterEqualComparison(ctx *EqualComparisonContext) {}
+
+// ExitEqualComparison is called when production EqualComparison is exited.
+func (s *BaseAbacusListener) ExitEqualComparison(ctx *EqualComparisonContext) {}
+
+// EnterLessComparison is called when production LessComparison is entered.
+func (s *BaseAbacusListener) EnterLessComparison(ctx *LessComparisonContext) {}
+
+// ExitLessComparison is called when production LessComparison is exited.
+func (s *BaseAbacusListener) ExitLessComparison(ctx *LessComparisonContext) {}
+
+// EnterGreaterComparison is called when production GreaterComparison is entered.
+func (s *BaseAbacusListener) EnterGreaterComparison(ctx *GreaterComparisonContext) {}
+
+// ExitGreaterComparison is called when production GreaterComparison is exited.
+func (s *BaseAbacusListener) ExitGreaterComparison(ctx *GreaterComparisonContext) {}
+
+// EnterLessOrEqualComparison is called when production LessOrEqualComparison is entered.
+func (s *BaseAbacusListener) EnterLessOrEqualComparison(ctx *LessOrEqualComparisonContext) {}
+
+// ExitLessOrEqualComparison is called when production LessOrEqualComparison is exited.
+func (s *BaseAbacusListener) ExitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) {}
+
+// EnterGreaterOrEqualComparison is called when production GreaterOrEqualComparison is entered.
+func (s *BaseAbacusListener) EnterGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
+
+// ExitGreaterOrEqualComparison is called when production GreaterOrEqualComparison is exited.
+func (s *BaseAbacusListener) ExitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
+
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}
 
@@ -134,3 +164,33 @@ func (s *BaseAbacusListener) EnterTanFunction(ctx *TanFunctionContext) {}
 
 // ExitTanFunction is called when production TanFunction is exited.
 func (s *BaseAbacusListener) ExitTanFunction(ctx *TanFunctionContext) {}
+
+// EnterRoundDefFunction is called when production RoundDefFunction is entered.
+func (s *BaseAbacusListener) EnterRoundDefFunction(ctx *RoundDefFunctionContext) {}
+
+// ExitRoundDefFunction is called when production RoundDefFunction is exited.
+func (s *BaseAbacusListener) ExitRoundDefFunction(ctx *RoundDefFunctionContext) {}
+
+// EnterRound2Function is called when production Round2Function is entered.
+func (s *BaseAbacusListener) EnterRound2Function(ctx *Round2FunctionContext) {}
+
+// ExitRound2Function is called when production Round2Function is exited.
+func (s *BaseAbacusListener) ExitRound2Function(ctx *Round2FunctionContext) {}
+
+// EnterLogFunction is called when production LogFunction is entered.
+func (s *BaseAbacusListener) EnterLogFunction(ctx *LogFunctionContext) {}
+
+// ExitLogFunction is called when production LogFunction is exited.
+func (s *BaseAbacusListener) ExitLogFunction(ctx *LogFunctionContext) {}
+
+// EnterMinFunction is called when production MinFunction is entered.
+func (s *BaseAbacusListener) EnterMinFunction(ctx *MinFunctionContext) {}
+
+// ExitMinFunction is called when production MinFunction is exited.
+func (s *BaseAbacusListener) ExitMinFunction(ctx *MinFunctionContext) {}
+
+// EnterMaxFunction is called when production MaxFunction is entered.
+func (s *BaseAbacusListener) EnterMaxFunction(ctx *MaxFunctionContext) {}
+
+// ExitMaxFunction is called when production MaxFunction is exited.
+func (s *BaseAbacusListener) ExitMaxFunction(ctx *MaxFunctionContext) {}

@@ -14,6 +14,21 @@ type AbacusListener interface {
 	// EnterDeclaration is called when entering the declaration production.
 	EnterDeclaration(c *DeclarationContext)
 
+	// EnterEqualComparison is called when entering the EqualComparison production.
+	EnterEqualComparison(c *EqualComparisonContext)
+
+	// EnterLessComparison is called when entering the LessComparison production.
+	EnterLessComparison(c *LessComparisonContext)
+
+	// EnterGreaterComparison is called when entering the GreaterComparison production.
+	EnterGreaterComparison(c *GreaterComparisonContext)
+
+	// EnterLessOrEqualComparison is called when entering the LessOrEqualComparison production.
+	EnterLessOrEqualComparison(c *LessOrEqualComparisonContext)
+
+	// EnterGreaterOrEqualComparison is called when entering the GreaterOrEqualComparison production.
+	EnterGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
+
 	// EnterMulDiv is called when entering the MulDiv production.
 	EnterMulDiv(c *MulDivContext)
 
@@ -65,11 +80,41 @@ type AbacusListener interface {
 	// EnterTanFunction is called when entering the TanFunction production.
 	EnterTanFunction(c *TanFunctionContext)
 
+	// EnterRoundDefFunction is called when entering the RoundDefFunction production.
+	EnterRoundDefFunction(c *RoundDefFunctionContext)
+
+	// EnterRound2Function is called when entering the Round2Function production.
+	EnterRound2Function(c *Round2FunctionContext)
+
+	// EnterLogFunction is called when entering the LogFunction production.
+	EnterLogFunction(c *LogFunctionContext)
+
+	// EnterMinFunction is called when entering the MinFunction production.
+	EnterMinFunction(c *MinFunctionContext)
+
+	// EnterMaxFunction is called when entering the MaxFunction production.
+	EnterMaxFunction(c *MaxFunctionContext)
+
 	// ExitRoot is called when exiting the root production.
 	ExitRoot(c *RootContext)
 
 	// ExitDeclaration is called when exiting the declaration production.
 	ExitDeclaration(c *DeclarationContext)
+
+	// ExitEqualComparison is called when exiting the EqualComparison production.
+	ExitEqualComparison(c *EqualComparisonContext)
+
+	// ExitLessComparison is called when exiting the LessComparison production.
+	ExitLessComparison(c *LessComparisonContext)
+
+	// ExitGreaterComparison is called when exiting the GreaterComparison production.
+	ExitGreaterComparison(c *GreaterComparisonContext)
+
+	// ExitLessOrEqualComparison is called when exiting the LessOrEqualComparison production.
+	ExitLessOrEqualComparison(c *LessOrEqualComparisonContext)
+
+	// ExitGreaterOrEqualComparison is called when exiting the GreaterOrEqualComparison production.
+	ExitGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
 	// ExitMulDiv is called when exiting the MulDiv production.
 	ExitMulDiv(c *MulDivContext)
@@ -121,4 +166,19 @@ type AbacusListener interface {
 
 	// ExitTanFunction is called when exiting the TanFunction production.
 	ExitTanFunction(c *TanFunctionContext)
+
+	// ExitRoundDefFunction is called when exiting the RoundDefFunction production.
+	ExitRoundDefFunction(c *RoundDefFunctionContext)
+
+	// ExitRound2Function is called when exiting the Round2Function production.
+	ExitRound2Function(c *Round2FunctionContext)
+
+	// ExitLogFunction is called when exiting the LogFunction production.
+	ExitLogFunction(c *LogFunctionContext)
+
+	// ExitMinFunction is called when exiting the MinFunction production.
+	ExitMinFunction(c *MinFunctionContext)
+
+	// ExitMaxFunction is called when exiting the MaxFunction production.
+	ExitMaxFunction(c *MaxFunctionContext)
 }

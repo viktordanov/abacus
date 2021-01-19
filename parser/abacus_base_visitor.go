@@ -16,6 +16,26 @@ func (v *BaseAbacusVisitor) VisitDeclaration(ctx *DeclarationContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitEqualComparison(ctx *EqualComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLessComparison(ctx *LessComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitGreaterComparison(ctx *GreaterComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitMulDiv(ctx *MulDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -81,5 +101,25 @@ func (v *BaseAbacusVisitor) VisitCosFunction(ctx *CosFunctionContext) interface{
 }
 
 func (v *BaseAbacusVisitor) VisitTanFunction(ctx *TanFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitRound2Function(ctx *Round2FunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLogFunction(ctx *LogFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMinFunction(ctx *MinFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMaxFunction(ctx *MaxFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

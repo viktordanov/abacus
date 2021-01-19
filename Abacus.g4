@@ -7,11 +7,20 @@ grammar Abacus;
 // Rules
 root
     : declaration EOF
+    | comparison EOF
     | expression  EOF
     ;
 
 declaration
     : VARIABLE EQ expression
+    ;
+
+comparison
+    : expression EQ EQ expression               # EqualComparison
+    | expression LS expression                  # LessComparison
+    | expression GR expression                  # GreaterComparison
+    | expression ((LS EQ) | (EQ LS)) expression   # LessOrEqualComparison
+    | expression ((GR EQ) | (EQ GR)) expression   # GreaterOrEqualComparison
     ;
 
 
@@ -24,6 +33,8 @@ expression
    ;
 
 EQ: '=';
+LS: '<';
+GR: '>';
 
 POW: '^' | '**';
 MUL: '*';
@@ -47,14 +58,19 @@ atom
 
 
 function
-    : 'sqrt' LPAREN expression RPAREN   # SqrtFunction
-    | 'ln' LPAREN expression RPAREN     # LnFunction
-    | 'floor' LPAREN expression RPAREN  # FloorFunction
-    | 'ceil' LPAREN expression RPAREN   # CeilFunction
-    | 'exp' LPAREN expression RPAREN    # ExpFunction
-    | 'sin' LPAREN expression RPAREN    # SinFunction
-    | 'cos' LPAREN expression RPAREN    # CosFunction
-    | 'tan' LPAREN expression RPAREN    # TanFunction
+    : 'sqrt' LPAREN expression RPAREN                   # SqrtFunction
+    | 'ln' LPAREN expression RPAREN                     # LnFunction
+    | 'floor' LPAREN expression RPAREN                  # FloorFunction
+    | 'ceil' LPAREN expression RPAREN                   # CeilFunction
+    | 'exp' LPAREN expression RPAREN                    # ExpFunction
+    | 'sin' LPAREN expression RPAREN                    # SinFunction
+    | 'cos' LPAREN expression RPAREN                    # CosFunction
+    | 'tan' LPAREN expression RPAREN                    # TanFunction
+    | 'round' LPAREN expression RPAREN                  # RoundDefFunction
+    | 'round' LPAREN expression ',' expression RPAREN   # Round2Function
+    | 'log' LPAREN expression ',' expression RPAREN     # LogFunction
+    | 'min' LPAREN expression ',' expression RPAREN     # MinFunction
+    | 'max' LPAREN expression ',' expression RPAREN     # MaxFunction
     ;
 
 
