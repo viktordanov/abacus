@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/fatih/color"
 	"github.com/peterh/liner"
@@ -29,6 +30,10 @@ type variableAssignment struct {
 func main() {
 	precision = flag.Int("prec", 32, "precision bits to calculate for")
 	isColored := flag.Bool("color", true, "color the output")
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr, "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\nUsage: ")
+		flag.PrintDefaults()
+	}
 	flag.Parse()
 
 	visitor := NewAbacusVisitor()
