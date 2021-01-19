@@ -105,7 +105,7 @@ func main() {
 }
 
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
-	completions := make([]string,0)
+	completions := make([]string, 0)
 	completions = append(completions, funcs...)
 	for k := range a.vars {
 		completions = append(completions, k)
@@ -113,8 +113,20 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 
 	line.SetCompleter(func(line string) (c []string) {
 		for _, n := range completions {
-			if strings.HasPrefix(n, strings.ToLower(line)) {
+
+			var idx int
+			for idx = len(line) - 1; idx >= 0; idx-- {
+				r := rune(line[idx])
+				if (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') {
+					continue
+				}
+				idx++
+				break
+			}
+			if idx == -1 {
 				c = append(c, n)
+			} else if strings.HasPrefix(n, strings.ToLower(line[idx:])) {
+				c = append(c, line[0:idx]+n)
 			}
 		}
 		return
