@@ -1,25 +1,26 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
+	"os"
 )
 
 func main() {
-	// Setup the input
-	is := antlr.NewInputStream("(1 + 2)^(3+1) * 3")
-
-	// Create the Lexer
-	lexer := parser.NewAbacusLexer(is)
-	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-
-	// Create the Parser
-	p := parser.NewAbacusParser(stream)
-
-	// Finally parse the expression
+	reader := bufio.NewReader(os.Stdin)
 	visitor := NewAbacusVisitor()
-	tree := p.Start()
-	fmt.Println(visitor.Visit(tree))
-	fmt.Println(visitor.trace)
+	for {
+		fmt.Print("> ")
+		input, _ := reader.ReadString('\n')
+
+		is := antlr.NewInputStream(input)
+		lexer := parser.NewAbacusLexer(is)
+		stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+
+		p := parser.NewAbacusParser(stream)
+		tree := p.Start()
+		fmt.Println(visitor.Visit(tree))
+	}
 }
