@@ -12,10 +12,6 @@ func (v *BaseAbacusVisitor) VisitStart(ctx *StartContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitNumber(ctx *NumberContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseAbacusVisitor) VisitMulDiv(ctx *MulDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -28,6 +24,18 @@ func (v *BaseAbacusVisitor) VisitPow(ctx *PowContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitAtomExpr(ctx *AtomExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitParentheses(ctx *ParenthesesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitNumber(ctx *NumberContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitVariable(ctx *VariableContext) interface{} {
 	return v.VisitChildren(ctx)
 }

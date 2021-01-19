@@ -27,12 +27,6 @@ func (s *BaseAbacusListener) EnterStart(ctx *StartContext) {}
 // ExitStart is called when production start is exited.
 func (s *BaseAbacusListener) ExitStart(ctx *StartContext) {}
 
-// EnterNumber is called when production Number is entered.
-func (s *BaseAbacusListener) EnterNumber(ctx *NumberContext) {}
-
-// ExitNumber is called when production Number is exited.
-func (s *BaseAbacusListener) ExitNumber(ctx *NumberContext) {}
-
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}
 
@@ -51,8 +45,26 @@ func (s *BaseAbacusListener) EnterPow(ctx *PowContext) {}
 // ExitPow is called when production Pow is exited.
 func (s *BaseAbacusListener) ExitPow(ctx *PowContext) {}
 
+// EnterAtomExpr is called when production AtomExpr is entered.
+func (s *BaseAbacusListener) EnterAtomExpr(ctx *AtomExprContext) {}
+
+// ExitAtomExpr is called when production AtomExpr is exited.
+func (s *BaseAbacusListener) ExitAtomExpr(ctx *AtomExprContext) {}
+
 // EnterParentheses is called when production Parentheses is entered.
 func (s *BaseAbacusListener) EnterParentheses(ctx *ParenthesesContext) {}
 
 // ExitParentheses is called when production Parentheses is exited.
 func (s *BaseAbacusListener) ExitParentheses(ctx *ParenthesesContext) {}
+
+// EnterNumber is called when production Number is entered.
+func (s *BaseAbacusListener) EnterNumber(ctx *NumberContext) {}
+
+// ExitNumber is called when production Number is exited.
+func (s *BaseAbacusListener) ExitNumber(ctx *NumberContext) {}
+
+// EnterVariable is called when production Variable is entered.
+func (s *BaseAbacusListener) EnterVariable(ctx *VariableContext) {}
+
+// ExitVariable is called when production Variable is exited.
+func (s *BaseAbacusListener) ExitVariable(ctx *VariableContext) {}
