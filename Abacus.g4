@@ -5,7 +5,15 @@ grammar Abacus;
 
 
 // Rules
-start : expression EOF;
+root
+    : declaration EOF
+    | expression  EOF
+    ;
+
+declaration
+    : VARIABLE EQ expression
+    ;
+
 
 expression
    : expression POW expression          # Pow
@@ -15,6 +23,7 @@ expression
    | atom                               # AtomExpr
    ;
 
+EQ: '=';
 
 POW: '^' | '**';
 MUL: '*';

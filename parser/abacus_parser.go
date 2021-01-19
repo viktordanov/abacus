@@ -16,33 +16,37 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 13, 38, 4,
-	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 3, 2, 3, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 5, 3, 18, 10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 7, 3, 29, 10, 3, 12, 3, 14, 3, 32, 11, 3, 3, 4, 3, 4, 5,
-	4, 36, 10, 4, 3, 4, 2, 3, 4, 5, 2, 4, 6, 2, 4, 3, 2, 4, 5, 3, 2, 6, 7,
-	2, 39, 2, 8, 3, 2, 2, 2, 4, 17, 3, 2, 2, 2, 6, 35, 3, 2, 2, 2, 8, 9, 5,
-	4, 3, 2, 9, 10, 7, 2, 2, 3, 10, 3, 3, 2, 2, 2, 11, 12, 8, 3, 1, 2, 12,
-	13, 7, 9, 2, 2, 13, 14, 5, 4, 3, 2, 14, 15, 7, 10, 2, 2, 15, 18, 3, 2,
-	2, 2, 16, 18, 5, 6, 4, 2, 17, 11, 3, 2, 2, 2, 17, 16, 3, 2, 2, 2, 18, 30,
-	3, 2, 2, 2, 19, 20, 12, 7, 2, 2, 20, 21, 7, 3, 2, 2, 21, 29, 5, 4, 3, 8,
-	22, 23, 12, 6, 2, 2, 23, 24, 9, 2, 2, 2, 24, 29, 5, 4, 3, 7, 25, 26, 12,
-	5, 2, 2, 26, 27, 9, 3, 2, 2, 27, 29, 5, 4, 3, 6, 28, 19, 3, 2, 2, 2, 28,
-	22, 3, 2, 2, 2, 28, 25, 3, 2, 2, 2, 29, 32, 3, 2, 2, 2, 30, 28, 3, 2, 2,
-	2, 30, 31, 3, 2, 2, 2, 31, 5, 3, 2, 2, 2, 32, 30, 3, 2, 2, 2, 33, 36, 7,
-	11, 2, 2, 34, 36, 7, 12, 2, 2, 35, 33, 3, 2, 2, 2, 35, 34, 3, 2, 2, 2,
-	36, 7, 3, 2, 2, 2, 6, 17, 28, 30, 35,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 14, 49, 4,
+	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 3, 2, 3, 2, 3, 2, 3, 2, 3,
+	2, 3, 2, 5, 2, 17, 10, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 4, 3, 4, 3,
+	4, 3, 4, 3, 4, 5, 4, 29, 10, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+	4, 3, 4, 3, 4, 7, 4, 40, 10, 4, 12, 4, 14, 4, 43, 11, 4, 3, 5, 3, 5, 5,
+	5, 47, 10, 5, 3, 5, 2, 3, 6, 6, 2, 4, 6, 8, 2, 4, 3, 2, 5, 6, 3, 2, 7,
+	8, 2, 50, 2, 16, 3, 2, 2, 2, 4, 18, 3, 2, 2, 2, 6, 28, 3, 2, 2, 2, 8, 46,
+	3, 2, 2, 2, 10, 11, 5, 4, 3, 2, 11, 12, 7, 2, 2, 3, 12, 17, 3, 2, 2, 2,
+	13, 14, 5, 6, 4, 2, 14, 15, 7, 2, 2, 3, 15, 17, 3, 2, 2, 2, 16, 10, 3,
+	2, 2, 2, 16, 13, 3, 2, 2, 2, 17, 3, 3, 2, 2, 2, 18, 19, 7, 13, 2, 2, 19,
+	20, 7, 3, 2, 2, 20, 21, 5, 6, 4, 2, 21, 5, 3, 2, 2, 2, 22, 23, 8, 4, 1,
+	2, 23, 24, 7, 10, 2, 2, 24, 25, 5, 6, 4, 2, 25, 26, 7, 11, 2, 2, 26, 29,
+	3, 2, 2, 2, 27, 29, 5, 8, 5, 2, 28, 22, 3, 2, 2, 2, 28, 27, 3, 2, 2, 2,
+	29, 41, 3, 2, 2, 2, 30, 31, 12, 7, 2, 2, 31, 32, 7, 4, 2, 2, 32, 40, 5,
+	6, 4, 8, 33, 34, 12, 6, 2, 2, 34, 35, 9, 2, 2, 2, 35, 40, 5, 6, 4, 7, 36,
+	37, 12, 5, 2, 2, 37, 38, 9, 3, 2, 2, 38, 40, 5, 6, 4, 6, 39, 30, 3, 2,
+	2, 2, 39, 33, 3, 2, 2, 2, 39, 36, 3, 2, 2, 2, 40, 43, 3, 2, 2, 2, 41, 39,
+	3, 2, 2, 2, 41, 42, 3, 2, 2, 2, 42, 7, 3, 2, 2, 2, 43, 41, 3, 2, 2, 2,
+	44, 47, 7, 12, 2, 2, 45, 47, 7, 13, 2, 2, 46, 44, 3, 2, 2, 2, 46, 45, 3,
+	2, 2, 2, 47, 9, 3, 2, 2, 2, 7, 16, 28, 39, 41, 46,
 }
 var literalNames = []string{
-	"", "", "'*'", "'/'", "'+'", "'-'", "'.'", "'('", "')'",
+	"", "'='", "", "'*'", "'/'", "'+'", "'-'", "'.'", "'('", "')'",
 }
 var symbolicNames = []string{
-	"", "POW", "MUL", "DIV", "ADD", "SUB", "POINT", "LPAREN", "RPAREN", "SCIENTIFIC_NUMBER",
-	"VARIABLE", "WHITESPACE",
+	"", "EQ", "POW", "MUL", "DIV", "ADD", "SUB", "POINT", "LPAREN", "RPAREN",
+	"SCIENTIFIC_NUMBER", "VARIABLE", "WHITESPACE",
 }
 
 var ruleNames = []string{
-	"start", "expression", "atom",
+	"root", "declaration", "expression", "atom",
 }
 
 type AbacusParser struct {
@@ -77,65 +81,81 @@ func NewAbacusParser(input antlr.TokenStream) *AbacusParser {
 // AbacusParser tokens.
 const (
 	AbacusParserEOF               = antlr.TokenEOF
-	AbacusParserPOW               = 1
-	AbacusParserMUL               = 2
-	AbacusParserDIV               = 3
-	AbacusParserADD               = 4
-	AbacusParserSUB               = 5
-	AbacusParserPOINT             = 6
-	AbacusParserLPAREN            = 7
-	AbacusParserRPAREN            = 8
-	AbacusParserSCIENTIFIC_NUMBER = 9
-	AbacusParserVARIABLE          = 10
-	AbacusParserWHITESPACE        = 11
+	AbacusParserEQ                = 1
+	AbacusParserPOW               = 2
+	AbacusParserMUL               = 3
+	AbacusParserDIV               = 4
+	AbacusParserADD               = 5
+	AbacusParserSUB               = 6
+	AbacusParserPOINT             = 7
+	AbacusParserLPAREN            = 8
+	AbacusParserRPAREN            = 9
+	AbacusParserSCIENTIFIC_NUMBER = 10
+	AbacusParserVARIABLE          = 11
+	AbacusParserWHITESPACE        = 12
 )
 
 // AbacusParser rules.
 const (
-	AbacusParserRULE_start      = 0
-	AbacusParserRULE_expression = 1
-	AbacusParserRULE_atom       = 2
+	AbacusParserRULE_root        = 0
+	AbacusParserRULE_declaration = 1
+	AbacusParserRULE_expression  = 2
+	AbacusParserRULE_atom        = 3
 )
 
-// IStartContext is an interface to support dynamic dispatch.
-type IStartContext interface {
+// IRootContext is an interface to support dynamic dispatch.
+type IRootContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsStartContext differentiates from other interfaces.
-	IsStartContext()
+	// IsRootContext differentiates from other interfaces.
+	IsRootContext()
 }
 
-type StartContext struct {
+type RootContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyStartContext() *StartContext {
-	var p = new(StartContext)
+func NewEmptyRootContext() *RootContext {
+	var p = new(RootContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AbacusParserRULE_start
+	p.RuleIndex = AbacusParserRULE_root
 	return p
 }
 
-func (*StartContext) IsStartContext() {}
+func (*RootContext) IsRootContext() {}
 
-func NewStartContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StartContext {
-	var p = new(StartContext)
+func NewRootContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *RootContext {
+	var p = new(RootContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AbacusParserRULE_start
+	p.RuleIndex = AbacusParserRULE_root
 
 	return p
 }
 
-func (s *StartContext) GetParser() antlr.Parser { return s.parser }
+func (s *RootContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *StartContext) Expression() IExpressionContext {
+func (s *RootContext) Declaration() IDeclarationContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDeclarationContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDeclarationContext)
+}
+
+func (s *RootContext) EOF() antlr.TerminalNode {
+	return s.GetToken(AbacusParserEOF, 0)
+}
+
+func (s *RootContext) Expression() IExpressionContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
 
 	if t == nil {
@@ -145,43 +165,175 @@ func (s *StartContext) Expression() IExpressionContext {
 	return t.(IExpressionContext)
 }
 
-func (s *StartContext) EOF() antlr.TerminalNode {
-	return s.GetToken(AbacusParserEOF, 0)
-}
-
-func (s *StartContext) GetRuleContext() antlr.RuleContext {
+func (s *RootContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *StartContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *RootContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *StartContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *RootContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AbacusListener); ok {
-		listenerT.EnterStart(s)
+		listenerT.EnterRoot(s)
 	}
 }
 
-func (s *StartContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *RootContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AbacusListener); ok {
-		listenerT.ExitStart(s)
+		listenerT.ExitRoot(s)
 	}
 }
 
-func (s *StartContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *RootContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case AbacusVisitor:
-		return t.VisitStart(s)
+		return t.VisitRoot(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *AbacusParser) Start() (localctx IStartContext) {
-	localctx = NewStartContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 0, AbacusParserRULE_start)
+func (p *AbacusParser) Root() (localctx IRootContext) {
+	localctx = NewRootContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 0, AbacusParserRULE_root)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(14)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(8)
+			p.Declaration()
+		}
+		{
+			p.SetState(9)
+			p.Match(AbacusParserEOF)
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(11)
+			p.expression(0)
+		}
+		{
+			p.SetState(12)
+			p.Match(AbacusParserEOF)
+		}
+
+	}
+
+	return localctx
+}
+
+// IDeclarationContext is an interface to support dynamic dispatch.
+type IDeclarationContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsDeclarationContext differentiates from other interfaces.
+	IsDeclarationContext()
+}
+
+type DeclarationContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDeclarationContext() *DeclarationContext {
+	var p = new(DeclarationContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AbacusParserRULE_declaration
+	return p
+}
+
+func (*DeclarationContext) IsDeclarationContext() {}
+
+func NewDeclarationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DeclarationContext {
+	var p = new(DeclarationContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AbacusParserRULE_declaration
+
+	return p
+}
+
+func (s *DeclarationContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DeclarationContext) VARIABLE() antlr.TerminalNode {
+	return s.GetToken(AbacusParserVARIABLE, 0)
+}
+
+func (s *DeclarationContext) EQ() antlr.TerminalNode {
+	return s.GetToken(AbacusParserEQ, 0)
+}
+
+func (s *DeclarationContext) Expression() IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *DeclarationContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DeclarationContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DeclarationContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterDeclaration(s)
+	}
+}
+
+func (s *DeclarationContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitDeclaration(s)
+	}
+}
+
+func (s *DeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitDeclaration(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
+	localctx = NewDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 2, AbacusParserRULE_declaration)
 
 	defer func() {
 		p.ExitRule()
@@ -201,12 +353,16 @@ func (p *AbacusParser) Start() (localctx IStartContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(6)
-		p.expression(0)
+		p.SetState(16)
+		p.Match(AbacusParserVARIABLE)
 	}
 	{
-		p.SetState(7)
-		p.Match(AbacusParserEOF)
+		p.SetState(17)
+		p.Match(AbacusParserEQ)
+	}
+	{
+		p.SetState(18)
+		p.expression(0)
 	}
 
 	return localctx
@@ -599,8 +755,8 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 	localctx = NewExpressionContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IExpressionContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
-	_startState := 2
-	p.EnterRecursionRule(localctx, 2, AbacusParserRULE_expression, _p)
+	_startState := 4
+	p.EnterRecursionRule(localctx, 4, AbacusParserRULE_expression, _p)
 	var _la int
 
 	defer func() {
@@ -622,7 +778,7 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(15)
+	p.SetState(26)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -632,15 +788,15 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		_prevctx = localctx
 
 		{
-			p.SetState(10)
+			p.SetState(21)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(11)
+			p.SetState(22)
 			p.expression(0)
 		}
 		{
-			p.SetState(12)
+			p.SetState(23)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -649,7 +805,7 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(14)
+			p.SetState(25)
 			p.Atom()
 		}
 
@@ -657,9 +813,9 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(28)
+	p.SetState(39)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
@@ -667,36 +823,36 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(26)
+			p.SetState(37)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 1, p.GetParserRuleContext()) {
+			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewPowContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(17)
+				p.SetState(28)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(18)
+					p.SetState(29)
 					p.Match(AbacusParserPOW)
 				}
 				{
-					p.SetState(19)
+					p.SetState(30)
 					p.expression(6)
 				}
 
 			case 2:
 				localctx = NewMulDivContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(20)
+				p.SetState(31)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(21)
+					p.SetState(32)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -714,20 +870,20 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(22)
+					p.SetState(33)
 					p.expression(5)
 				}
 
 			case 3:
 				localctx = NewAddSubContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(23)
+				p.SetState(34)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(24)
+					p.SetState(35)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -745,16 +901,16 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(25)
+					p.SetState(36)
 					p.expression(4)
 				}
 
 			}
 
 		}
-		p.SetState(30)
+		p.SetState(41)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -900,7 +1056,7 @@ func (s *NumberContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *AbacusParser) Atom() (localctx IAtomContext) {
 	localctx = NewAtomContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, AbacusParserRULE_atom)
+	p.EnterRule(localctx, 6, AbacusParserRULE_atom)
 
 	defer func() {
 		p.ExitRule()
@@ -918,7 +1074,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		}
 	}()
 
-	p.SetState(33)
+	p.SetState(44)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -926,7 +1082,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		localctx = NewNumberContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(31)
+			p.SetState(42)
 			p.Match(AbacusParserSCIENTIFIC_NUMBER)
 		}
 
@@ -934,7 +1090,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		localctx = NewVariableContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(32)
+			p.SetState(43)
 			p.Match(AbacusParserVARIABLE)
 		}
 
@@ -947,7 +1103,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 
 func (p *AbacusParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {
 	switch ruleIndex {
-	case 1:
+	case 2:
 		var t *ExpressionContext = nil
 		if localctx != nil {
 			t = localctx.(*ExpressionContext)

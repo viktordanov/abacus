@@ -21,11 +21,17 @@ func (s *BaseAbacusListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BaseAbacusListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
-// EnterStart is called when production start is entered.
-func (s *BaseAbacusListener) EnterStart(ctx *StartContext) {}
+// EnterRoot is called when production root is entered.
+func (s *BaseAbacusListener) EnterRoot(ctx *RootContext) {}
 
-// ExitStart is called when production start is exited.
-func (s *BaseAbacusListener) ExitStart(ctx *StartContext) {}
+// ExitRoot is called when production root is exited.
+func (s *BaseAbacusListener) ExitRoot(ctx *RootContext) {}
+
+// EnterDeclaration is called when production declaration is entered.
+func (s *BaseAbacusListener) EnterDeclaration(ctx *DeclarationContext) {}
+
+// ExitDeclaration is called when production declaration is exited.
+func (s *BaseAbacusListener) ExitDeclaration(ctx *DeclarationContext) {}
 
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}

@@ -8,8 +8,11 @@ import "github.com/antlr/antlr4/runtime/Go/antlr"
 type AbacusListener interface {
 	antlr.ParseTreeListener
 
-	// EnterStart is called when entering the start production.
-	EnterStart(c *StartContext)
+	// EnterRoot is called when entering the root production.
+	EnterRoot(c *RootContext)
+
+	// EnterDeclaration is called when entering the declaration production.
+	EnterDeclaration(c *DeclarationContext)
 
 	// EnterMulDiv is called when entering the MulDiv production.
 	EnterMulDiv(c *MulDivContext)
@@ -32,8 +35,11 @@ type AbacusListener interface {
 	// EnterVariable is called when entering the Variable production.
 	EnterVariable(c *VariableContext)
 
-	// ExitStart is called when exiting the start production.
-	ExitStart(c *StartContext)
+	// ExitRoot is called when exiting the root production.
+	ExitRoot(c *RootContext)
+
+	// ExitDeclaration is called when exiting the declaration production.
+	ExitDeclaration(c *DeclarationContext)
 
 	// ExitMulDiv is called when exiting the MulDiv production.
 	ExitMulDiv(c *MulDivContext)

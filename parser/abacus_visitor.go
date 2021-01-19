@@ -8,8 +8,11 @@ import "github.com/antlr/antlr4/runtime/Go/antlr"
 type AbacusVisitor interface {
 	antlr.ParseTreeVisitor
 
-	// Visit a parse tree produced by AbacusParser#start.
-	VisitStart(ctx *StartContext) interface{}
+	// Visit a parse tree produced by AbacusParser#root.
+	VisitRoot(ctx *RootContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#declaration.
+	VisitDeclaration(ctx *DeclarationContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#MulDiv.
 	VisitMulDiv(ctx *MulDivContext) interface{}

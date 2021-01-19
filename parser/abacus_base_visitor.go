@@ -8,7 +8,11 @@ type BaseAbacusVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
-func (v *BaseAbacusVisitor) VisitStart(ctx *StartContext) interface{} {
+func (v *BaseAbacusVisitor) VisitRoot(ctx *RootContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitDeclaration(ctx *DeclarationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
