@@ -134,9 +134,14 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 				idx++
 				break
 			}
-			if idx == -1 {
+			if len(line) == 0 {
 				c = append(c, n)
-			} else if strings.HasPrefix(n, strings.ToLower(line[idx:])) {
+				continue
+			}
+			if idx == -1 {
+				idx = 0
+			}
+			if strings.HasPrefix(n, strings.ToLower(line[idx:])) {
 				c = append(c, line[0:idx]+n)
 			}
 		}
