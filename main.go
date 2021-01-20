@@ -20,7 +20,7 @@ var (
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
-		"sqrt", "ln", "floor", "ceil", "exp", "sin", "cos", "tan", "round", "log", "min", "max", "pi", "e", "phi",
+		"sqrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "round(", "min(", "max(", "pi", "e", "phi",
 	}
 )
 
