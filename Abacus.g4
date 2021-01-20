@@ -81,9 +81,12 @@ CONSTANT
     : 'pi' | 'e' | 'phi';
 
 SCIENTIFIC_NUMBER
-   : NUMBER
+   : NUMBER (('e' | 'E') SIGN? NUMBER)?
    ;
 
+
+fragment SIGN:
+'+'|'-';
 
 fragment NUMBER
    : ('0' .. '9')+ (POINT ('0' .. '9') +)?
