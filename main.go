@@ -56,6 +56,10 @@ func main() {
 	for {
 		savedPrecision := *precision
 		if input, err := line.Prompt("> "); err == nil {
+			if strings.Index(input, "quit") != -1 {
+				writeHistoryFile(line)
+				os.Exit(0)
+			}
 			line.AppendHistory(input)
 			ans := evaluateExpression(input, visitor)
 			switch val := ans.(type) {

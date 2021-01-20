@@ -89,6 +89,11 @@ Usage:
    10
    ```
 
+## Reserved names
+ 
+ * `quit` – If a query includes quit, the program will terminate and the query will not be saved to the history file
+ * The constants `e`, `pi`, and `phi`
+
 # TODO
 
 - [x] Add full feature list
