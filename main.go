@@ -30,7 +30,7 @@ type variableAssignment struct {
 
 type args struct {
 	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   uint   `arg:"-p,--precision" help:"precision for calculations" default:"32"`
+	Precision   uint   `arg:"-p,--precision" help:"precision for calculations" default:"64"`
 	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 

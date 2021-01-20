@@ -14,7 +14,7 @@ Usage: abacus [--no-color] [--precision PRECISION] [--eval EVAL]
 Options:
   --no-color, -n         disable color in output [default: false]
   --precision PRECISION, -p PRECISION
-                         precision for calculations [default: 32]
+                         precision for calculations [default: 64]
   --eval EVAL, -e EVAL   evaluate expression and quit
   --help, -h             display this help and exit
   --version              display version and exit
