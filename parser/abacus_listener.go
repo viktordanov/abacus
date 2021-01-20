@@ -62,6 +62,15 @@ type AbacusListener interface {
 	// EnterLnFunction is called when entering the LnFunction production.
 	EnterLnFunction(c *LnFunctionContext)
 
+	// EnterLogDefFunction is called when entering the LogDefFunction production.
+	EnterLogDefFunction(c *LogDefFunctionContext)
+
+	// EnterLog2Function is called when entering the Log2Function production.
+	EnterLog2Function(c *Log2FunctionContext)
+
+	// EnterLog10Function is called when entering the Log10Function production.
+	EnterLog10Function(c *Log10FunctionContext)
+
 	// EnterFloorFunction is called when entering the FloorFunction production.
 	EnterFloorFunction(c *FloorFunctionContext)
 
@@ -148,6 +157,15 @@ type AbacusListener interface {
 
 	// ExitLnFunction is called when exiting the LnFunction production.
 	ExitLnFunction(c *LnFunctionContext)
+
+	// ExitLogDefFunction is called when exiting the LogDefFunction production.
+	ExitLogDefFunction(c *LogDefFunctionContext)
+
+	// ExitLog2Function is called when exiting the Log2Function production.
+	ExitLog2Function(c *Log2FunctionContext)
+
+	// ExitLog10Function is called when exiting the Log10Function production.
+	ExitLog10Function(c *Log10FunctionContext)
 
 	// ExitFloorFunction is called when exiting the FloorFunction production.
 	ExitFloorFunction(c *FloorFunctionContext)

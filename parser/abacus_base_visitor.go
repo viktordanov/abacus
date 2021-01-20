@@ -80,6 +80,18 @@ func (v *BaseAbacusVisitor) VisitLnFunction(ctx *LnFunctionContext) interface{} 
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitLogDefFunction(ctx *LogDefFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLog2Function(ctx *Log2FunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLog10Function(ctx *Log10FunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitFloorFunction(ctx *FloorFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

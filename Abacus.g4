@@ -60,6 +60,9 @@ atom
 function
     : 'sqrt' LPAREN expression RPAREN                   # SqrtFunction
     | 'ln' LPAREN expression RPAREN                     # LnFunction
+    | 'log' LPAREN expression RPAREN                    # LogDefFunction
+    | 'log2' LPAREN expression RPAREN                   # Log2Function
+    | 'log10' LPAREN expression RPAREN                  # Log10Function
     | 'floor' LPAREN expression RPAREN                  # FloorFunction
     | 'ceil' LPAREN expression RPAREN                   # CeilFunction
     | 'exp' LPAREN expression RPAREN                    # ExpFunction

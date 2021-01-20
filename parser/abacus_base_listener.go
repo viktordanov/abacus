@@ -129,6 +129,24 @@ func (s *BaseAbacusListener) EnterLnFunction(ctx *LnFunctionContext) {}
 // ExitLnFunction is called when production LnFunction is exited.
 func (s *BaseAbacusListener) ExitLnFunction(ctx *LnFunctionContext) {}
 
+// EnterLogDefFunction is called when production LogDefFunction is entered.
+func (s *BaseAbacusListener) EnterLogDefFunction(ctx *LogDefFunctionContext) {}
+
+// ExitLogDefFunction is called when production LogDefFunction is exited.
+func (s *BaseAbacusListener) ExitLogDefFunction(ctx *LogDefFunctionContext) {}
+
+// EnterLog2Function is called when production Log2Function is entered.
+func (s *BaseAbacusListener) EnterLog2Function(ctx *Log2FunctionContext) {}
+
+// ExitLog2Function is called when production Log2Function is exited.
+func (s *BaseAbacusListener) ExitLog2Function(ctx *Log2FunctionContext) {}
+
+// EnterLog10Function is called when production Log10Function is entered.
+func (s *BaseAbacusListener) EnterLog10Function(ctx *Log10FunctionContext) {}
+
+// ExitLog10Function is called when production Log10Function is exited.
+func (s *BaseAbacusListener) ExitLog10Function(ctx *Log10FunctionContext) {}
+
 // EnterFloorFunction is called when production FloorFunction is entered.
 func (s *BaseAbacusListener) EnterFloorFunction(ctx *FloorFunctionContext) {}
 

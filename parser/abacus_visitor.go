@@ -62,6 +62,15 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#LnFunction.
 	VisitLnFunction(ctx *LnFunctionContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#LogDefFunction.
+	VisitLogDefFunction(ctx *LogDefFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Log2Function.
+	VisitLog2Function(ctx *Log2FunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Log10Function.
+	VisitLog10Function(ctx *Log10FunctionContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#FloorFunction.
 	VisitFloorFunction(ctx *FloorFunctionContext) interface{}
 
