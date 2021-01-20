@@ -33,10 +33,10 @@ type args struct {
 	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 func (args) Version() string {
-	return "v1.0.0"
+	return "v1.0.0\n"
 }
 func (args) Description() string {
-	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions"
+	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
 }
 
 func main() {

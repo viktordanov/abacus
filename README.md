@@ -3,14 +3,22 @@
 Abacus is a simple interactive calculator CLI with support for variables, comparison checks, and math functions
 
 ```
-λ abacus -h
-abacus - a simple interactive calculator CLI with support for variables, comparison 
-checks, and math functions
-Usage: 
-  -color
-        color the output (default true)
-  -prec int
-        precision bits to calculate for (default 32)
+λ ./abacus -h         
+abacus - a simple interactive calculator CLI with support for variables, 
+comparison checks, and math functions
+
+v1.0.0
+
+Usage: abacus [--no-color] [--precision PRECISION] [--eval EVAL]
+
+Options:
+  --no-color, -n         disable color in output [default: false]
+  --precision PRECISION, -p PRECISION
+                         precision for calculations [default: 32]
+  --eval EVAL, -e EVAL   evaluate expression and quit
+  --help, -h             display this help and exit
+  --version              display version and exit
+
 ```
 
 ## Install
