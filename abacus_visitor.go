@@ -234,9 +234,9 @@ func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 	case "pi":
 		return pi(precision)
 	case "phi":
-		return big.NewFloat(math.Phi)
+		return phi(precision)
 	case "e":
-		return big.NewFloat(math.E)
+		return e(precision)
 	}
 	return 0
 }
