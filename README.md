@@ -15,7 +15,7 @@ Usage:
 
 ## Install
 
-`go get github.com/viktordanov/abacus`
+`go get -u github.com/viktordanov/abacus`
 
 ## Features
 - `History of expressions` and `Tab completion` of all math functions and defined variables
