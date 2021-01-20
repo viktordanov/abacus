@@ -59,15 +59,9 @@ func main() {
 
 	for {
 		savedPrecision := *precision
-		if name, err := line.Prompt("> "); err == nil {
-			line.AppendHistory(name)
-			is := antlr.NewInputStream(name)
-			lexer := parser.NewAbacusLexer(is)
-			stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-
-			p := parser.NewAbacusParser(stream)
-			tree := p.Root()
-			ans := visitor.Visit(tree)
+		if input, err := line.Prompt("> "); err == nil {
+			line.AppendHistory(input)
+			ans := evaluateExpression(input, visitor)
 			switch val := ans.(type) {
 			case variableAssignment:
 				updateCompletions(line, visitor)
@@ -102,6 +96,17 @@ func main() {
 		}
 		*precision = savedPrecision
 	}
+}
+
+func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
+	is := antlr.NewInputStream(expr)
+	lexer := parser.NewAbacusLexer(is)
+	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+
+	p := parser.NewAbacusParser(stream)
+	tree := p.Root()
+	ans = visitor.Visit(tree)
+	return
 }
 
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
