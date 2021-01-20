@@ -201,7 +201,7 @@ func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) int
 	num, _ := arg.Float64()
 	digits, _ := arg2.Float64()
 	mult := math.Pow(10, digits+1)
-	*precision = int(digits)
+	precision = int(digits)
 	return big.NewFloat(math.Round(num*mult) / mult)
 }
 
