@@ -1,14 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/fatih/color"
 	"github.com/peterh/liner"
 	"github.com/viktordanov/abacus/parser"
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"math/big"
@@ -29,14 +30,25 @@ type variableAssignment struct {
 
 type args struct {
 	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   uint    `arg:"-p,--precision" help:"precision for calculations" default:"32"`
+	Precision   uint   `arg:"-p,--precision" help:"precision for calculations" default:"32"`
 	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
+
 func (args) Version() string {
 	return "v1.0.0\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
+}
+
+func green(arg string) {
+	fmt.Println(string("\033[32m") + arg + string("\033[0m"))
+}
+func magenta(arg string) {
+	fmt.Println(string("\033[35m") + arg + string("\033[0m"))
+}
+func white(arg string) {
+	fmt.Println(string("\033[37m") + arg + string("\033[0m"))
 }
 
 func main() {
@@ -46,9 +58,7 @@ func main() {
 
 	visitor := NewAbacusVisitor()
 	line := liner.NewLiner()
-	numberPrinter := color.New(color.FgGreen)
-	booleanPrinter := color.New(color.FgMagenta)
-	defaultPrinter := color.New(color.FgWhite)
+
 	defer line.Close()
 	line.SetCtrlCAborts(true)
 
@@ -62,27 +72,27 @@ func main() {
 		case variableAssignment:
 			updateCompletions(line, visitor)
 			if !arguments.IgnoreColor {
-				numberPrinter.Println(val.newValue.Text('g', int(precision)))
+				green(val.newValue.Text('g', int(precision)))
 			} else {
-				defaultPrinter.Println(val.newValue.Text('g', int(precision)))
+				white(val.newValue.Text('g', int(precision)))
 			}
 		case *big.Float:
 			if !arguments.IgnoreColor {
-				numberPrinter.Println(val.Text('g', int(precision)))
+				green(val.Text('g', int(precision)))
 			} else {
-				defaultPrinter.Println(val.Text('g', int(precision)))
+				white(val.Text('g', int(precision)))
 			}
 		case string:
 			if !arguments.IgnoreColor {
-				numberPrinter.Println(val)
+				green(val)
 			} else {
-				defaultPrinter.Println(val)
+				white(val)
 			}
 		case bool:
 			if !arguments.IgnoreColor {
-				booleanPrinter.Println(val)
+				magenta(strconv.FormatBool(val))
 			} else {
-				defaultPrinter.Println(val)
+				white(strconv.FormatBool(val))
 			}
 		}
 	}
