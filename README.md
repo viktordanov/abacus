@@ -18,7 +18,7 @@ Usage:
 `go get github.com/viktordanov/abacus`
 
 ## Features
-
+- Tab completion of all math functions and defined variables
 - All common operations
   ```
   > 1+1
