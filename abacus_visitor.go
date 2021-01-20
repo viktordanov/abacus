@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/ALTree/bigfloat"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
 	"math"
@@ -118,7 +117,7 @@ func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
 	first := c.Expression(0).Accept(a).(*big.Float)
 	second := c.Expression(1).Accept(a).(*big.Float)
-	return bigfloat.Pow(first, second)
+	return Pow(first, second)
 }
 
 func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface{} {
@@ -135,27 +134,27 @@ func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
 
 func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return bigfloat.Sqrt(arg)
+	return Sqrt(arg)
 }
 
 func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return bigfloat.Log(arg)
+	return Log(arg)
 }
 
 func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return bigfloat.Log(arg)
+	return Log(arg)
 }
 
 func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return Div(bigfloat.Log(arg), bigfloat.Log(New(2)))
+	return Div(Log(arg), Log(New(2)))
 }
 
 func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return Div(bigfloat.Log(arg), bigfloat.Log(New(10)))
+	return Div(Log(arg), Log(New(10)))
 }
 
 func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
@@ -186,7 +185,7 @@ func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface
 }
 func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
-	return bigfloat.Exp(arg)
+	return Exp(arg)
 }
 
 func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
@@ -201,7 +200,7 @@ func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) int
 	num, _ := arg.Float64()
 	digits, _ := arg2.Float64()
 	mult := math.Pow(10, digits+1)
-	precision = int(digits)
+	precision = uint(digits)
 	return big.NewFloat(math.Round(num*mult) / mult)
 }
 
@@ -209,7 +208,7 @@ func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface
 	arg := c.Expression(0).Accept(a).(*big.Float)
 	arg2 := c.Expression(1).Accept(a).(*big.Float)
 
-	return Div(bigfloat.Log(arg), bigfloat.Log(arg2))
+	return Div(Log(arg), Log(arg2))
 }
 
 func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
@@ -233,7 +232,7 @@ func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface
 func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 	switch c.CONSTANT().GetText() {
 	case "pi":
-		return big.NewFloat(math.Pi)
+		return pi(precision)
 	case "phi":
 		return big.NewFloat(math.Phi)
 	case "e":
@@ -243,7 +242,7 @@ func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
-	out, _, err := big.ParseFloat(c.SCIENTIFIC_NUMBER().GetText(), 10, 256, big.ToNearestEven)
+	out, _, err := big.ParseFloat(c.SCIENTIFIC_NUMBER().GetText(), 10, precision, big.ToNearestEven)
 	if err != nil {
 		panic(err)
 	}

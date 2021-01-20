@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	precision   int
+	precision   uint
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
@@ -29,7 +29,7 @@ type variableAssignment struct {
 
 type args struct {
 	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   int    `arg:"-p,--precision" help:"precision for calculations" default:"32"`
+	Precision   uint    `arg:"-p,--precision" help:"precision for calculations" default:"32"`
 	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 func (args) Version() string {
@@ -62,15 +62,15 @@ func main() {
 		case variableAssignment:
 			updateCompletions(line, visitor)
 			if !arguments.IgnoreColor {
-				numberPrinter.Println(val.newValue.Text('g', precision))
+				numberPrinter.Println(val.newValue.Text('g', int(precision)))
 			} else {
-				defaultPrinter.Println(val.newValue.Text('g', precision))
+				defaultPrinter.Println(val.newValue.Text('g', int(precision)))
 			}
 		case *big.Float:
 			if !arguments.IgnoreColor {
-				numberPrinter.Println(val.Text('g', precision))
+				numberPrinter.Println(val.Text('g', int(precision)))
 			} else {
-				defaultPrinter.Println(val.Text('g', precision))
+				defaultPrinter.Println(val.Text('g', int(precision)))
 			}
 		case string:
 			if !arguments.IgnoreColor {
