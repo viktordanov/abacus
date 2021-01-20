@@ -242,7 +242,9 @@ func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
-	out, _, err := big.ParseFloat(c.SCIENTIFIC_NUMBER().GetText(), 10, precision, big.ToNearestEven)
+	numberString := c.SCIENTIFIC_NUMBER().GetText()
+
+	out, _, err := big.ParseFloat(numberString, 10, precision, big.ToNearestEven)
 	if err != nil {
 		panic(err)
 	}
