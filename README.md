@@ -93,4 +93,8 @@ Usage:
 
 - [x] Add full feature list
 - [ ] Write tests
+  - [x] Base tests
+  - [x] Simple benchmark of a complicated expression
+  - [ ] Improve tests
+- [ ] Refactor to depend less on other packages
 - [ ] Implement most single arity functions with `*big.Float` for improved precision
