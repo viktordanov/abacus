@@ -17,7 +17,8 @@ import (
 
 var (
 	precision   *int
-	historyFile = filepath.Join(os.TempDir(), ".abacus_history")
+	homeDir, _  = os.UserHomeDir()
+	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
 		"sqrt", "ln", "floor", "ceil", "exp", "sin", "cos", "tan", "round", "log", "min", "max", "pi", "e", "phi",
 	}
@@ -49,12 +50,7 @@ func main() {
 		f.Close()
 	}
 
-	if f, err := os.Create(historyFile); err != nil {
-		log.Print("Error writing history file: ", err)
-	} else {
-		line.WriteHistory(f)
-		f.Close()
-	}
+	writeHistoryFile(line)
 	updateCompletions(line, visitor)
 
 	for {
@@ -90,6 +86,7 @@ func main() {
 				}
 			}
 		} else if err == liner.ErrPromptAborted {
+			writeHistoryFile(line)
 			os.Exit(0)
 		} else {
 			log.Print("Error reading line: ", err)
@@ -107,6 +104,15 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
 	tree := p.Root()
 	ans = visitor.Visit(tree)
 	return
+}
+
+func writeHistoryFile(line *liner.State) {
+	if f, err := os.Create(historyFile); err != nil {
+		log.Print("Error writing history file: ", err)
+	} else {
+		line.WriteHistory(f)
+		f.Close()
+	}
 }
 
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
