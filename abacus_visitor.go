@@ -142,6 +142,22 @@ func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{}
 	arg := c.Expression().Accept(a).(*big.Float)
 	return bigfloat.Log(arg)
 }
+
+func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
+	arg := c.Expression().Accept(a).(*big.Float)
+	return bigfloat.Log(arg)
+}
+
+func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
+	arg := c.Expression().Accept(a).(*big.Float)
+	return Div(bigfloat.Log(arg), bigfloat.Log(New(2)))
+}
+
+func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
+	arg := c.Expression().Accept(a).(*big.Float)
+	return Div(bigfloat.Log(arg), bigfloat.Log(New(10)))
+}
+
 func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
 	arg := c.Expression().Accept(a).(*big.Float)
 	toFloat, _ := arg.Float64()
@@ -192,12 +208,8 @@ func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) int
 func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface{} {
 	arg := c.Expression(0).Accept(a).(*big.Float)
 	arg2 := c.Expression(1).Accept(a).(*big.Float)
-	num, _ := arg.Float64()
-	base, _ := arg2.Float64()
 
-	ans := math.Log(num) / math.Log(base)
-
-	return big.NewFloat(ans)
+	return Div(bigfloat.Log(arg), bigfloat.Log(arg2))
 }
 
 func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
