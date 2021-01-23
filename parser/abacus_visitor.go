@@ -1,4 +1,4 @@
-// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9. DO NOT EDIT.
+// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9.1. DO NOT EDIT.
 
 package parser // Abacus
 
@@ -55,6 +55,12 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#Variable.
 	VisitVariable(ctx *VariableContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#PlusSign.
+	VisitPlusSign(ctx *PlusSignContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#MinusSign.
+	VisitMinusSign(ctx *MinusSignContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#SqrtFunction.
 	VisitSqrtFunction(ctx *SqrtFunctionContext) interface{}

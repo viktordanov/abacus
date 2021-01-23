@@ -251,11 +251,28 @@ func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
 	return out
 }
 
+func (a *AbacusVisitor) VisitPlusSign(c *parser.PlusSignContext) interface{} {
+	return '+'
+}
+
+func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
+	return '-'
+}
+
 func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	var value *big.Float
 	ok := false
+	multiplier := New(1)
+
+	if c.Sign() != nil {
+		sign := c.Sign().Accept(a).(rune)
+		if sign == '-' {
+			multiplier = New(-1)
+		}
+	}
+
 	if value, ok = a.vars[c.VARIABLE().GetText()]; !ok {
 		return big.NewFloat(0)
 	}
-	return value
+	return Zero().Mul(value, multiplier)
 }

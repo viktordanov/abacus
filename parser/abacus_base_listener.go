@@ -1,4 +1,4 @@
-// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9. DO NOT EDIT.
+// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9.1. DO NOT EDIT.
 
 package parser // Abacus
 
@@ -116,6 +116,18 @@ func (s *BaseAbacusListener) EnterVariable(ctx *VariableContext) {}
 
 // ExitVariable is called when production Variable is exited.
 func (s *BaseAbacusListener) ExitVariable(ctx *VariableContext) {}
+
+// EnterPlusSign is called when production PlusSign is entered.
+func (s *BaseAbacusListener) EnterPlusSign(ctx *PlusSignContext) {}
+
+// ExitPlusSign is called when production PlusSign is exited.
+func (s *BaseAbacusListener) ExitPlusSign(ctx *PlusSignContext) {}
+
+// EnterMinusSign is called when production MinusSign is entered.
+func (s *BaseAbacusListener) EnterMinusSign(ctx *MinusSignContext) {}
+
+// ExitMinusSign is called when production MinusSign is exited.
+func (s *BaseAbacusListener) ExitMinusSign(ctx *MinusSignContext) {}
 
 // EnterSqrtFunction is called when production SqrtFunction is entered.
 func (s *BaseAbacusListener) EnterSqrtFunction(ctx *SqrtFunctionContext) {}

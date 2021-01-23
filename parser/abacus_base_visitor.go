@@ -1,4 +1,4 @@
-// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9. DO NOT EDIT.
+// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9.1. DO NOT EDIT.
 
 package parser // Abacus
 
@@ -69,6 +69,14 @@ func (v *BaseAbacusVisitor) VisitNumber(ctx *NumberContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitVariable(ctx *VariableContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitPlusSign(ctx *PlusSignContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMinusSign(ctx *MinusSignContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

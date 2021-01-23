@@ -1,4 +1,4 @@
-// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9. DO NOT EDIT.
+// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9.1. DO NOT EDIT.
 
 package parser // Abacus
 
@@ -55,6 +55,12 @@ type AbacusListener interface {
 
 	// EnterVariable is called when entering the Variable production.
 	EnterVariable(c *VariableContext)
+
+	// EnterPlusSign is called when entering the PlusSign production.
+	EnterPlusSign(c *PlusSignContext)
+
+	// EnterMinusSign is called when entering the MinusSign production.
+	EnterMinusSign(c *MinusSignContext)
 
 	// EnterSqrtFunction is called when entering the SqrtFunction production.
 	EnterSqrtFunction(c *SqrtFunctionContext)
@@ -151,6 +157,12 @@ type AbacusListener interface {
 
 	// ExitVariable is called when exiting the Variable production.
 	ExitVariable(c *VariableContext)
+
+	// ExitPlusSign is called when exiting the PlusSign production.
+	ExitPlusSign(c *PlusSignContext)
+
+	// ExitMinusSign is called when exiting the MinusSign production.
+	ExitMinusSign(c *MinusSignContext)
 
 	// ExitSqrtFunction is called when exiting the SqrtFunction production.
 	ExitSqrtFunction(c *SqrtFunctionContext)

@@ -50,11 +50,15 @@ LPAREN: '(';
 RPAREN: ')';
 
 atom
-    : function          # FuncExpr
-    | CONSTANT          # Constant
-    | SCIENTIFIC_NUMBER # Number
-    | VARIABLE          # Variable
+    : function              # FuncExpr
+    | CONSTANT              # Constant
+    | SCIENTIFIC_NUMBER     # Number
+    | sign? VARIABLE        # Variable
     ;
+
+sign
+    : '+' # PlusSign
+    | '-' # MinusSign;
 
 
 function
@@ -93,7 +97,7 @@ fragment NUMBER
    ;
 
 VARIABLE
-   : VALID_ID_START VALID_ID_CHAR*
+   :  VALID_ID_START VALID_ID_CHAR*
    ;
 
 
