@@ -81,7 +81,7 @@ CONSTANT
     : 'pi' | 'e' | 'phi';
 
 SCIENTIFIC_NUMBER
-   : NUMBER (('e' | 'E') SIGN? NUMBER)?
+   : SIGN? NUMBER (('e' | 'E') SIGN? NUMBER)?
    ;
 
 
