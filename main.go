@@ -57,6 +57,13 @@ func white(arg string) {
 }
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	var arguments args
 	arg.MustParse(&arguments)
 	precision = arguments.Precision
@@ -67,10 +74,16 @@ func main() {
 	defer line.Close()
 	line.SetCtrlCAborts(true)
 
-	if f, err := os.Open(historyFile); err == nil {
-		line.ReadHistory(f)
-		f.Close()
+	f, err := os.Open(historyFile)
+	if err != nil {
+		return err
 	}
+
+	_, err = line.ReadHistory(f)
+	if err != nil {
+		return err
+	}
+	f.Close()
 
 	printAnswer := func(ans interface{}) {
 		switch val := ans.(type) {
@@ -104,7 +117,7 @@ func main() {
 
 	if len(arguments.Expression) != 0 {
 		printAnswer(evaluateExpression(arguments.Expression, visitor))
-		os.Exit(0)
+		return nil
 	}
 	updateCompletions(line, visitor)
 
@@ -117,22 +130,25 @@ func main() {
 
 	for {
 		savedPrecision := precision
-		if input, err := line.Prompt("> "); err == nil {
-			if strings.Index(input, "quit") != -1 {
-				writeHistoryFile(line)
-				os.Exit(0)
+		input, err := line.Prompt("> ")
+		if err != nil {
+			if errors.Is(err, liner.ErrPromptAborted) || errors.Is(err, io.EOF) {
+				return writeHistoryFile(line)
 			}
-			line.AppendHistory(input)
-			ans := evaluateExpression(input, visitor)
-			printAnswer(ans)
-		} else if errors.Is(err, liner.ErrPromptAborted) || errors.Is(err, io.EOF) {
-			writeHistoryFile(line)
-			os.Exit(0)
-		} else {
 			log.Print("Error reading line: ", err)
 		}
-		precision = savedPrecision
+
+		if strings.Contains(input, "quit") {
+			return writeHistoryFile(line)
+		}
+
+		if input != "" {
+			line.AppendHistory(input)
+			printAnswer(evaluateExpression(input, visitor))
+			precision = savedPrecision
+		}
 	}
+
 }
 
 func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
@@ -146,13 +162,14 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
 	return
 }
 
-func writeHistoryFile(line *liner.State) {
-	if f, err := os.Create(historyFile); err != nil {
-		log.Print("Error writing history file: ", err)
-	} else {
-		line.WriteHistory(f)
-		f.Close()
+func writeHistoryFile(line *liner.State) error {
+	f, err := os.Create(historyFile)
+	if err != nil {
+		return err
 	}
+	defer f.Close()
+	_, err = line.WriteHistory(f)
+	return err
 }
 
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
@@ -164,7 +181,6 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 
 	line.SetCompleter(func(line string) (c []string) {
 		for _, n := range completions {
-
 			var idx int
 			for idx = len(line) - 1; idx >= 0; idx-- {
 				r := rune(line[idx])
@@ -172,10 +188,12 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 					continue
 				}
 				idx++
+
 				break
 			}
 			if len(line) == 0 {
 				c = append(c, n)
+
 				continue
 			}
 			if idx == -1 {
