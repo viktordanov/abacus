@@ -125,7 +125,18 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 }
 
 func (a *AbacusVisitor) VisitAtomExpr(c *parser.AtomExprContext) interface{} {
-	return c.Atom().Accept(a)
+	atomValue := c.Atom().Accept(a).(*big.Float)
+
+	multiplier := New(1)
+
+	if c.Sign() != nil {
+		sign := c.Sign().Accept(a).(rune)
+		if sign == '-' {
+			multiplier = New(-1)
+		}
+	}
+
+	return Zero().Mul(atomValue, multiplier)
 }
 
 func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
@@ -262,17 +273,9 @@ func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
 func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	var value *big.Float
 	ok := false
-	multiplier := New(1)
-
-	if c.Sign() != nil {
-		sign := c.Sign().Accept(a).(rune)
-		if sign == '-' {
-			multiplier = New(-1)
-		}
-	}
 
 	if value, ok = a.vars[c.VARIABLE().GetText()]; !ok {
 		return big.NewFloat(0)
 	}
-	return Zero().Mul(value, multiplier)
+	return value
 }

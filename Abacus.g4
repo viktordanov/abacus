@@ -29,7 +29,7 @@ expression
    | expression op=(MUL|DIV) expression # MulDiv
    | expression op=(ADD|SUB) expression # AddSub
    | LPAREN expression RPAREN           # Parentheses
-   | atom                               # AtomExpr
+   | sign? atom                         # AtomExpr
    ;
 
 EQ: '=';
@@ -53,7 +53,7 @@ atom
     : function              # FuncExpr
     | CONSTANT              # Constant
     | SCIENTIFIC_NUMBER     # Number
-    | sign? VARIABLE        # Variable
+    | VARIABLE              # Variable
     ;
 
 sign
@@ -85,7 +85,7 @@ CONSTANT
     : 'pi' | 'e' | 'phi';
 
 SCIENTIFIC_NUMBER
-   : SIGN? NUMBER (('e' | 'E') SIGN? NUMBER)?
+   : NUMBER (('e' | 'E') SIGN? NUMBER)?
    ;
 
 
