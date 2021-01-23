@@ -20,3 +20,5 @@ github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
+github.com/thecodeteam/goodbye v0.0.0-20170927022442-a83968bda2d3 h1:COy7ekr2jBEd34npP2LvMTqk9UtiLkuvkjiJFHihlTo=
+github.com/thecodeteam/goodbye v0.0.0-20170927022442-a83968bda2d3/go.mod h1:ehwM4AFY4byYSorQbigh79cKUOUNL3pAOz5eCAQNlGI=
