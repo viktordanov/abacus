@@ -8,4 +8,5 @@ require (
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/peterh/liner v1.2.1
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/thecodeteam/goodbye v0.0.0-20170927022442-a83968bda2d3
 )

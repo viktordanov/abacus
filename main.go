@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
+	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
 
 	"math/big"
@@ -105,6 +107,13 @@ func main() {
 		os.Exit(0)
 	}
 	updateCompletions(line, visitor)
+
+	ctx := context.Background()
+	defer goodbye.Exit(ctx, -1)
+	goodbye.Notify(ctx)
+	goodbye.Register(func(ctx context.Context, sig os.Signal) {
+		writeHistoryFile(line)
+	})
 
 	for {
 		savedPrecision := precision
