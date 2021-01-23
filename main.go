@@ -1,16 +1,19 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"github.com/alexflint/go-arg"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/peterh/liner"
-	"github.com/viktordanov/abacus/parser"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/alexflint/go-arg"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/peterh/liner"
+	"github.com/viktordanov/abacus/parser"
 
 	"math/big"
 )
@@ -113,7 +116,7 @@ func main() {
 			line.AppendHistory(input)
 			ans := evaluateExpression(input, visitor)
 			printAnswer(ans)
-		} else if err == liner.ErrPromptAborted {
+		} else if errors.Is(err, liner.ErrPromptAborted) || errors.Is(err, io.EOF) {
 			writeHistoryFile(line)
 			os.Exit(0)
 		} else {
