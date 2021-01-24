@@ -31,11 +31,13 @@ var (
 )
 
 type args struct {
-	IgnoreColor          bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision            uint   `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	MaxRecurrences       uint   `arg:"-r,--max-recurrences" help:"allow N recurrences in lambda expressions; set to 0 to disable" default:"20"`
-	LastValueInRecursion uint   `arg:"-l,--last-value-in-recursion" help:"value for last lambda call in recursion stack" default:"0"`
-	Expression           string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	IgnoreColor          bool    `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	Precision            uint    `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	MaxRecurrences       uint    `arg:"-r,--max-recurrences" help:"allow N recurrences in lambda expressions; set to 0 to disable" default:"20"`
+	LastValueInRecursion uint    `arg:"-R,--last-value-in-recursion" help:"return value by last lambda in the recursion stack" default:"0"`
+	StopWhenReachedValue float64 `arg:"-S,--stop-value" help:"value to look for when --stop is used" default:"0"`
+	StopWhenReached      bool    `arg:"-s,--stop" help:"stop recurring when the value given received as argument" default:"false"`
+	Expression           string  `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 
 func (args) Version() string {

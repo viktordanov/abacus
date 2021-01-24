@@ -14,19 +14,21 @@ type Lambda struct {
 
 type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
-	vars            map[string]*big.Float
-	lambdas         map[string]*Lambda
-	lambdaVars      map[string]*big.Float
-	lambdaRecursion map[string]uint
+	vars                 map[string]*big.Float
+	lambdas              map[string]*Lambda
+	lambdaVars           map[string]*big.Float
+	lambdaRecursion      map[string]uint
+	lambdaRecursionStack map[string]uint
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
-		ParseTreeVisitor: &parser.BaseAbacusVisitor{},
-		vars:             make(map[string]*big.Float),
-		lambdas:          make(map[string]*Lambda),
-		lambdaVars:       make(map[string]*big.Float),
-		lambdaRecursion:  make(map[string]uint),
+		ParseTreeVisitor:     &parser.BaseAbacusVisitor{},
+		vars:                 make(map[string]*big.Float),
+		lambdas:              make(map[string]*Lambda),
+		lambdaVars:           make(map[string]*big.Float),
+		lambdaRecursion:      make(map[string]uint),
+		lambdaRecursionStack: make(map[string]uint),
 	}
 }
 
@@ -34,6 +36,7 @@ func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 	switch val := tree.(type) {
 	case *parser.RootContext:
 		a.lambdaRecursion = make(map[string]uint)
+		a.lambdaRecursionStack = make(map[string]uint)
 		return val.Accept(a)
 
 	case *parser.DeclarationContext:
@@ -443,6 +446,13 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		return New(0)
 	}
 
+	parameters := make([]*big.Float, 0)
+	if c.Tuple() != nil {
+		resValues := c.Tuple().Accept(a)
+		tuple := a.convertTupleResult(resValues)
+		parameters = tuple.Values
+	}
+
 	// Handle recursion
 	inLambda, nested := a.checkParentCtxForLambda(c.GetParent())
 	if inLambda {
@@ -455,19 +465,20 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 
 			if recurrences, ok = a.lambdaRecursion[lambdaName]; !ok {
 				a.lambdaRecursion[lambdaName] = 1
-			} else if recurrences == arguments.MaxRecurrences {
+			}
+			if _, ok = a.lambdaRecursionStack[lambdaName]; !ok {
+				a.lambdaRecursionStack[lambdaName] = 1
+			}
+			if len(parameters) > 0 && arguments.StopWhenReached && parameters[0].Cmp(New(arguments.StopWhenReachedValue)) <= 0 {
+				return New(float64(arguments.LastValueInRecursion))
+			}
+			if recurrences == arguments.MaxRecurrences {
 				return New(float64(arguments.LastValueInRecursion))
 			} else {
-				a.lambdaRecursion[lambdaName] = recurrences + 1
+				a.lambdaRecursion[lambdaName]++
+				a.lambdaRecursionStack[lambdaName]++
 			}
 		}
-	}
-
-	parameters := make([]*big.Float, 0)
-	if c.Tuple() != nil {
-		resValues := c.Tuple().Accept(a)
-		tuple := a.convertTupleResult(resValues)
-		parameters = tuple.Values
 	}
 
 	switch val := lambda.ctx.Lambda().(type) {
@@ -476,8 +487,11 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			return ResultError("expected 1 parameter")
 		}
 		varName := val.VARIABLE().GetText()
-		a.lambdaVars[lambdaVarName(lambdaName, varName)] = parameters[0]
-		return val.Accept(a)
+		a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[0]
+		r := val.Accept(a)
+		a.lambdaRecursionStack[lambdaName]--
+		//log.Printf("%+v %+v\n", r, parameters)
+		return r
 	case *parser.MultiVariableLambdaContext:
 		resVars := val.VariablesTuple().Accept(a)
 		variableNames, err := a.convertVariablesTupleResult(resVars)
@@ -493,7 +507,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			return ResultError("expected " + strconv.FormatInt(int64(count), 10) + " parameter" + s)
 		}
 		for i, varName := range variableNames.Variables {
-			a.lambdaVars[lambdaVarName(lambdaName, varName)] = parameters[i]
+			a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[i]
 		}
 		return val.Accept(a)
 	}
@@ -508,7 +522,7 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 
 	inLambda, lambdaName := a.checkParentCtxForLambda(c.GetParent())
 	if inLambda {
-		if value, ok = a.lambdaVars[lambdaVarName(lambdaName, name)]; ok {
+		if value, ok = a.lambdaVars[lambdaVarName(lambdaName, name, a.lambdaRecursionStack[lambdaName])]; ok {
 			return value
 		}
 
@@ -546,6 +560,13 @@ func sliceIndex(limit int, predicate func(i int) bool) int {
 	return -1
 }
 
-func lambdaVarName(lambdaName, varName string) string {
-	return "$" + lambdaName + "$" + varName
+func lambdaVarName(lambdaName, varName string, stack uint) string {
+	out := ""
+	if stack == 0 {
+		stack = 1
+	}
+	for i := uint(0); i < stack; i++ {
+		out += "$" + lambdaName
+	}
+	return out + "$" + varName
 }
