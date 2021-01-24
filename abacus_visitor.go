@@ -5,17 +5,28 @@ import (
 	"github.com/viktordanov/abacus/parser"
 	"math"
 	"math/big"
+	"strconv"
 )
+
+type Lambda struct {
+	ctx interface{}
+}
 
 type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
-	vars map[string]*big.Float
+	vars                map[string]*big.Float
+	lambdas             map[string]*Lambda
+	currentLambdaValues []*big.Float
+	currentLambdaVars   []string
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
-		ParseTreeVisitor: &parser.BaseAbacusVisitor{},
-		vars:             make(map[string]*big.Float),
+		ParseTreeVisitor:    &parser.BaseAbacusVisitor{},
+		vars:                make(map[string]*big.Float),
+		lambdas:             make(map[string]*Lambda),
+		currentLambdaValues: make([]*big.Float, 0),
+		currentLambdaVars:   make([]string, 0),
 	}
 }
 
@@ -37,9 +48,8 @@ func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 }
 
 func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
-
-	if c.Expression() != nil {
-		return c.Expression().Accept(a)
+	if c.Tuple() != nil {
+		return c.Tuple().Accept(a)
 	}
 	if c.Declaration() != nil {
 		return c.Declaration().Accept(a)
@@ -50,12 +60,124 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 	return nil
 }
 
-func (a *AbacusVisitor) VisitDeclaration(c *parser.DeclarationContext) interface{} {
-	variableName := c.VARIABLE().GetText()
-	value := c.Expression().Accept(a).(*big.Float)
+func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *ResultTuple) {
+	ctx, ok := c.(*parser.TupleContext)
+	if !ok || ctx == nil {
+		return
+	}
+	val, _ := ctx.Expression().Accept(a).(*big.Float)
+	resultTuple.Values = append(resultTuple.Values, val)
+	a.visitTupleTail(ctx.Tuple(), resultTuple)
+}
 
-	a.vars[variableName] = value
-	return variableAssignment{newValue: value}
+func (a *AbacusVisitor) VisitTuple(c *parser.TupleContext) interface{} {
+	if c.Tuple() == nil {
+		return c.Expression().Accept(a)
+	}
+
+	evaledTuple := NewResultTuple()
+	val, _ := c.Expression().Accept(a).(*big.Float)
+	evaledTuple.Values = append(evaledTuple.Values, val)
+	a.visitTupleTail(c.Tuple(), &evaledTuple)
+
+	return evaledTuple
+}
+
+func (a *AbacusVisitor) visitVariableTupleTail(c parser.IVariablesTupleContext, resultTuple *ResultVariablesTuple) {
+	ctx, ok := c.(*parser.VariablesTupleContext)
+	if !ok || ctx == nil {
+		return
+	}
+	val := ctx.VARIABLE().GetText()
+	resultTuple.Variables = append(resultTuple.Variables, val)
+	a.visitVariableTupleTail(ctx.VariablesTuple(), resultTuple)
+}
+
+func (a *AbacusVisitor) VisitVariablesTuple(c *parser.VariablesTupleContext) interface{} {
+	if c.VariablesTuple() == nil {
+		return c.VARIABLE().GetText()
+	}
+
+	evaledTuple := NewResultVariablesTuple()
+
+	val := c.VARIABLE().GetText()
+	evaledTuple.Variables = append(evaledTuple.Variables, val)
+	a.visitVariableTupleTail(c.VariablesTuple(), &evaledTuple)
+
+	foundVars := make(map[string]bool)
+	for _, variable := range evaledTuple.Variables {
+		if _, ok := foundVars[variable]; !ok {
+			foundVars[variable] = true
+		} else {
+			return ResultError("duplicate variable name \"" + variable + "\"")
+		}
+	}
+
+	return evaledTuple
+}
+
+func (a *AbacusVisitor) convertVariablesTupleResult(result interface{}) (ResultVariablesTuple, *ResultError) {
+	variableNames := NewResultVariablesTuple()
+	switch val := result.(type) {
+	case ResultError:
+		return variableNames, &val
+	case string:
+		variableNames.Variables = append(variableNames.Variables, val)
+	case ResultVariablesTuple:
+		variableNames = val
+	}
+	return variableNames, nil
+}
+
+func (a *AbacusVisitor) convertTupleResult(result interface{}) ResultTuple {
+	values := NewResultTuple()
+	switch val := result.(type) {
+	case *big.Float:
+		values.Values = append(values.Values, val)
+	case ResultTuple:
+		values = val
+	}
+	return values
+}
+
+func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationContext) interface{} {
+	resVariables := c.VariablesTuple().Accept(a)
+	variableNames, err := a.convertVariablesTupleResult(resVariables)
+	if err != nil {
+		return *err
+	}
+
+	resValues := c.Tuple().Accept(a)
+	values := a.convertTupleResult(resValues)
+
+	if len(variableNames.Variables) != len(values.Values) {
+		return ResultError("Wrong number of values " + strconv.FormatInt(int64(len(values.Values)), 10) + "; expected " + strconv.FormatInt(int64(len(variableNames.Variables)), 10))
+	}
+
+	for i, variable := range variableNames.Variables {
+		a.vars[variable] = values.Values[i]
+	}
+	return ResultAssignment{Values: values.Values}
+}
+
+func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContext) interface{} {
+	lambdaName := c.LAMBDA_VARIABLE().GetText()
+	lambda := c.Lambda()
+
+	// Check if 1) multiple vars 2) duped vars
+	multipleVarLambda, ok := lambda.(*parser.MultiVariableLambdaContext)
+	if ok {
+		resVars := multipleVarLambda.VariablesTuple().Accept(a)
+		_, err := a.convertVariablesTupleResult(resVars)
+		if err != nil {
+			return *err
+		}
+	}
+
+	a.lambdas[lambdaName] = &Lambda{
+		ctx: lambda,
+	}
+	return nil
 }
 
 func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) interface{} {
@@ -115,7 +237,7 @@ func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
-	first := c.Expression(0).Accept(a).(*big.Float)
+	first := c.Expression(0).Accept(a).(*big.Float) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
 	second := c.Expression(1).Accept(a).(*big.Float)
 	return Pow(first, second)
 }
@@ -223,21 +345,49 @@ func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface
 }
 
 func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
-	arg := c.Expression(0).Accept(a).(*big.Float)
-	arg2 := c.Expression(1).Accept(a).(*big.Float)
-	if arg.Cmp(arg2) == -1 {
-		return arg
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	smallest := tuple.Values[0]
+
+	for i := 1; i < len(tuple.Values); i++ {
+		curr := tuple.Values[i]
+		if curr.Cmp(smallest) == -1 {
+			smallest = curr
+		}
 	}
-	return arg2
+
+	return smallest
 }
 
 func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface{} {
-	arg := c.Expression(0).Accept(a).(*big.Float)
-	arg2 := c.Expression(1).Accept(a).(*big.Float)
-	if arg.Cmp(arg2) == 1 {
-		return arg
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	biggest := tuple.Values[0]
+
+	for i := 1; i < len(tuple.Values); i++ {
+		curr := tuple.Values[i]
+		if curr.Cmp(biggest) == 1 {
+			biggest = curr
+		}
 	}
-	return arg2
+
+	return biggest
+}
+
+func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface{} {
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	sum := tuple.Values[0]
+
+	for i := 1; i < len(tuple.Values); i++ {
+		curr := tuple.Values[i]
+		sum = Add(sum, curr)
+	}
+
+	return Div(sum, New(float64(len(tuple.Values))))
 }
 
 func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
@@ -270,12 +420,109 @@ func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
 	return '-'
 }
 
+func (a *AbacusVisitor) VisitSingleVariableLambda(c *parser.SingleVariableLambdaContext) interface{} {
+	variableName := c.VARIABLE().GetText()
+	a.currentLambdaVars = []string{variableName}
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+	return tuple
+}
+
+func (a *AbacusVisitor) VisitMultiVariableLambda(c *parser.MultiVariableLambdaContext) interface{} {
+	resVars := c.VariablesTuple().Accept(a)
+	variableNames, err := a.convertVariablesTupleResult(resVars)
+	if err != nil {
+		return *err
+	}
+
+	a.currentLambdaVars = variableNames.Variables
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+	return tuple
+}
+
+func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{} {
+	lambdaName := c.LAMBDA_VARIABLE().GetText()
+
+	lambda, found := a.lambdas[lambdaName]
+	if !found {
+		return New(0)
+	}
+
+	parameterCount := 0
+	if c.Tuple() != nil {
+		resValues := c.Tuple().Accept(a)
+		tuple := a.convertTupleResult(resValues)
+		a.currentLambdaValues = tuple.Values
+		parameterCount = len(tuple.Values)
+	}
+
+	switch val := lambda.ctx.(type) {
+	case *parser.SingleVariableLambdaContext:
+		if parameterCount < 1 {
+			return ResultError("expected 1 parameter")
+		}
+		return val.Accept(a)
+	case *parser.MultiVariableLambdaContext:
+		resVars := val.VariablesTuple().Accept(a)
+		variableNames, err := a.convertVariablesTupleResult(resVars)
+		if err != nil {
+			return *err
+		}
+		count := len(variableNames.Variables)
+		s := ""
+		if count > 1 {
+			s = "s"
+		}
+		if parameterCount < count {
+			return ResultError("expected " + strconv.FormatInt(int64(count), 10) + " parameter" + s)
+		}
+		return val.Accept(a)
+	}
+	return New(0)
+}
+
 func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	var value *big.Float
 	ok := false
 
-	if value, ok = a.vars[c.VARIABLE().GetText()]; !ok {
-		return big.NewFloat(0)
+	name := c.VARIABLE().GetText()
+
+	inLambda := a.checkParentCtxForLambda(c.GetParent())
+	if inLambda {
+		idx := sliceIndex(len(a.currentLambdaVars), func(i int) bool {
+			return a.currentLambdaVars[i] == name
+		})
+
+		if value, ok = a.vars[name]; idx == -1 && !ok {
+			return big.NewFloat(0)
+		}
+		if idx != -1 {
+
+			return a.currentLambdaValues[idx]
+		}
+	} else {
+		if value, ok = a.vars[name]; !ok {
+			return big.NewFloat(0)
+		}
 	}
 	return value
+}
+
+func (a *AbacusVisitor) checkParentCtxForLambda(c antlr.Tree) bool {
+	_, ok1 := interface{}(c).(*parser.SingleVariableLambdaContext)
+	_, ok2 := interface{}(c).(*parser.MultiVariableLambdaContext)
+	if !(ok1 || ok2) && c.GetParent() != nil {
+		return a.checkParentCtxForLambda(c.GetParent())
+	}
+	return ok1 || ok2
+}
+
+func sliceIndex(limit int, predicate func(i int) bool) int {
+	for i := 0; i < limit; i++ {
+		if predicate(i) {
+			return i
+		}
+	}
+	return -1
 }

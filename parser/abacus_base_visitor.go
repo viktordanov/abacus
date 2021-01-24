@@ -12,7 +12,11 @@ func (v *BaseAbacusVisitor) VisitRoot(ctx *RootContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitDeclaration(ctx *DeclarationContext) interface{} {
+func (v *BaseAbacusVisitor) VisitVariableDeclaration(ctx *VariableDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLambdaDeclaration(ctx *LambdaDeclarationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -36,11 +40,23 @@ func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualCom
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitSingleVariableLambda(ctx *SingleVariableLambdaContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMultiVariableLambda(ctx *MultiVariableLambdaContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitMulDiv(ctx *MulDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
 func (v *BaseAbacusVisitor) VisitAddSub(ctx *AddSubContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLambdaExpr(ctx *LambdaExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -53,6 +69,14 @@ func (v *BaseAbacusVisitor) VisitAtomExpr(ctx *AtomExprContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitParentheses(ctx *ParenthesesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitTuple(ctx *TupleContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitVariablesTuple(ctx *VariablesTupleContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -141,5 +165,9 @@ func (v *BaseAbacusVisitor) VisitMinFunction(ctx *MinFunctionContext) interface{
 }
 
 func (v *BaseAbacusVisitor) VisitMaxFunction(ctx *MaxFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitAvgFunction(ctx *AvgFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

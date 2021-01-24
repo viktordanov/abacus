@@ -11,8 +11,11 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#root.
 	VisitRoot(ctx *RootContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#declaration.
-	VisitDeclaration(ctx *DeclarationContext) interface{}
+	// Visit a parse tree produced by AbacusParser#VariableDeclaration.
+	VisitVariableDeclaration(ctx *VariableDeclarationContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LambdaDeclaration.
+	VisitLambdaDeclaration(ctx *LambdaDeclarationContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#EqualComparison.
 	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
@@ -29,11 +32,20 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
 	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#SingleVariableLambda.
+	VisitSingleVariableLambda(ctx *SingleVariableLambdaContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#MultiVariableLambda.
+	VisitMultiVariableLambda(ctx *MultiVariableLambdaContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#MulDiv.
 	VisitMulDiv(ctx *MulDivContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#AddSub.
 	VisitAddSub(ctx *AddSubContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LambdaExpr.
+	VisitLambdaExpr(ctx *LambdaExprContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#Pow.
 	VisitPow(ctx *PowContext) interface{}
@@ -43,6 +55,12 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#Parentheses.
 	VisitParentheses(ctx *ParenthesesContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#tuple.
+	VisitTuple(ctx *TupleContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#variablesTuple.
+	VisitVariablesTuple(ctx *VariablesTupleContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#FuncExpr.
 	VisitFuncExpr(ctx *FuncExprContext) interface{}
@@ -109,4 +127,7 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#MaxFunction.
 	VisitMaxFunction(ctx *MaxFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#AvgFunction.
+	VisitAvgFunction(ctx *AvgFunctionContext) interface{}
 }

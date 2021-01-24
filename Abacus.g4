@@ -8,11 +8,12 @@ grammar Abacus;
 root
     : declaration EOF
     | comparison EOF
-    | expression  EOF
+    | tuple  EOF
     ;
 
 declaration
-    : VARIABLE EQ expression
+    : variablesTuple EQ tuple       # VariableDeclaration
+    | LAMBDA_VARIABLE EQ lambda     # LambdaDeclaration
     ;
 
 comparison
@@ -24,17 +25,25 @@ comparison
     ;
 
 
+lambda
+    : VARIABLE ARROW tuple                        # SingleVariableLambda
+    | LPAREN variablesTuple RPAREN ARROW tuple    # MultiVariableLambda
+    ;
+
 expression
-   : expression POW expression          # Pow
-   | expression op=(MUL|DIV) expression # MulDiv
-   | expression op=(ADD|SUB) expression # AddSub
-   | LPAREN expression RPAREN           # Parentheses
-   | sign? atom                         # AtomExpr
+   : expression POW expression              # Pow
+   | expression op=(MUL|DIV) expression     # MulDiv
+   | expression op=(ADD|SUB) expression     # AddSub
+   | LPAREN expression RPAREN               # Parentheses
+   | LAMBDA_VARIABLE LPAREN tuple? RPAREN   # LambdaExpr
+   | sign? atom                             # AtomExpr
    ;
 
 EQ: '=';
 LS: '<';
 GR: '>';
+
+ARROW: '->';
 
 POW: '^' | '**';
 MUL: '*';
@@ -48,6 +57,13 @@ POINT
 
 LPAREN: '(';
 RPAREN: ')';
+
+tuple
+    : expression (',' tuple)?;
+
+variablesTuple
+    : VARIABLE (',' variablesTuple)?;
+
 
 atom
     : function              # FuncExpr
@@ -76,8 +92,9 @@ function
     | 'round' LPAREN expression RPAREN                  # RoundDefFunction
     | 'round' LPAREN expression ',' expression RPAREN   # Round2Function
     | 'log' LPAREN expression ',' expression RPAREN     # LogFunction
-    | 'min' LPAREN expression ',' expression RPAREN     # MinFunction
-    | 'max' LPAREN expression ',' expression RPAREN     # MaxFunction
+    | 'min' LPAREN tuple RPAREN                         # MinFunction
+    | 'max' LPAREN tuple RPAREN                         # MaxFunction
+    | 'avg' LPAREN tuple RPAREN                         # AvgFunction
     ;
 
 
@@ -100,9 +117,13 @@ VARIABLE
    :  VALID_ID_START VALID_ID_CHAR*
    ;
 
+LAMBDA_VARIABLE
+   :  ('A' .. 'Z') VALID_ID_CHAR*
+   ;
+
 
 fragment VALID_ID_START
-   : ('a' .. 'z') | ('A' .. 'Z') | '_'
+   : ('a' .. 'z') | '_'
    ;
 
 

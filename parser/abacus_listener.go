@@ -11,8 +11,11 @@ type AbacusListener interface {
 	// EnterRoot is called when entering the root production.
 	EnterRoot(c *RootContext)
 
-	// EnterDeclaration is called when entering the declaration production.
-	EnterDeclaration(c *DeclarationContext)
+	// EnterVariableDeclaration is called when entering the VariableDeclaration production.
+	EnterVariableDeclaration(c *VariableDeclarationContext)
+
+	// EnterLambdaDeclaration is called when entering the LambdaDeclaration production.
+	EnterLambdaDeclaration(c *LambdaDeclarationContext)
 
 	// EnterEqualComparison is called when entering the EqualComparison production.
 	EnterEqualComparison(c *EqualComparisonContext)
@@ -29,11 +32,20 @@ type AbacusListener interface {
 	// EnterGreaterOrEqualComparison is called when entering the GreaterOrEqualComparison production.
 	EnterGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
+	// EnterSingleVariableLambda is called when entering the SingleVariableLambda production.
+	EnterSingleVariableLambda(c *SingleVariableLambdaContext)
+
+	// EnterMultiVariableLambda is called when entering the MultiVariableLambda production.
+	EnterMultiVariableLambda(c *MultiVariableLambdaContext)
+
 	// EnterMulDiv is called when entering the MulDiv production.
 	EnterMulDiv(c *MulDivContext)
 
 	// EnterAddSub is called when entering the AddSub production.
 	EnterAddSub(c *AddSubContext)
+
+	// EnterLambdaExpr is called when entering the LambdaExpr production.
+	EnterLambdaExpr(c *LambdaExprContext)
 
 	// EnterPow is called when entering the Pow production.
 	EnterPow(c *PowContext)
@@ -43,6 +55,12 @@ type AbacusListener interface {
 
 	// EnterParentheses is called when entering the Parentheses production.
 	EnterParentheses(c *ParenthesesContext)
+
+	// EnterTuple is called when entering the tuple production.
+	EnterTuple(c *TupleContext)
+
+	// EnterVariablesTuple is called when entering the variablesTuple production.
+	EnterVariablesTuple(c *VariablesTupleContext)
 
 	// EnterFuncExpr is called when entering the FuncExpr production.
 	EnterFuncExpr(c *FuncExprContext)
@@ -110,11 +128,17 @@ type AbacusListener interface {
 	// EnterMaxFunction is called when entering the MaxFunction production.
 	EnterMaxFunction(c *MaxFunctionContext)
 
+	// EnterAvgFunction is called when entering the AvgFunction production.
+	EnterAvgFunction(c *AvgFunctionContext)
+
 	// ExitRoot is called when exiting the root production.
 	ExitRoot(c *RootContext)
 
-	// ExitDeclaration is called when exiting the declaration production.
-	ExitDeclaration(c *DeclarationContext)
+	// ExitVariableDeclaration is called when exiting the VariableDeclaration production.
+	ExitVariableDeclaration(c *VariableDeclarationContext)
+
+	// ExitLambdaDeclaration is called when exiting the LambdaDeclaration production.
+	ExitLambdaDeclaration(c *LambdaDeclarationContext)
 
 	// ExitEqualComparison is called when exiting the EqualComparison production.
 	ExitEqualComparison(c *EqualComparisonContext)
@@ -131,11 +155,20 @@ type AbacusListener interface {
 	// ExitGreaterOrEqualComparison is called when exiting the GreaterOrEqualComparison production.
 	ExitGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
+	// ExitSingleVariableLambda is called when exiting the SingleVariableLambda production.
+	ExitSingleVariableLambda(c *SingleVariableLambdaContext)
+
+	// ExitMultiVariableLambda is called when exiting the MultiVariableLambda production.
+	ExitMultiVariableLambda(c *MultiVariableLambdaContext)
+
 	// ExitMulDiv is called when exiting the MulDiv production.
 	ExitMulDiv(c *MulDivContext)
 
 	// ExitAddSub is called when exiting the AddSub production.
 	ExitAddSub(c *AddSubContext)
+
+	// ExitLambdaExpr is called when exiting the LambdaExpr production.
+	ExitLambdaExpr(c *LambdaExprContext)
 
 	// ExitPow is called when exiting the Pow production.
 	ExitPow(c *PowContext)
@@ -145,6 +178,12 @@ type AbacusListener interface {
 
 	// ExitParentheses is called when exiting the Parentheses production.
 	ExitParentheses(c *ParenthesesContext)
+
+	// ExitTuple is called when exiting the tuple production.
+	ExitTuple(c *TupleContext)
+
+	// ExitVariablesTuple is called when exiting the variablesTuple production.
+	ExitVariablesTuple(c *VariablesTupleContext)
 
 	// ExitFuncExpr is called when exiting the FuncExpr production.
 	ExitFuncExpr(c *FuncExprContext)
@@ -211,4 +250,7 @@ type AbacusListener interface {
 
 	// ExitMaxFunction is called when exiting the MaxFunction production.
 	ExitMaxFunction(c *MaxFunctionContext)
+
+	// ExitAvgFunction is called when exiting the AvgFunction production.
+	ExitAvgFunction(c *AvgFunctionContext)
 }

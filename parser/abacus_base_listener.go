@@ -27,11 +27,17 @@ func (s *BaseAbacusListener) EnterRoot(ctx *RootContext) {}
 // ExitRoot is called when production root is exited.
 func (s *BaseAbacusListener) ExitRoot(ctx *RootContext) {}
 
-// EnterDeclaration is called when production declaration is entered.
-func (s *BaseAbacusListener) EnterDeclaration(ctx *DeclarationContext) {}
+// EnterVariableDeclaration is called when production VariableDeclaration is entered.
+func (s *BaseAbacusListener) EnterVariableDeclaration(ctx *VariableDeclarationContext) {}
 
-// ExitDeclaration is called when production declaration is exited.
-func (s *BaseAbacusListener) ExitDeclaration(ctx *DeclarationContext) {}
+// ExitVariableDeclaration is called when production VariableDeclaration is exited.
+func (s *BaseAbacusListener) ExitVariableDeclaration(ctx *VariableDeclarationContext) {}
+
+// EnterLambdaDeclaration is called when production LambdaDeclaration is entered.
+func (s *BaseAbacusListener) EnterLambdaDeclaration(ctx *LambdaDeclarationContext) {}
+
+// ExitLambdaDeclaration is called when production LambdaDeclaration is exited.
+func (s *BaseAbacusListener) ExitLambdaDeclaration(ctx *LambdaDeclarationContext) {}
 
 // EnterEqualComparison is called when production EqualComparison is entered.
 func (s *BaseAbacusListener) EnterEqualComparison(ctx *EqualComparisonContext) {}
@@ -63,6 +69,18 @@ func (s *BaseAbacusListener) EnterGreaterOrEqualComparison(ctx *GreaterOrEqualCo
 // ExitGreaterOrEqualComparison is called when production GreaterOrEqualComparison is exited.
 func (s *BaseAbacusListener) ExitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
 
+// EnterSingleVariableLambda is called when production SingleVariableLambda is entered.
+func (s *BaseAbacusListener) EnterSingleVariableLambda(ctx *SingleVariableLambdaContext) {}
+
+// ExitSingleVariableLambda is called when production SingleVariableLambda is exited.
+func (s *BaseAbacusListener) ExitSingleVariableLambda(ctx *SingleVariableLambdaContext) {}
+
+// EnterMultiVariableLambda is called when production MultiVariableLambda is entered.
+func (s *BaseAbacusListener) EnterMultiVariableLambda(ctx *MultiVariableLambdaContext) {}
+
+// ExitMultiVariableLambda is called when production MultiVariableLambda is exited.
+func (s *BaseAbacusListener) ExitMultiVariableLambda(ctx *MultiVariableLambdaContext) {}
+
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}
 
@@ -74,6 +92,12 @@ func (s *BaseAbacusListener) EnterAddSub(ctx *AddSubContext) {}
 
 // ExitAddSub is called when production AddSub is exited.
 func (s *BaseAbacusListener) ExitAddSub(ctx *AddSubContext) {}
+
+// EnterLambdaExpr is called when production LambdaExpr is entered.
+func (s *BaseAbacusListener) EnterLambdaExpr(ctx *LambdaExprContext) {}
+
+// ExitLambdaExpr is called when production LambdaExpr is exited.
+func (s *BaseAbacusListener) ExitLambdaExpr(ctx *LambdaExprContext) {}
 
 // EnterPow is called when production Pow is entered.
 func (s *BaseAbacusListener) EnterPow(ctx *PowContext) {}
@@ -92,6 +116,18 @@ func (s *BaseAbacusListener) EnterParentheses(ctx *ParenthesesContext) {}
 
 // ExitParentheses is called when production Parentheses is exited.
 func (s *BaseAbacusListener) ExitParentheses(ctx *ParenthesesContext) {}
+
+// EnterTuple is called when production tuple is entered.
+func (s *BaseAbacusListener) EnterTuple(ctx *TupleContext) {}
+
+// ExitTuple is called when production tuple is exited.
+func (s *BaseAbacusListener) ExitTuple(ctx *TupleContext) {}
+
+// EnterVariablesTuple is called when production variablesTuple is entered.
+func (s *BaseAbacusListener) EnterVariablesTuple(ctx *VariablesTupleContext) {}
+
+// ExitVariablesTuple is called when production variablesTuple is exited.
+func (s *BaseAbacusListener) ExitVariablesTuple(ctx *VariablesTupleContext) {}
 
 // EnterFuncExpr is called when production FuncExpr is entered.
 func (s *BaseAbacusListener) EnterFuncExpr(ctx *FuncExprContext) {}
@@ -224,3 +260,9 @@ func (s *BaseAbacusListener) EnterMaxFunction(ctx *MaxFunctionContext) {}
 
 // ExitMaxFunction is called when production MaxFunction is exited.
 func (s *BaseAbacusListener) ExitMaxFunction(ctx *MaxFunctionContext) {}
+
+// EnterAvgFunction is called when production AvgFunction is entered.
+func (s *BaseAbacusListener) EnterAvgFunction(ctx *AvgFunctionContext) {}
+
+// ExitAvgFunction is called when production AvgFunction is exited.
+func (s *BaseAbacusListener) ExitAvgFunction(ctx *AvgFunctionContext) {}

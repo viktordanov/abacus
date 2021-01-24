@@ -25,13 +25,9 @@ var (
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
-		"sqrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "round(", "min(", "max(", "pi", "e", "phi",
+		"sqrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "round(", "min(", "max(", "avg(", "pi", "e", "phi",
 	}
 )
-
-type variableAssignment struct {
-	newValue *big.Float
-}
 
 type args struct {
 	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
@@ -51,6 +47,9 @@ func green(arg string) {
 }
 func magenta(arg string) {
 	fmt.Println(string("\033[35m") + arg + string("\033[0m"))
+}
+func red(arg string) {
+	fmt.Println(string("\033[91m") + arg + string("\033[0m"))
 }
 func white(arg string) {
 	fmt.Println(string("\033[37m") + arg + string("\033[0m"))
@@ -87,12 +86,41 @@ func run() error {
 
 	printAnswer := func(ans interface{}) {
 		switch val := ans.(type) {
-		case variableAssignment:
+		case ResultAssignment:
 			updateCompletions(line, visitor)
+
+			tupleString := val.Values[0].Text('g', int(precision))
+			if len(val.Values) > 1 {
+				tupleValues := make([]string, 0)
+				for _, value := range val.Values {
+					tupleValues = append(tupleValues, value.Text('g', int(precision)))
+				}
+				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
+			}
 			if !arguments.IgnoreColor {
-				green(val.newValue.Text('g', int(precision)))
+				magenta(tupleString)
 			} else {
-				white(val.newValue.Text('g', int(precision)))
+				white(tupleString)
+			}
+		case ResultTuple:
+			tupleString := val.Values[0].Text('g', int(precision))
+			if len(val.Values) > 1 {
+				tupleValues := make([]string, 0)
+				for _, value := range val.Values {
+					tupleValues = append(tupleValues, value.Text('g', int(precision)))
+				}
+				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
+			}
+			if !arguments.IgnoreColor {
+				green(tupleString)
+			} else {
+				white(tupleString)
+			}
+		case ResultError:
+			if !arguments.IgnoreColor {
+				red(string(val))
+			} else {
+				white(string(val))
 			}
 		case *big.Float:
 			if !arguments.IgnoreColor {
