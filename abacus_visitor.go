@@ -112,8 +112,7 @@ func (a *AbacusVisitor) VisitVariablesTuple(c *parser.VariablesTupleContext) int
 		if _, ok := foundVars[variable]; !ok {
 			foundVars[variable] = true
 		} else {
-			a.answerChannel <- ResultError("duplicate variable name \"" + variable + "\"")
-			return nil
+			return ResultError("duplicate variable name \"" + variable + "\"")
 		}
 	}
 
