@@ -180,13 +180,18 @@ func run() error {
 }
 
 func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
-	is := antlr.NewInputStream(expr)
-	lexer := parser.NewAbacusLexer(is)
-	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+	for _, e := range strings.Split(expr, ";") {
+		if len(e) == 0 {
+			continue
+		}
+		is := antlr.NewInputStream(e)
+		lexer := parser.NewAbacusLexer(is)
+		stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
-	p := parser.NewAbacusParser(stream)
-	tree := p.Root()
-	ans = visitor.Visit(tree)
+		p := parser.NewAbacusParser(stream)
+		tree := p.Root()
+		ans = visitor.Visit(tree)
+	}
 	return
 }
 
