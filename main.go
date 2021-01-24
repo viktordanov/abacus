@@ -223,6 +223,10 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 		completions = append(completions, k)
 	}
 
+	for k := range a.lambdaVars {
+		completions = append(completions, k+"(")
+	}
+
 	line.SetCompleter(func(line string) (c []string) {
 		for _, n := range completions {
 			var idx int
