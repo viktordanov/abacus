@@ -116,6 +116,9 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#RoundDefFunction.
 	VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#AbsFunction.
+	VisitAbsFunction(ctx *AbsFunctionContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#Round2Function.
 	VisitRound2Function(ctx *Round2FunctionContext) interface{}
 

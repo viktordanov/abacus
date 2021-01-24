@@ -327,6 +327,12 @@ func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface
 	return Exp(val)
 }
 
+func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface{} {
+	val := c.Expression().Accept(a).(*big.Float)
+	return Abs(val)
+}
+
+
 func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
 	val := c.Expression().Accept(a).(*big.Float)
 	toFloat, _ := val.Float64()

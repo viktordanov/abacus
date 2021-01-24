@@ -116,6 +116,9 @@ type AbacusListener interface {
 	// EnterRoundDefFunction is called when entering the RoundDefFunction production.
 	EnterRoundDefFunction(c *RoundDefFunctionContext)
 
+	// EnterAbsFunction is called when entering the AbsFunction production.
+	EnterAbsFunction(c *AbsFunctionContext)
+
 	// EnterRound2Function is called when entering the Round2Function production.
 	EnterRound2Function(c *Round2FunctionContext)
 
@@ -238,6 +241,9 @@ type AbacusListener interface {
 
 	// ExitRoundDefFunction is called when exiting the RoundDefFunction production.
 	ExitRoundDefFunction(c *RoundDefFunctionContext)
+
+	// ExitAbsFunction is called when exiting the AbsFunction production.
+	ExitAbsFunction(c *AbsFunctionContext)
 
 	// ExitRound2Function is called when exiting the Round2Function production.
 	ExitRound2Function(c *Round2FunctionContext)
