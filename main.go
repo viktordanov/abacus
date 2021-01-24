@@ -88,6 +88,13 @@ func run() error {
 
 	printAnswer := func(ans interface{}) {
 		switch val := ans.(type) {
+		case ResultLambdaAssignment:
+			updateCompletions(line, visitor)
+			if !arguments.IgnoreColor {
+				magenta(string(val))
+			} else {
+				white(string(val))
+			}
 		case ResultAssignment:
 			updateCompletions(line, visitor)
 
@@ -146,7 +153,11 @@ func run() error {
 	}
 
 	if len(arguments.Expression) != 0 {
-		printAnswer(evaluateExpression(arguments.Expression, visitor))
+		go evaluateExpression(arguments.Expression, visitor)
+		select {
+		case ans := <-visitor.answerChannel:
+			printAnswer(ans)
+		}
 		return nil
 	}
 	updateCompletions(line, visitor)
@@ -174,14 +185,19 @@ func run() error {
 
 		if input != "" {
 			line.AppendHistory(input)
-			printAnswer(evaluateExpression(input, visitor))
+			go evaluateExpression(input, visitor)
+			select {
+			case ans := <-visitor.answerChannel:
+				printAnswer(ans)
+			}
 			precision = savedPrecision
 		}
 	}
 
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
+func evaluateExpression(expr string, visitor *AbacusVisitor) {
+	var ans interface{}
 	for _, e := range strings.Split(expr, ";") {
 		if len(e) == 0 {
 			continue
@@ -194,7 +210,7 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
 		tree := p.Root()
 		ans = visitor.Visit(tree)
 	}
-	return
+	visitor.answerChannel <- ans
 }
 
 func writeHistoryFile(line *liner.State) error {
@@ -212,6 +228,9 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 	completions = append(completions, funcs...)
 	for k := range a.vars {
 		completions = append(completions, k)
+	}
+	for k := range a.lambdas {
+		completions = append(completions, k+"(")
 	}
 
 	line.SetCompleter(func(line string) (c []string) {
@@ -234,7 +253,7 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 			if idx == -1 {
 				idx = 0
 			}
-			if strings.HasPrefix(n, strings.ToLower(line[idx:])) {
+			if strings.HasPrefix(n, line[idx:]) {
 				c = append(c, line[0:idx]+n)
 			}
 		}

@@ -6,6 +6,8 @@ type ResultAssignment struct {
 	Values []*big.Float
 }
 
+type ResultLambdaAssignment string
+
 type ResultTuple struct {
 	Values []*big.Float
 }
@@ -20,7 +22,6 @@ func NewResultAssignment() ResultAssignment {
 		Values: make([]*big.Float, 0),
 	}
 }
-
 
 func NewResultTuple() ResultTuple {
 	return ResultTuple{

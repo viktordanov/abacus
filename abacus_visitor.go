@@ -18,6 +18,7 @@ type AbacusVisitor struct {
 	lambdas         map[string]*Lambda
 	lambdaVars      map[string]*big.Float
 	lambdaRecursion map[string]uint
+	answerChannel   chan interface{}
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
@@ -27,6 +28,7 @@ func NewAbacusVisitor() *AbacusVisitor {
 		lambdas:          make(map[string]*Lambda),
 		lambdaVars:       make(map[string]*big.Float),
 		lambdaRecursion:  make(map[string]uint),
+		answerChannel:    make(chan interface{}),
 	}
 }
 
@@ -121,6 +123,7 @@ func (a *AbacusVisitor) convertVariablesTupleResult(result interface{}) (ResultV
 	variableNames := NewResultVariablesTuple()
 	switch val := result.(type) {
 	case ResultError:
+		a.answerChannel <- val
 		return variableNames, &val
 	case string:
 		variableNames.Variables = append(variableNames.Variables, val)
@@ -178,7 +181,9 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 	a.lambdas[lambdaName] = &Lambda{
 		ctx: c,
 	}
-	return nil
+
+	formattedLambda := lambdaName + " = " + lambda.GetText()
+	return ResultLambdaAssignment(formattedLambda)
 }
 
 func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) interface{} {
@@ -212,35 +217,35 @@ func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualCo
 }
 
 func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {
-	first := c.Expression(0).Accept(a).(*big.Float)
-	second := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*big.Float)
+	right := c.Expression(1).Accept(a).(*big.Float)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserMUL:
-		return Mul(first, second)
+		return Mul(left, right)
 	case parser.AbacusLexerDIV:
-		return Div(first, second)
+		return Div(left, right)
 	}
 	return 0
 }
 
 func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
-	first := c.Expression(0).Accept(a).(*big.Float)
-	second := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*big.Float)
+	right := c.Expression(1).Accept(a).(*big.Float)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserADD:
-		return Add(first, second)
+		return Add(left, right)
 	case parser.AbacusLexerSUB:
-		return Sub(first, second)
+		return Sub(left, right)
 	}
 	return nil
 }
 
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
-	first := c.Expression(0).Accept(a).(*big.Float) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
-	second := c.Expression(1).Accept(a).(*big.Float)
-	return Pow(first, second)
+	left := c.Expression(0).Accept(a).(*big.Float) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
+	right := c.Expression(1).Accept(a).(*big.Float)
+	return Pow(left, right)
 }
 
 func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface{} {
@@ -267,82 +272,82 @@ func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Sqrt(arg)
+	val := c.Expression().Accept(a).(*big.Float)
+	return Sqrt(val)
 }
 
 func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Log(arg)
+	val := c.Expression().Accept(a).(*big.Float)
+	return Log(val)
 }
 
 func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Log(arg)
+	val := c.Expression().Accept(a).(*big.Float)
+	return Log(val)
 }
 
 func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Div(Log(arg), Log(New(2)))
+	val := c.Expression().Accept(a).(*big.Float)
+	return Div(Log(val), Log(New(2)))
 }
 
 func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Div(Log(arg), Log(New(10)))
+	val := c.Expression().Accept(a).(*big.Float)
+	return Div(Log(val), Log(New(10)))
 }
 
 func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Floor(toFloat))
 }
 
 func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Ceil(toFloat))
 }
 func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Sin(toFloat))
 }
 func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Cos(toFloat))
 }
 func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Tan(toFloat))
 }
 func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	return Exp(arg)
+	val := c.Expression().Accept(a).(*big.Float)
+	return Exp(val)
 }
 
 func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
-	arg := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := arg.Float64()
+	val := c.Expression().Accept(a).(*big.Float)
+	toFloat, _ := val.Float64()
 	return big.NewFloat(math.Round(toFloat))
 }
 
 func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) interface{} {
-	arg := c.Expression(0).Accept(a).(*big.Float)
-	arg2 := c.Expression(1).Accept(a).(*big.Float)
-	num, _ := arg.Float64()
-	digits, _ := arg2.Float64()
+	left := c.Expression(0).Accept(a).(*big.Float)
+	right := c.Expression(1).Accept(a).(*big.Float)
+	num, _ := left.Float64()
+	digits, _ := right.Float64()
 	mult := math.Pow(10, digits+1)
 	precision = uint(digits)
 	return big.NewFloat(math.Round(num*mult) / mult)
 }
 
 func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface{} {
-	arg := c.Expression(0).Accept(a).(*big.Float)
-	arg2 := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*big.Float)
+	right := c.Expression(1).Accept(a).(*big.Float)
 
-	return Div(Log(arg), Log(arg2))
+	return Div(Log(left), Log(right))
 }
 
 func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
@@ -422,7 +427,6 @@ func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitSingleVariableLambda(c *parser.SingleVariableLambdaContext) interface{} {
-
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 	return tuple
