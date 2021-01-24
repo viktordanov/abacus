@@ -69,7 +69,7 @@ func run() error {
 	arg.MustParse(&arguments)
 	precision = arguments.Precision
 
-	visitor := NewAbacusVisitor()
+	abacusVisitor := NewAbacusVisitor()
 	line := liner.NewLiner()
 
 	defer line.Close()
@@ -89,14 +89,14 @@ func run() error {
 	printAnswer := func(ans interface{}) {
 		switch val := ans.(type) {
 		case ResultLambdaAssignment:
-			updateCompletions(line, visitor)
+			updateCompletions(line, abacusVisitor)
 			if !arguments.IgnoreColor {
 				magenta(string(val))
 			} else {
 				white(string(val))
 			}
 		case ResultAssignment:
-			updateCompletions(line, visitor)
+			updateCompletions(line, abacusVisitor)
 
 			tupleString := val.Values[0].Text('g', int(precision))
 			if len(val.Values) > 1 {
@@ -153,14 +153,10 @@ func run() error {
 	}
 
 	if len(arguments.Expression) != 0 {
-		go evaluateExpression(arguments.Expression, visitor)
-		select {
-		case ans := <-visitor.answerChannel:
-			printAnswer(ans)
-		}
+		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
 		return nil
 	}
-	updateCompletions(line, visitor)
+	updateCompletions(line, abacusVisitor)
 
 	ctx := context.Background()
 	defer goodbye.Exit(ctx, -1)
@@ -185,19 +181,14 @@ func run() error {
 
 		if input != "" {
 			line.AppendHistory(input)
-			go evaluateExpression(input, visitor)
-			select {
-			case ans := <-visitor.answerChannel:
-				printAnswer(ans)
-			}
+			printAnswer(evaluateExpression(input, abacusVisitor))
 			precision = savedPrecision
 		}
 	}
 
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) {
-	var ans interface{}
+func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
 	for _, e := range strings.Split(expr, ";") {
 		if len(e) == 0 {
 			continue
@@ -210,7 +201,7 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) {
 		tree := p.Root()
 		ans = visitor.Visit(tree)
 	}
-	visitor.answerChannel <- ans
+	return
 }
 
 func writeHistoryFile(line *liner.State) error {
@@ -228,9 +219,6 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 	completions = append(completions, funcs...)
 	for k := range a.vars {
 		completions = append(completions, k)
-	}
-	for k := range a.lambdas {
-		completions = append(completions, k+"(")
 	}
 
 	line.SetCompleter(func(line string) (c []string) {
