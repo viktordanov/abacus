@@ -18,7 +18,6 @@ type AbacusVisitor struct {
 	lambdas         map[string]*Lambda
 	lambdaVars      map[string]*big.Float
 	lambdaRecursion map[string]uint
-	answerChannel   chan interface{}
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
@@ -28,7 +27,6 @@ func NewAbacusVisitor() *AbacusVisitor {
 		lambdas:          make(map[string]*Lambda),
 		lambdaVars:       make(map[string]*big.Float),
 		lambdaRecursion:  make(map[string]uint),
-		answerChannel:    make(chan interface{}),
 	}
 }
 
@@ -123,7 +121,6 @@ func (a *AbacusVisitor) convertVariablesTupleResult(result interface{}) (ResultV
 	variableNames := NewResultVariablesTuple()
 	switch val := result.(type) {
 	case ResultError:
-		a.answerChannel <- val
 		return variableNames, &val
 	case string:
 		variableNames.Variables = append(variableNames.Variables, val)
