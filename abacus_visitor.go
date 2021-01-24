@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
-	"log"
 	"math"
 	"math/big"
 	"strconv"
@@ -484,12 +483,12 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 				a.lambdaRecursion[lambdaName]++
 				a.lambdaRecursionStack[lambdaName]++
 			}
-		}else {
+		} else {
 			a.lambdaRecursionStack[lambdaName] = 1
 		}
 	}
 
-	log.Printf("[%s] %v %v\n", lambdaName, inLambda, parameters)
+	//log.Printf("[%s] %v %v\n", lambdaName, inLambda, parameters)
 
 	switch val := lambda.ctx.Lambda().(type) {
 	case *parser.SingleVariableLambdaContext:
