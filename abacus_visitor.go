@@ -9,30 +9,31 @@ import (
 )
 
 type Lambda struct {
-	ctx interface{}
+	ctx *parser.LambdaDeclarationContext
 }
 
 type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
-	vars                map[string]*big.Float
-	lambdas             map[string]*Lambda
-	currentLambdaValues []*big.Float
-	currentLambdaVars   []string
+	vars            map[string]*big.Float
+	lambdas         map[string]*Lambda
+	lambdaVars      map[string]*big.Float
+	lambdaRecursion map[string]uint
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
-		ParseTreeVisitor:    &parser.BaseAbacusVisitor{},
-		vars:                make(map[string]*big.Float),
-		lambdas:             make(map[string]*Lambda),
-		currentLambdaValues: make([]*big.Float, 0),
-		currentLambdaVars:   make([]string, 0),
+		ParseTreeVisitor: &parser.BaseAbacusVisitor{},
+		vars:             make(map[string]*big.Float),
+		lambdas:          make(map[string]*Lambda),
+		lambdaVars:       make(map[string]*big.Float),
+		lambdaRecursion:  make(map[string]uint),
 	}
 }
 
 func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 	switch val := tree.(type) {
 	case *parser.RootContext:
+		a.lambdaRecursion = make(map[string]uint)
 		return val.Accept(a)
 
 	case *parser.DeclarationContext:
@@ -175,7 +176,7 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 	}
 
 	a.lambdas[lambdaName] = &Lambda{
-		ctx: lambda,
+		ctx: c,
 	}
 	return nil
 }
@@ -421,21 +422,13 @@ func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitSingleVariableLambda(c *parser.SingleVariableLambdaContext) interface{} {
-	variableName := c.VARIABLE().GetText()
-	a.currentLambdaVars = []string{variableName}
+
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 	return tuple
 }
 
 func (a *AbacusVisitor) VisitMultiVariableLambda(c *parser.MultiVariableLambdaContext) interface{} {
-	resVars := c.VariablesTuple().Accept(a)
-	variableNames, err := a.convertVariablesTupleResult(resVars)
-	if err != nil {
-		return *err
-	}
-
-	a.currentLambdaVars = variableNames.Variables
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 	return tuple
@@ -449,19 +442,40 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		return New(0)
 	}
 
-	parameterCount := 0
+	// Handle recursion
+	inLambda, nested := a.checkParentCtxForLambda(c.GetParent())
+	if inLambda {
+		// Recurrs
+		if lambdaName == nested {
+			if arguments.MaxRecurrences == 0 {
+				return ResultError("recursion is disabled")
+			}
+			recurrences, ok := uint(0), false
+
+			if recurrences, ok = a.lambdaRecursion[lambdaName]; !ok {
+				a.lambdaRecursion[lambdaName] = 1
+			} else if recurrences == arguments.MaxRecurrences {
+				return New(float64(arguments.LastValueInRecursion))
+			} else {
+				a.lambdaRecursion[lambdaName] = recurrences + 1
+			}
+		}
+	}
+
+	parameters := make([]*big.Float, 0)
 	if c.Tuple() != nil {
 		resValues := c.Tuple().Accept(a)
 		tuple := a.convertTupleResult(resValues)
-		a.currentLambdaValues = tuple.Values
-		parameterCount = len(tuple.Values)
+		parameters = tuple.Values
 	}
 
-	switch val := lambda.ctx.(type) {
+	switch val := lambda.ctx.Lambda().(type) {
 	case *parser.SingleVariableLambdaContext:
-		if parameterCount < 1 {
+		if len(parameters) < 1 {
 			return ResultError("expected 1 parameter")
 		}
+		varName := val.VARIABLE().GetText()
+		a.lambdaVars[lambdaVarName(lambdaName, varName)] = parameters[0]
 		return val.Accept(a)
 	case *parser.MultiVariableLambdaContext:
 		resVars := val.VariablesTuple().Accept(a)
@@ -474,8 +488,11 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		if count > 1 {
 			s = "s"
 		}
-		if parameterCount < count {
+		if len(parameters) < count {
 			return ResultError("expected " + strconv.FormatInt(int64(count), 10) + " parameter" + s)
+		}
+		for i, varName := range variableNames.Variables {
+			a.lambdaVars[lambdaVarName(lambdaName, varName)] = parameters[i]
 		}
 		return val.Accept(a)
 	}
@@ -488,34 +505,35 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 
 	name := c.VARIABLE().GetText()
 
-	inLambda := a.checkParentCtxForLambda(c.GetParent())
+	inLambda, lambdaName := a.checkParentCtxForLambda(c.GetParent())
 	if inLambda {
-		idx := sliceIndex(len(a.currentLambdaVars), func(i int) bool {
-			return a.currentLambdaVars[i] == name
-		})
-
-		if value, ok = a.vars[name]; idx == -1 && !ok {
-			return big.NewFloat(0)
+		if value, ok = a.lambdaVars[lambdaVarName(lambdaName, name)]; ok {
+			return value
 		}
-		if idx != -1 {
 
-			return a.currentLambdaValues[idx]
+		if value, ok = a.vars[name]; ok {
+			return value
 		}
 	} else {
-		if value, ok = a.vars[name]; !ok {
-			return big.NewFloat(0)
+		if value, ok = a.vars[name]; ok {
+			return value
 		}
 	}
-	return value
+	return big.NewFloat(0)
 }
 
-func (a *AbacusVisitor) checkParentCtxForLambda(c antlr.Tree) bool {
-	_, ok1 := interface{}(c).(*parser.SingleVariableLambdaContext)
-	_, ok2 := interface{}(c).(*parser.MultiVariableLambdaContext)
-	if !(ok1 || ok2) && c.GetParent() != nil {
+func (a *AbacusVisitor) checkParentCtxForLambda(c antlr.Tree) (bool, string) {
+	ctx, ok := interface{}(c).(*parser.LambdaDeclarationContext)
+
+	lambdaName := ""
+	if ok {
+		lambdaName = ctx.LAMBDA_VARIABLE().GetText()
+	}
+
+	if !ok && c.GetParent() != nil {
 		return a.checkParentCtxForLambda(c.GetParent())
 	}
-	return ok1 || ok2
+	return ok, lambdaName
 }
 
 func sliceIndex(limit int, predicate func(i int) bool) int {
@@ -525,4 +543,8 @@ func sliceIndex(limit int, predicate func(i int) bool) int {
 		}
 	}
 	return -1
+}
+
+func lambdaVarName(lambdaName, varName string) string {
+	return "$" + lambdaName + "$" + varName
 }

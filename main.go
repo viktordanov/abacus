@@ -21,6 +21,7 @@ import (
 )
 
 var (
+	arguments   args
 	precision   uint
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
@@ -30,9 +31,11 @@ var (
 )
 
 type args struct {
-	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   uint   `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	IgnoreColor          bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	Precision            uint   `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	MaxRecurrences       uint   `arg:"-r,--max-recurrences" help:"allow N recurrences in lambda expressions; set to 0 to disable" default:"20"`
+	LastValueInRecursion uint   `arg:"-l,--last-value-in-recursion" help:"value for last lambda call in recursion stack" default:"0"`
+	Expression           string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 
 func (args) Version() string {
@@ -63,7 +66,6 @@ func main() {
 }
 
 func run() error {
-	var arguments args
 	arg.MustParse(&arguments)
 	precision = arguments.Precision
 
