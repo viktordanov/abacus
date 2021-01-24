@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/viktordanov/abacus/parser"
+	"log"
 	"math"
 	"math/big"
 	"strconv"
@@ -332,7 +333,6 @@ func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface
 	return Abs(val)
 }
 
-
 func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
 	val := c.Expression().Accept(a).(*big.Float)
 	toFloat, _ := val.Float64()
@@ -484,8 +484,12 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 				a.lambdaRecursion[lambdaName]++
 				a.lambdaRecursionStack[lambdaName]++
 			}
+		}else {
+			a.lambdaRecursionStack[lambdaName] = 1
 		}
 	}
+
+	log.Printf("[%s] %v %v\n", lambdaName, inLambda, parameters)
 
 	switch val := lambda.ctx.Lambda().(type) {
 	case *parser.SingleVariableLambdaContext:
@@ -496,7 +500,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[0]
 		r := val.Accept(a)
 		a.lambdaRecursionStack[lambdaName]--
-		//log.Printf("%+v %+v\n", r, parameters)
+		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
 		return r
 	case *parser.MultiVariableLambdaContext:
 		resVars := val.VariablesTuple().Accept(a)
@@ -515,7 +519,10 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		for i, varName := range variableNames.Variables {
 			a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[i]
 		}
-		return val.Accept(a)
+		r := val.Accept(a)
+		a.lambdaRecursionStack[lambdaName]--
+		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
+		return r
 	}
 	return New(0)
 }
