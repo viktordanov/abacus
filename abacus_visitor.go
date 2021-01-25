@@ -24,11 +24,11 @@ func NewRecursionParameters() *RecursionParameters {
 }
 
 var (
-	logCache   map[string]*apd.Decimal
-	decimalCtx *apd.Context
-	PI         *apd.Decimal
-	PHI        *apd.Decimal
-	E          *apd.Decimal
+	logCache        map[string]*apd.Decimal
+	decimalCtx      *apd.Context
+	PI              *apd.Decimal
+	PHI             *apd.Decimal
+	E               *apd.Decimal
 )
 
 func init() {
@@ -218,6 +218,7 @@ func (a *AbacusVisitor) convertTupleResult(result interface{}) ResultTuple {
 	}
 	return values
 }
+
 
 func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationContext) interface{} {
 	resVariables := c.VariablesTuple().Accept(a)
@@ -649,7 +650,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			if shouldStop {
 				v := newDecimal(0)
 				v.Set(lambda.parameters.LastValue)
-				return v
+				return 0
 			}
 			if recurrences == lambda.parameters.MaxRecurrences {
 				v := newDecimal(0)
