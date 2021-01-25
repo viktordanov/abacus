@@ -218,7 +218,7 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 		completions = append(completions, k)
 	}
 
-	for k := range a.lambdaVars {
+	for k := range a.lambdas {
 		completions = append(completions, k+"(")
 	}
 
