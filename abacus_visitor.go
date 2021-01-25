@@ -9,7 +9,18 @@ import (
 )
 
 type Lambda struct {
-	ctx *parser.LambdaDeclarationContext
+	ctx        *parser.LambdaDeclarationContext
+	parameters *RecursionParameters
+}
+
+type RecursionParameters struct {
+	MaxRecurrences uint
+	LastValue      *apd.Decimal
+	StopWhen       parser.IComparisonContext
+}
+
+func NewRecursionParameters() *RecursionParameters {
+	return &RecursionParameters{MaxRecurrences: 0, LastValue: newDecimal(0), StopWhen: nil}
 }
 
 var (
@@ -40,7 +51,7 @@ func init() {
 		"95749669676277240766303535475945713821785251664274" +
 		"27466391932003059921817413596629043572900334295260" +
 		"59563073813232862794349076323382988075319525101901" +
-		"15738341879307021540891499348841675092447614606680" +
+		"157383418793070215408914993488416750924147614606680" +
 		"82264800168477411853742345442437107539077744992069" +
 		"55170276183860626133138458300075204493382656029760")
 
@@ -569,12 +580,38 @@ func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) i
 	return tuple
 }
 
+func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersContext) interface{} {
+	recursionParameters := NewRecursionParameters()
+	for i := 0; i < len(c.AllExpression()); i++ {
+		val := c.Expression(i).Accept(a).(*apd.Decimal)
+		switch i {
+		case 0:
+			intValue, _ := val.Int64()
+			recursionParameters.MaxRecurrences = uint(intValue)
+		case 1:
+			v := newDecimal(0)
+			v.Set(val)
+			recursionParameters.LastValue = v
+		}
+	}
+	recursionParameters.StopWhen = c.Comparison()
+	return recursionParameters
+}
+
 func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{} {
 	lambdaName := c.LAMBDA_VARIABLE().GetText()
+	recursionParameters := NewRecursionParameters()
+	if c.RecursionParameters() != nil {
+		recursionParameters = c.RecursionParameters().Accept(a).(*RecursionParameters)
+	}
 
 	lambda, found := a.lambdas[lambdaName]
 	if !found {
 		return newDecimal(0)
+	}
+
+	if recursionParameters.StopWhen != nil {
+		recursionParameters.StopWhen.SetParent(lambda.ctx)
 	}
 
 	parameters := make([]*apd.Decimal, 0)
@@ -586,10 +623,14 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 
 	// Handle recursion
 	inLambda, nested := a.checkParentCtxForLambda(c.GetParent())
+	if !inLambda {
+		lambda.parameters = recursionParameters
+	}
+
 	if inLambda {
 		// Recurrs
 		if lambdaName == nested {
-			if arguments.MaxRecurrences == 0 {
+			if lambda.parameters.MaxRecurrences == 0 {
 				return ResultError("recursion is disabled")
 			}
 			recurrences, ok := uint(0), false
@@ -600,11 +641,20 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			if _, ok = a.lambdaRecursionStack[lambdaName]; !ok {
 				a.lambdaRecursionStack[lambdaName] = 1
 			}
-			if len(parameters) > 0 && arguments.StopWhenReached && parameters[0].Cmp(newDecimal(arguments.StopWhenReachedValue)) <= 0 {
-				return newDecimal(float64(arguments.LastValueInRecursion))
+			shouldStop := false
+			if lambda.parameters.StopWhen != nil {
+				condition := lambda.parameters.StopWhen.Accept(a)
+				shouldStop = condition.(bool)
 			}
-			if recurrences == arguments.MaxRecurrences {
-				return newDecimal(float64(arguments.LastValueInRecursion))
+			if shouldStop {
+				v := newDecimal(0)
+				v.Set(lambda.parameters.LastValue)
+				return v
+			}
+			if recurrences == lambda.parameters.MaxRecurrences {
+				v := newDecimal(0)
+				v.Set(lambda.parameters.LastValue)
+				return v
 			} else {
 				a.lambdaRecursion[lambdaName]++
 				a.lambdaRecursionStack[lambdaName]++

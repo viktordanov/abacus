@@ -59,6 +59,9 @@ type AbacusListener interface {
 	// EnterParentheses is called when entering the Parentheses production.
 	EnterParentheses(c *ParenthesesContext)
 
+	// EnterRecursionParameters is called when entering the recursionParameters production.
+	EnterRecursionParameters(c *RecursionParametersContext)
+
 	// EnterTuple is called when entering the tuple production.
 	EnterTuple(c *TupleContext)
 
@@ -187,6 +190,9 @@ type AbacusListener interface {
 
 	// ExitParentheses is called when exiting the Parentheses production.
 	ExitParentheses(c *ParenthesesContext)
+
+	// ExitRecursionParameters is called when exiting the recursionParameters production.
+	ExitRecursionParameters(c *RecursionParametersContext)
 
 	// ExitTuple is called when exiting the tuple production.
 	ExitTuple(c *TupleContext)

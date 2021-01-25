@@ -123,6 +123,12 @@ func (s *BaseAbacusListener) EnterParentheses(ctx *ParenthesesContext) {}
 // ExitParentheses is called when production Parentheses is exited.
 func (s *BaseAbacusListener) ExitParentheses(ctx *ParenthesesContext) {}
 
+// EnterRecursionParameters is called when production recursionParameters is entered.
+func (s *BaseAbacusListener) EnterRecursionParameters(ctx *RecursionParametersContext) {}
+
+// ExitRecursionParameters is called when production recursionParameters is exited.
+func (s *BaseAbacusListener) ExitRecursionParameters(ctx *RecursionParametersContext) {}
+
 // EnterTuple is called when production tuple is entered.
 func (s *BaseAbacusListener) EnterTuple(ctx *TupleContext) {}
 

@@ -29,14 +29,18 @@ lambda
     ;
 
 expression
-   : sign expression                        # SignedExpr
-   | expression POW expression              # Pow
-   | expression op=(MUL|DIV) expression     # MulDiv
-   | expression op=(ADD|SUB) expression     # AddSub
-   | LPAREN expression RPAREN               # Parentheses
-   | LAMBDA_VARIABLE LPAREN tuple? RPAREN   # LambdaExpr
-   | atom                                   # AtomExpr
+   : sign expression                                            # SignedExpr
+   | expression POW expression                                  # Pow
+   | expression op=(MUL|DIV) expression                         # MulDiv
+   | expression op=(ADD|SUB) expression                         # AddSub
+   | LPAREN expression RPAREN                                   # Parentheses
+   | LAMBDA_VARIABLE LPAREN tuple? RPAREN recursionParameters?  # LambdaExpr
+   | atom                                                       # AtomExpr
    ;
+
+
+recursionParameters
+    : LSQPAREN expression (',' expression (',' comparison)?)? RSQPAREN;
 
 EQ: '=';
 LS: '<';
@@ -56,6 +60,8 @@ POINT
 
 LPAREN: '(';
 RPAREN: ')';
+LSQPAREN: '[';
+RSQPAREN: ']';
 
 tuple
     : expression (',' tuple)?;

@@ -76,6 +76,10 @@ func (v *BaseAbacusVisitor) VisitParentheses(ctx *ParenthesesContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitRecursionParameters(ctx *RecursionParametersContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitTuple(ctx *TupleContext) interface{} {
 	return v.VisitChildren(ctx)
 }
