@@ -24,11 +24,11 @@ func NewRecursionParameters() *RecursionParameters {
 }
 
 var (
-	logCache        map[string]*apd.Decimal
-	decimalCtx      *apd.Context
-	PI              *apd.Decimal
-	PHI             *apd.Decimal
-	E               *apd.Decimal
+	logCache   map[string]*apd.Decimal
+	decimalCtx *apd.Context
+	PI         *apd.Decimal
+	PHI        *apd.Decimal
+	E          *apd.Decimal
 )
 
 func init() {
@@ -219,7 +219,6 @@ func (a *AbacusVisitor) convertTupleResult(result interface{}) ResultTuple {
 	return values
 }
 
-
 func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationContext) interface{} {
 	resVariables := c.VariablesTuple().Accept(a)
 	variableNames, err := a.convertVariablesTupleResult(resVariables)
@@ -374,6 +373,14 @@ func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interfa
 
 	v := newDecimal(0)
 	a.decimalCtx.Sqrt(v, val)
+	return v
+}
+
+func (a *AbacusVisitor) VisitCbrtFunction(c *parser.CbrtFunctionContext) interface{} {
+	val := c.Expression().Accept(a).(*apd.Decimal)
+
+	v := newDecimal(0)
+	a.decimalCtx.Cbrt(v, val)
 	return v
 }
 
@@ -549,6 +556,13 @@ func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 		return E
 	}
 	return 0
+}
+
+func (a *AbacusVisitor) VisitPercent(c *parser.PercentContext) interface{} {
+	numberString := c.Expression().Accept(a).(*apd.Decimal)
+
+	a.decimalCtx.Quo(numberString, numberString, newDecimal(100))
+	return numberString
 }
 
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
