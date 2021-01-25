@@ -1,7 +1,5 @@
-
 grammar Abacus;
 
-// Tokens
 
 
 // Rules
@@ -31,12 +29,13 @@ lambda
     ;
 
 expression
-   : expression POW expression              # Pow
+   : sign expression                        # SignedExpr
+   | expression POW expression              # Pow
    | expression op=(MUL|DIV) expression     # MulDiv
    | expression op=(ADD|SUB) expression     # AddSub
    | LPAREN expression RPAREN               # Parentheses
    | LAMBDA_VARIABLE LPAREN tuple? RPAREN   # LambdaExpr
-   | sign? atom                             # AtomExpr
+   | atom                                   # AtomExpr
    ;
 
 EQ: '=';

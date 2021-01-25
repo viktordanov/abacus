@@ -97,7 +97,7 @@ func Abs(a *big.Float) *big.Float {
 	return Zero().Abs(a)
 }
 
-func New(f float64) *big.Float {
+func _New(f float64) *big.Float {
 	r := big.NewFloat(f)
 	r.SetPrec(256)
 	return r

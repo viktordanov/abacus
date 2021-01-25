@@ -1,15 +1,17 @@
 package main
 
-import "math/big"
+import (
+	"github.com/cockroachdb/apd"
+)
 
 type ResultAssignment struct {
-	Values []*big.Float
+	Values []*apd.Decimal
 }
 
 type ResultLambdaAssignment string
 
 type ResultTuple struct {
-	Values []*big.Float
+	Values []*apd.Decimal
 }
 
 type ResultVariablesTuple struct {
@@ -19,13 +21,13 @@ type ResultError string
 
 func NewResultAssignment() ResultAssignment {
 	return ResultAssignment{
-		Values: make([]*big.Float, 0),
+		Values: make([]*apd.Decimal, 0),
 	}
 }
 
 func NewResultTuple() ResultTuple {
 	return ResultTuple{
-		Values: make([]*big.Float, 0),
+		Values: make([]*apd.Decimal, 0),
 	}
 }
 

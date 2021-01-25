@@ -48,6 +48,10 @@ func (v *BaseAbacusVisitor) VisitMultiVariableLambda(ctx *MultiVariableLambdaCon
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitSignedExpr(ctx *SignedExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitMulDiv(ctx *MulDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }

@@ -81,6 +81,12 @@ func (s *BaseAbacusListener) EnterMultiVariableLambda(ctx *MultiVariableLambdaCo
 // ExitMultiVariableLambda is called when production MultiVariableLambda is exited.
 func (s *BaseAbacusListener) ExitMultiVariableLambda(ctx *MultiVariableLambdaContext) {}
 
+// EnterSignedExpr is called when production SignedExpr is entered.
+func (s *BaseAbacusListener) EnterSignedExpr(ctx *SignedExprContext) {}
+
+// ExitSignedExpr is called when production SignedExpr is exited.
+func (s *BaseAbacusListener) ExitSignedExpr(ctx *SignedExprContext) {}
+
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}
 

@@ -38,6 +38,9 @@ type AbacusListener interface {
 	// EnterMultiVariableLambda is called when entering the MultiVariableLambda production.
 	EnterMultiVariableLambda(c *MultiVariableLambdaContext)
 
+	// EnterSignedExpr is called when entering the SignedExpr production.
+	EnterSignedExpr(c *SignedExprContext)
+
 	// EnterMulDiv is called when entering the MulDiv production.
 	EnterMulDiv(c *MulDivContext)
 
@@ -163,6 +166,9 @@ type AbacusListener interface {
 
 	// ExitMultiVariableLambda is called when exiting the MultiVariableLambda production.
 	ExitMultiVariableLambda(c *MultiVariableLambdaContext)
+
+	// ExitSignedExpr is called when exiting the SignedExpr production.
+	ExitSignedExpr(c *SignedExprContext)
 
 	// ExitMulDiv is called when exiting the MulDiv production.
 	ExitMulDiv(c *MulDivContext)

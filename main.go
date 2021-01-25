@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/cockroachdb/apd"
 	"io"
 	"log"
 	"os"
@@ -16,13 +17,11 @@ import (
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
-
-	"math/big"
 )
 
 var (
 	arguments   args
-	precision   uint
+	precision   uint32
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
@@ -32,7 +31,7 @@ var (
 
 type args struct {
 	IgnoreColor          bool    `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision            uint    `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	Precision            uint32  `arg:"-p,--precision" help:"precision for calculations" default:"64"`
 	MaxRecurrences       uint    `arg:"-r,--max-recurrences" help:"allow N recurrences in lambda expressions; set to 0 to disable" default:"20"`
 	LastValueInRecursion uint    `arg:"-R,--last-value-in-recursion" help:"return value by last lambda in the recursion stack" default:"0"`
 	StopWhenReachedValue float64 `arg:"-S,--stop-value" help:"value to look for when --stop is used" default:"0"`
@@ -100,11 +99,11 @@ func run() error {
 		case ResultAssignment:
 			updateCompletions(line, abacusVisitor)
 
-			tupleString := val.Values[0].Text('g', int(precision))
+			tupleString := val.Values[0].Text('g')
 			if len(val.Values) > 1 {
 				tupleValues := make([]string, 0)
 				for _, value := range val.Values {
-					tupleValues = append(tupleValues, value.Text('g', int(precision)))
+					tupleValues = append(tupleValues, value.Text('g'))
 				}
 				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
 			}
@@ -114,11 +113,11 @@ func run() error {
 				white(tupleString)
 			}
 		case ResultTuple:
-			tupleString := val.Values[0].Text('g', int(precision))
+			tupleString := val.Values[0].Text('g')
 			if len(val.Values) > 1 {
 				tupleValues := make([]string, 0)
 				for _, value := range val.Values {
-					tupleValues = append(tupleValues, value.Text('g', int(precision)))
+					tupleValues = append(tupleValues, value.Text('g'))
 				}
 				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
 			}
@@ -133,11 +132,11 @@ func run() error {
 			} else {
 				white(string(val))
 			}
-		case *big.Float:
+		case *apd.Decimal:
 			if !arguments.IgnoreColor {
-				green(val.Text('g', int(precision)))
+				green(val.Text('g'))
 			} else {
-				white(val.Text('g', int(precision)))
+				white(val.Text('g'))
 			}
 		case string:
 			if !arguments.IgnoreColor {

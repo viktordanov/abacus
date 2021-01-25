@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/cockroachdb/apd"
 	"github.com/viktordanov/abacus/parser"
 	"math"
-	"math/big"
 	"strconv"
 )
 
@@ -12,23 +12,87 @@ type Lambda struct {
 	ctx *parser.LambdaDeclarationContext
 }
 
+var (
+	logCache   map[string]*apd.Decimal
+	decimalCtx *apd.Context
+	PI         *apd.Decimal
+	PHI        *apd.Decimal
+	E          *apd.Decimal
+)
+
+func init() {
+	logCache = make(map[string]*apd.Decimal)
+	decimalCtx = apd.BaseContext.WithPrecision(arguments.Precision)
+	cachedLog(apd.New(2, 0))
+	cachedLog(apd.New(10, 0))
+
+	PI, _, _ = decimalCtx.NewFromString("3." +
+		"14159265358979323846264338327950288419716939937510" +
+		"58209749445923078164062862089986280348253421170679" +
+		"82148086513282306647093844609550582231725359408128" +
+		"48111745028410270193852110555964462294895493038196" +
+		"44288109756659334461284756482337867831652712019091" +
+		"45648566923460348610454326648213393607260249141273" +
+		"72458700660631558817488152092096282925409171536444")
+
+	E, _, _ = decimalCtx.NewFromString("2." +
+		"71828182845904523536028747135266249775724709369995" +
+		"95749669676277240766303535475945713821785251664274" +
+		"27466391932003059921817413596629043572900334295260" +
+		"59563073813232862794349076323382988075319525101901" +
+		"15738341879307021540891499348841675092447614606680" +
+		"82264800168477411853742345442437107539077744992069" +
+		"55170276183860626133138458300075204493382656029760")
+
+	PHI, _, _ = decimalCtx.NewFromString("1." +
+		"61803398874989484820458683436563811772030917980576" +
+		"28621354486227052604628189024497072072041893911374" +
+		"84754088075386891752126633862223536931793180060766" +
+		"72635443338908659593958290563832266131992829026788" +
+		"06752087668925017116962070322210432162695486262963" +
+		"13614438149758701220340805887954454749246185695364" +
+		"86444924104432077134494704956584678850987433944221")
+}
+func newDecimal(f float64) *apd.Decimal {
+	res := apd.New(0, 0)
+	res.SetFloat64(f)
+	return res
+}
+
+func cachedLog(n *apd.Decimal) *apd.Decimal {
+	out := newDecimal(0)
+
+	var r *apd.Decimal
+	var ok bool
+	if r, ok = logCache[n.String()]; !ok {
+		decimalCtx.Ln(out, n)
+		logCache[n.String()] = newDecimal(0)
+		logCache[n.String()].Set(out)
+	} else {
+		out.Set(r)
+	}
+	return out
+}
+
 type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
-	vars                 map[string]*big.Float
+	vars                 map[string]*apd.Decimal
 	lambdas              map[string]*Lambda
-	lambdaVars           map[string]*big.Float
+	lambdaVars           map[string]*apd.Decimal
 	lambdaRecursion      map[string]uint
 	lambdaRecursionStack map[string]uint
+	decimalCtx           *apd.Context
 }
 
 func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
 		ParseTreeVisitor:     &parser.BaseAbacusVisitor{},
-		vars:                 make(map[string]*big.Float),
+		vars:                 make(map[string]*apd.Decimal),
 		lambdas:              make(map[string]*Lambda),
-		lambdaVars:           make(map[string]*big.Float),
+		lambdaVars:           make(map[string]*apd.Decimal),
 		lambdaRecursion:      make(map[string]uint),
 		lambdaRecursionStack: make(map[string]uint),
+		decimalCtx:           apd.BaseContext.WithPrecision(arguments.Precision),
 	}
 }
 
@@ -69,7 +133,7 @@ func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *Resu
 	if !ok || ctx == nil {
 		return
 	}
-	val, _ := ctx.Expression().Accept(a).(*big.Float)
+	val, _ := ctx.Expression().Accept(a).(*apd.Decimal)
 	resultTuple.Values = append(resultTuple.Values, val)
 	a.visitTupleTail(ctx.Tuple(), resultTuple)
 }
@@ -80,7 +144,7 @@ func (a *AbacusVisitor) VisitTuple(c *parser.TupleContext) interface{} {
 	}
 
 	evaledTuple := NewResultTuple()
-	val, _ := c.Expression().Accept(a).(*big.Float)
+	val, _ := c.Expression().Accept(a).(*apd.Decimal)
 	evaledTuple.Values = append(evaledTuple.Values, val)
 	a.visitTupleTail(c.Tuple(), &evaledTuple)
 
@@ -136,7 +200,7 @@ func (a *AbacusVisitor) convertVariablesTupleResult(result interface{}) (ResultV
 func (a *AbacusVisitor) convertTupleResult(result interface{}) ResultTuple {
 	values := NewResultTuple()
 	switch val := result.(type) {
-	case *big.Float:
+	case *apd.Decimal:
 		values.Values = append(values.Values, val)
 	case ResultTuple:
 		values = val
@@ -187,65 +251,86 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 }
 
 func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) == 0
 }
 
 func (a *AbacusVisitor) VisitLessComparison(c *parser.LessComparisonContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) == -1
 }
 
 func (a *AbacusVisitor) VisitGreaterComparison(c *parser.GreaterComparisonContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) == 1
 }
 
 func (a *AbacusVisitor) VisitLessOrEqualComparison(c *parser.LessOrEqualComparisonContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) <= 0
 }
 
 func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualComparisonContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) >= 0
 }
 
 func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserMUL:
-		return Mul(left, right)
+		res := newDecimal(0)
+		a.decimalCtx.Mul(res, left, right)
+		return res
 	case parser.AbacusLexerDIV:
-		return Div(left, right)
+		res := newDecimal(0)
+		a.decimalCtx.Quo(res, left, right)
+		return res
 	}
 	return 0
 }
 
 func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 
 	switch c.GetOp().GetTokenType() {
 	case parser.AbacusParserADD:
-		return Add(left, right)
+		res := newDecimal(0)
+		a.decimalCtx.Add(res, left, right)
+		return res
 	case parser.AbacusLexerSUB:
-		return Sub(left, right)
+		res := newDecimal(0)
+		a.decimalCtx.Sub(res, left, right)
+		return res
 	}
 	return nil
 }
 
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
-	right := c.Expression(1).Accept(a).(*big.Float)
-	return Pow(left, right)
+	left := c.Expression(0).Accept(a).(*apd.Decimal) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
+	res := newDecimal(0)
+	a.decimalCtx.Pow(res, left, right)
+	return res
+}
+
+func (a *AbacusVisitor) VisitSignedExpr(c *parser.SignedExprContext) interface{} {
+	val := c.Expression().Accept(a).(*apd.Decimal)
+
+	sign := c.Sign().Accept(a).(rune)
+	if sign == '-' {
+		val.Negative = !val.Negative
+	}
+
+	return val
 }
 
 func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface{} {
@@ -253,18 +338,19 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 }
 
 func (a *AbacusVisitor) VisitAtomExpr(c *parser.AtomExprContext) interface{} {
-	atomValue := c.Atom().Accept(a).(*big.Float)
+	atomValue := c.Atom().Accept(a).(*apd.Decimal)
 
-	multiplier := New(1)
-
-	if c.Sign() != nil {
-		sign := c.Sign().Accept(a).(rune)
-		if sign == '-' {
-			multiplier = New(-1)
-		}
-	}
-
-	return Zero().Mul(atomValue, multiplier)
+	//multiplier := New(1)
+	//
+	//if c.Sign() != nil {
+	//	sign := c.Sign().Accept(a).(rune)
+	//	if sign == '-' {
+	//		multiplier = New(-1)
+	//	}
+	//}
+	//
+	//return Zero().Mul(atomValue, multiplier)
+	return atomValue
 }
 
 func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
@@ -272,87 +358,125 @@ func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Sqrt(val)
+	val := c.Expression().Accept(a).(*apd.Decimal)
+
+	v := newDecimal(0)
+	a.decimalCtx.Sqrt(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Log(val)
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Ln(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Log(val)
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Ln(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Div(Log(val), Log(New(2)))
+	val := c.Expression().Accept(a).(*apd.Decimal)
+
+	v := newDecimal(0)
+	a.decimalCtx.Ln(v, val)
+	a.decimalCtx.Quo(v, v, logCache["2"])
+	return v
 }
 
 func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Div(Log(val), Log(New(10)))
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Ln(v, val)
+	base := cachedLog(newDecimal(10))
+	a.decimalCtx.Quo(v, v, base)
+	return v
 }
 
 func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Floor(toFloat))
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Floor(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Ceil(toFloat))
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Ceil(v, val)
+	return v
 }
 func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
+	val := c.Expression().Accept(a).(*apd.Decimal)
 	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Sin(toFloat))
+	res := newDecimal(0)
+	res, _ = res.SetFloat64(math.Sin(toFloat))
+	return res
 }
 func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
+	val := c.Expression().Accept(a).(*apd.Decimal)
 	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Cos(toFloat))
+	res := newDecimal(0)
+	res, _ = res.SetFloat64(math.Cos(toFloat))
+	return res
 }
 func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
+	val := c.Expression().Accept(a).(*apd.Decimal)
 	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Tan(toFloat))
+	res := newDecimal(0)
+	res, _ = res.SetFloat64(math.Tan(toFloat))
+	return res
 }
 func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Exp(val)
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Exp(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	return Abs(val)
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Abs(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
-	val := c.Expression().Accept(a).(*big.Float)
-	toFloat, _ := val.Float64()
-	return big.NewFloat(math.Round(toFloat))
+	val := c.Expression().Accept(a).(*apd.Decimal)
+	v := newDecimal(0)
+	a.decimalCtx.Round(v, val)
+	return v
 }
 
 func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
-	num, _ := left.Float64()
-	digits, _ := right.Float64()
-	mult := math.Pow(10, digits+1)
-	precision = uint(digits)
-	return big.NewFloat(math.Round(num*mult) / mult)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
+
+	intValue, _ := right.Int64()
+	exponent := apd.New(10, int32(intValue))
+
+	v := newDecimal(0)
+	a.decimalCtx.Mul(v, left, exponent)
+	a.decimalCtx.Round(v, v)
+	a.decimalCtx.Quo(v, v, exponent)
+
+	return v
 }
 
 func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface{} {
-	left := c.Expression(0).Accept(a).(*big.Float)
-	right := c.Expression(1).Accept(a).(*big.Float)
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
 
-	return Div(Log(left), Log(right))
+	v := newDecimal(0)
+
+	a.decimalCtx.Ln(v, left)
+	base := cachedLog(right)
+	a.decimalCtx.Quo(v, v, base)
+	return v
 }
 
 func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
@@ -375,7 +499,8 @@ func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 
-	biggest := tuple.Values[0]
+	biggest := newDecimal(0)
+	biggest.Set(tuple.Values[0])
 
 	for i := 1; i < len(tuple.Values); i++ {
 		curr := tuple.Values[i]
@@ -391,24 +516,25 @@ func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 
-	sum := tuple.Values[0]
+	sum := newDecimal(0)
+	sum.Set(tuple.Values[0])
 
 	for i := 1; i < len(tuple.Values); i++ {
 		curr := tuple.Values[i]
-		sum = Add(sum, curr)
+		a.decimalCtx.Add(sum, sum, curr)
 	}
-
-	return Div(sum, New(float64(len(tuple.Values))))
+	a.decimalCtx.Quo(sum, sum, apd.New(int64(len(tuple.Values)), 0))
+	return sum
 }
 
 func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 	switch c.CONSTANT().GetText() {
 	case "pi":
-		return pi(precision)
+		return PI
 	case "phi":
-		return phi(precision)
+		return PHI
 	case "e":
-		return e(precision)
+		return E
 	}
 	return 0
 }
@@ -416,7 +542,7 @@ func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
 	numberString := c.SCIENTIFIC_NUMBER().GetText()
 
-	out, _, err := big.ParseFloat(numberString, 10, precision, big.ToNearestEven)
+	out, _, err := apd.NewFromString(numberString)
 	if err != nil {
 		panic(err)
 	}
@@ -448,10 +574,10 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 
 	lambda, found := a.lambdas[lambdaName]
 	if !found {
-		return New(0)
+		return newDecimal(0)
 	}
 
-	parameters := make([]*big.Float, 0)
+	parameters := make([]*apd.Decimal, 0)
 	if c.Tuple() != nil {
 		resValues := c.Tuple().Accept(a)
 		tuple := a.convertTupleResult(resValues)
@@ -474,11 +600,11 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			if _, ok = a.lambdaRecursionStack[lambdaName]; !ok {
 				a.lambdaRecursionStack[lambdaName] = 1
 			}
-			if len(parameters) > 0 && arguments.StopWhenReached && parameters[0].Cmp(New(arguments.StopWhenReachedValue)) <= 0 {
-				return New(float64(arguments.LastValueInRecursion))
+			if len(parameters) > 0 && arguments.StopWhenReached && parameters[0].Cmp(newDecimal(arguments.StopWhenReachedValue)) <= 0 {
+				return newDecimal(float64(arguments.LastValueInRecursion))
 			}
 			if recurrences == arguments.MaxRecurrences {
-				return New(float64(arguments.LastValueInRecursion))
+				return newDecimal(float64(arguments.LastValueInRecursion))
 			} else {
 				a.lambdaRecursion[lambdaName]++
 				a.lambdaRecursionStack[lambdaName]++
@@ -499,6 +625,15 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[0]
 		r := val.Accept(a)
 		a.lambdaRecursionStack[lambdaName]--
+
+		switch rr := r.(type) {
+		case ResultTuple:
+			if len(rr.Values) == 1 {
+				v := newDecimal(0)
+				v.Set(rr.Values[0])
+				return v
+			}
+		}
 		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
 		return r
 	case *parser.MultiVariableLambdaContext:
@@ -521,13 +656,22 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		r := val.Accept(a)
 		a.lambdaRecursionStack[lambdaName]--
 		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
+
+		switch rr := r.(type) {
+		case ResultTuple:
+			if len(rr.Values) == 1 {
+				v := newDecimal(0)
+				v.Set(rr.Values[0])
+				return v
+			}
+		}
 		return r
 	}
-	return New(0)
+	return newDecimal(0)
 }
 
 func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
-	var value *big.Float
+	var value *apd.Decimal
 	ok := false
 
 	name := c.VARIABLE().GetText()
@@ -546,7 +690,7 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 			return value
 		}
 	}
-	return big.NewFloat(0)
+	return newDecimal(0)
 }
 
 func (a *AbacusVisitor) checkParentCtxForLambda(c antlr.Tree) (bool, string) {
