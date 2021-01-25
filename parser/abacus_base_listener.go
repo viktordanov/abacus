@@ -69,17 +69,17 @@ func (s *BaseAbacusListener) EnterGreaterOrEqualComparison(ctx *GreaterOrEqualCo
 // ExitGreaterOrEqualComparison is called when production GreaterOrEqualComparison is exited.
 func (s *BaseAbacusListener) ExitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
 
-// EnterSingleVariableLambda is called when production SingleVariableLambda is entered.
-func (s *BaseAbacusListener) EnterSingleVariableLambda(ctx *SingleVariableLambdaContext) {}
+// EnterVariablesLambda is called when production VariablesLambda is entered.
+func (s *BaseAbacusListener) EnterVariablesLambda(ctx *VariablesLambdaContext) {}
 
-// ExitSingleVariableLambda is called when production SingleVariableLambda is exited.
-func (s *BaseAbacusListener) ExitSingleVariableLambda(ctx *SingleVariableLambdaContext) {}
+// ExitVariablesLambda is called when production VariablesLambda is exited.
+func (s *BaseAbacusListener) ExitVariablesLambda(ctx *VariablesLambdaContext) {}
 
-// EnterMultiVariableLambda is called when production MultiVariableLambda is entered.
-func (s *BaseAbacusListener) EnterMultiVariableLambda(ctx *MultiVariableLambdaContext) {}
+// EnterNullArityLambda is called when production NullArityLambda is entered.
+func (s *BaseAbacusListener) EnterNullArityLambda(ctx *NullArityLambdaContext) {}
 
-// ExitMultiVariableLambda is called when production MultiVariableLambda is exited.
-func (s *BaseAbacusListener) ExitMultiVariableLambda(ctx *MultiVariableLambdaContext) {}
+// ExitNullArityLambda is called when production NullArityLambda is exited.
+func (s *BaseAbacusListener) ExitNullArityLambda(ctx *NullArityLambdaContext) {}
 
 // EnterSignedExpr is called when production SignedExpr is entered.
 func (s *BaseAbacusListener) EnterSignedExpr(ctx *SignedExprContext) {}

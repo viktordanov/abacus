@@ -233,7 +233,7 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 	lambda := c.Lambda()
 
 	// Check if 1) multiple vars 2) duped vars
-	multipleVarLambda, ok := lambda.(*parser.MultiVariableLambdaContext)
+	multipleVarLambda, ok := lambda.(*parser.VariablesLambdaContext)
 	if ok {
 		resVars := multipleVarLambda.VariablesTuple().Accept(a)
 		_, err := a.convertVariablesTupleResult(resVars)
@@ -557,13 +557,13 @@ func (a *AbacusVisitor) VisitMinusSign(c *parser.MinusSignContext) interface{} {
 	return '-'
 }
 
-func (a *AbacusVisitor) VisitSingleVariableLambda(c *parser.SingleVariableLambdaContext) interface{} {
+func (a *AbacusVisitor) VisitVariablesLambda(c *parser.VariablesLambdaContext) interface{} {
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 	return tuple
 }
 
-func (a *AbacusVisitor) VisitMultiVariableLambda(c *parser.MultiVariableLambdaContext) interface{} {
+func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) interface{} {
 	resValues := c.Tuple().Accept(a)
 	tuple := a.convertTupleResult(resValues)
 	return tuple
@@ -617,26 +617,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 	//log.Printf("[%s] %v %v\n", lambdaName, inLambda, parameters)
 
 	switch val := lambda.ctx.Lambda().(type) {
-	case *parser.SingleVariableLambdaContext:
-		if len(parameters) < 1 {
-			return ResultError("expected 1 parameter")
-		}
-		varName := val.VARIABLE().GetText()
-		a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[0]
-		r := val.Accept(a)
-		a.lambdaRecursionStack[lambdaName]--
-
-		switch rr := r.(type) {
-		case ResultTuple:
-			if len(rr.Values) == 1 {
-				v := newDecimal(0)
-				v.Set(rr.Values[0])
-				return v
-			}
-		}
-		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
-		return r
-	case *parser.MultiVariableLambdaContext:
+	case *parser.VariablesLambdaContext:
 		resVars := val.VariablesTuple().Accept(a)
 		variableNames, err := a.convertVariablesTupleResult(resVars)
 		if err != nil {
@@ -653,6 +634,20 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		for i, varName := range variableNames.Variables {
 			a.lambdaVars[lambdaVarName(lambdaName, varName, a.lambdaRecursionStack[lambdaName])] = parameters[i]
 		}
+		r := val.Accept(a)
+		a.lambdaRecursionStack[lambdaName]--
+
+		switch rr := r.(type) {
+		case ResultTuple:
+			if len(rr.Values) == 1 {
+				v := newDecimal(0)
+				v.Set(rr.Values[0])
+				return v
+			}
+		}
+		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
+		return r
+	case *parser.NullArityLambdaContext:
 		r := val.Accept(a)
 		a.lambdaRecursionStack[lambdaName]--
 		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)

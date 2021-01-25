@@ -32,11 +32,11 @@ type AbacusListener interface {
 	// EnterGreaterOrEqualComparison is called when entering the GreaterOrEqualComparison production.
 	EnterGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
-	// EnterSingleVariableLambda is called when entering the SingleVariableLambda production.
-	EnterSingleVariableLambda(c *SingleVariableLambdaContext)
+	// EnterVariablesLambda is called when entering the VariablesLambda production.
+	EnterVariablesLambda(c *VariablesLambdaContext)
 
-	// EnterMultiVariableLambda is called when entering the MultiVariableLambda production.
-	EnterMultiVariableLambda(c *MultiVariableLambdaContext)
+	// EnterNullArityLambda is called when entering the NullArityLambda production.
+	EnterNullArityLambda(c *NullArityLambdaContext)
 
 	// EnterSignedExpr is called when entering the SignedExpr production.
 	EnterSignedExpr(c *SignedExprContext)
@@ -161,11 +161,11 @@ type AbacusListener interface {
 	// ExitGreaterOrEqualComparison is called when exiting the GreaterOrEqualComparison production.
 	ExitGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
-	// ExitSingleVariableLambda is called when exiting the SingleVariableLambda production.
-	ExitSingleVariableLambda(c *SingleVariableLambdaContext)
+	// ExitVariablesLambda is called when exiting the VariablesLambda production.
+	ExitVariablesLambda(c *VariablesLambdaContext)
 
-	// ExitMultiVariableLambda is called when exiting the MultiVariableLambda production.
-	ExitMultiVariableLambda(c *MultiVariableLambdaContext)
+	// ExitNullArityLambda is called when exiting the NullArityLambda production.
+	ExitNullArityLambda(c *NullArityLambdaContext)
 
 	// ExitSignedExpr is called when exiting the SignedExpr production.
 	ExitSignedExpr(c *SignedExprContext)

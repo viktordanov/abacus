@@ -32,11 +32,11 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
 	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#SingleVariableLambda.
-	VisitSingleVariableLambda(ctx *SingleVariableLambdaContext) interface{}
+	// Visit a parse tree produced by AbacusParser#VariablesLambda.
+	VisitVariablesLambda(ctx *VariablesLambdaContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#MultiVariableLambda.
-	VisitMultiVariableLambda(ctx *MultiVariableLambdaContext) interface{}
+	// Visit a parse tree produced by AbacusParser#NullArityLambda.
+	VisitNullArityLambda(ctx *NullArityLambdaContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#SignedExpr.
 	VisitSignedExpr(ctx *SignedExprContext) interface{}

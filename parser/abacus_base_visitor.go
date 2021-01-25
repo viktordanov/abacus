@@ -40,11 +40,11 @@ func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualCom
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitSingleVariableLambda(ctx *SingleVariableLambdaContext) interface{} {
+func (v *BaseAbacusVisitor) VisitVariablesLambda(ctx *VariablesLambdaContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitMultiVariableLambda(ctx *MultiVariableLambdaContext) interface{} {
+func (v *BaseAbacusVisitor) VisitNullArityLambda(ctx *NullArityLambdaContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

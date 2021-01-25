@@ -24,8 +24,8 @@ comparison
 
 
 lambda
-    : VARIABLE ARROW tuple                        # SingleVariableLambda
-    | LPAREN variablesTuple RPAREN ARROW tuple    # MultiVariableLambda
+    : variablesTuple ARROW tuple            # VariablesLambda
+    | LPAREN RPAREN ARROW tuple             # NullArityLambda
     ;
 
 expression
@@ -61,7 +61,8 @@ tuple
     : expression (',' tuple)?;
 
 variablesTuple
-    : VARIABLE (',' variablesTuple)?;
+    : VARIABLE (',' variablesTuple)?
+    | LPAREN VARIABLE (',' variablesTuple)? RPAREN;
 
 
 atom
