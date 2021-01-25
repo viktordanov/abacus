@@ -87,6 +87,12 @@ func (s *BaseAbacusListener) EnterSignedExpr(ctx *SignedExprContext) {}
 // ExitSignedExpr is called when production SignedExpr is exited.
 func (s *BaseAbacusListener) ExitSignedExpr(ctx *SignedExprContext) {}
 
+// EnterMod is called when production Mod is entered.
+func (s *BaseAbacusListener) EnterMod(ctx *ModContext) {}
+
+// ExitMod is called when production Mod is exited.
+func (s *BaseAbacusListener) ExitMod(ctx *ModContext) {}
+
 // EnterMulDiv is called when production MulDiv is entered.
 func (s *BaseAbacusListener) EnterMulDiv(ctx *MulDivContext) {}
 

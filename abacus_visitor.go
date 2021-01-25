@@ -326,10 +326,18 @@ func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
 }
 
 func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
-	left := c.Expression(0).Accept(a).(*apd.Decimal) // TODO: This receives ResultTuple if a lambda is used; figure out a way to deal with that
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
 	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	res := newDecimal(0)
 	a.decimalCtx.Pow(res, left, right)
+	return res
+}
+
+func (a *AbacusVisitor) VisitMod(c *parser.ModContext) interface{} {
+	left := c.Expression(0).Accept(a).(*apd.Decimal)
+	right := c.Expression(1).Accept(a).(*apd.Decimal)
+	res := newDecimal(0)
+	a.decimalCtx.Rem(res, left, right)
 	return res
 }
 

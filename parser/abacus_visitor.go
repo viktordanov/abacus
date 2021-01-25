@@ -41,6 +41,9 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#SignedExpr.
 	VisitSignedExpr(ctx *SignedExprContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#Mod.
+	VisitMod(ctx *ModContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#MulDiv.
 	VisitMulDiv(ctx *MulDivContext) interface{}
 

@@ -32,6 +32,7 @@ expression
    : sign expression                                            # SignedExpr
    | expression PER                                             # Percent
    | expression POW expression                                  # Pow
+   | expression PER PER expression                              # Mod
    | expression op=(MUL|DIV) expression                         # MulDiv
    | expression op=(ADD|SUB) expression                         # AddSub
    | LPAREN expression RPAREN                                   # Parentheses

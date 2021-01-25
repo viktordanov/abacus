@@ -41,6 +41,9 @@ type AbacusListener interface {
 	// EnterSignedExpr is called when entering the SignedExpr production.
 	EnterSignedExpr(c *SignedExprContext)
 
+	// EnterMod is called when entering the Mod production.
+	EnterMod(c *ModContext)
+
 	// EnterMulDiv is called when entering the MulDiv production.
 	EnterMulDiv(c *MulDivContext)
 
@@ -178,6 +181,9 @@ type AbacusListener interface {
 
 	// ExitSignedExpr is called when exiting the SignedExpr production.
 	ExitSignedExpr(c *SignedExprContext)
+
+	// ExitMod is called when exiting the Mod production.
+	ExitMod(c *ModContext)
 
 	// ExitMulDiv is called when exiting the MulDiv production.
 	ExitMulDiv(c *MulDivContext)
