@@ -30,6 +30,7 @@ lambda
 
 expression
    : sign expression                                            # SignedExpr
+   | expression PER                                             # Percent
    | expression POW expression                                  # Pow
    | expression op=(MUL|DIV) expression                         # MulDiv
    | expression op=(ADD|SUB) expression                         # AddSub
@@ -53,6 +54,7 @@ MUL: '*';
 DIV: '/';
 ADD: '+';
 SUB: '-';
+PER: '%';
 
 POINT
    : '.'
@@ -85,6 +87,7 @@ sign
 
 function
     : 'sqrt' LPAREN expression RPAREN                   # SqrtFunction
+    | 'cbrt' LPAREN expression RPAREN                   # CbrtFunction
     | 'ln' LPAREN expression RPAREN                     # LnFunction
     | 'log' LPAREN expression RPAREN                    # LogDefFunction
     | 'log2' LPAREN expression RPAREN                   # Log2Function

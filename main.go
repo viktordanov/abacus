@@ -25,14 +25,14 @@ var (
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
-		"sqrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "abs(", "round(", "min(", "max(", "avg(", "pi", "e", "phi",
+		"sqrt(", "cbrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "abs(", "round(", "min(", "max(", "avg(", "pi", "e", "phi",
 	}
 )
 
 type args struct {
-	IgnoreColor    bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision      uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	Expression     string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	Precision   uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
 }
 
 func (args) Version() string {

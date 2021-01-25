@@ -60,6 +60,10 @@ func (v *BaseAbacusVisitor) VisitAddSub(ctx *AddSubContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitPercent(ctx *PercentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitLambdaExpr(ctx *LambdaExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -113,6 +117,10 @@ func (v *BaseAbacusVisitor) VisitMinusSign(ctx *MinusSignContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitSqrtFunction(ctx *SqrtFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitCbrtFunction(ctx *CbrtFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

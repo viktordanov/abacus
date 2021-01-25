@@ -47,6 +47,9 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#AddSub.
 	VisitAddSub(ctx *AddSubContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#Percent.
+	VisitPercent(ctx *PercentContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#LambdaExpr.
 	VisitLambdaExpr(ctx *LambdaExprContext) interface{}
 
@@ -88,6 +91,9 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#SqrtFunction.
 	VisitSqrtFunction(ctx *SqrtFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#CbrtFunction.
+	VisitCbrtFunction(ctx *CbrtFunctionContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#LnFunction.
 	VisitLnFunction(ctx *LnFunctionContext) interface{}

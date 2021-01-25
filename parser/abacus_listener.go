@@ -47,6 +47,9 @@ type AbacusListener interface {
 	// EnterAddSub is called when entering the AddSub production.
 	EnterAddSub(c *AddSubContext)
 
+	// EnterPercent is called when entering the Percent production.
+	EnterPercent(c *PercentContext)
+
 	// EnterLambdaExpr is called when entering the LambdaExpr production.
 	EnterLambdaExpr(c *LambdaExprContext)
 
@@ -88,6 +91,9 @@ type AbacusListener interface {
 
 	// EnterSqrtFunction is called when entering the SqrtFunction production.
 	EnterSqrtFunction(c *SqrtFunctionContext)
+
+	// EnterCbrtFunction is called when entering the CbrtFunction production.
+	EnterCbrtFunction(c *CbrtFunctionContext)
 
 	// EnterLnFunction is called when entering the LnFunction production.
 	EnterLnFunction(c *LnFunctionContext)
@@ -179,6 +185,9 @@ type AbacusListener interface {
 	// ExitAddSub is called when exiting the AddSub production.
 	ExitAddSub(c *AddSubContext)
 
+	// ExitPercent is called when exiting the Percent production.
+	ExitPercent(c *PercentContext)
+
 	// ExitLambdaExpr is called when exiting the LambdaExpr production.
 	ExitLambdaExpr(c *LambdaExprContext)
 
@@ -220,6 +229,9 @@ type AbacusListener interface {
 
 	// ExitSqrtFunction is called when exiting the SqrtFunction production.
 	ExitSqrtFunction(c *SqrtFunctionContext)
+
+	// ExitCbrtFunction is called when exiting the CbrtFunction production.
+	ExitCbrtFunction(c *CbrtFunctionContext)
 
 	// ExitLnFunction is called when exiting the LnFunction production.
 	ExitLnFunction(c *LnFunctionContext)

@@ -99,6 +99,12 @@ func (s *BaseAbacusListener) EnterAddSub(ctx *AddSubContext) {}
 // ExitAddSub is called when production AddSub is exited.
 func (s *BaseAbacusListener) ExitAddSub(ctx *AddSubContext) {}
 
+// EnterPercent is called when production Percent is entered.
+func (s *BaseAbacusListener) EnterPercent(ctx *PercentContext) {}
+
+// ExitPercent is called when production Percent is exited.
+func (s *BaseAbacusListener) ExitPercent(ctx *PercentContext) {}
+
 // EnterLambdaExpr is called when production LambdaExpr is entered.
 func (s *BaseAbacusListener) EnterLambdaExpr(ctx *LambdaExprContext) {}
 
@@ -182,6 +188,12 @@ func (s *BaseAbacusListener) EnterSqrtFunction(ctx *SqrtFunctionContext) {}
 
 // ExitSqrtFunction is called when production SqrtFunction is exited.
 func (s *BaseAbacusListener) ExitSqrtFunction(ctx *SqrtFunctionContext) {}
+
+// EnterCbrtFunction is called when production CbrtFunction is entered.
+func (s *BaseAbacusListener) EnterCbrtFunction(ctx *CbrtFunctionContext) {}
+
+// ExitCbrtFunction is called when production CbrtFunction is exited.
+func (s *BaseAbacusListener) ExitCbrtFunction(ctx *CbrtFunctionContext) {}
 
 // EnterLnFunction is called when production LnFunction is entered.
 func (s *BaseAbacusListener) EnterLnFunction(ctx *LnFunctionContext) {}
