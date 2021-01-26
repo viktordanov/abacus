@@ -302,3 +302,27 @@ func (s *BaseAbacusListener) EnterAvgFunction(ctx *AvgFunctionContext) {}
 
 // ExitAvgFunction is called when production AvgFunction is exited.
 func (s *BaseAbacusListener) ExitAvgFunction(ctx *AvgFunctionContext) {}
+
+// EnterUntilFunction is called when production UntilFunction is entered.
+func (s *BaseAbacusListener) EnterUntilFunction(ctx *UntilFunctionContext) {}
+
+// ExitUntilFunction is called when production UntilFunction is exited.
+func (s *BaseAbacusListener) ExitUntilFunction(ctx *UntilFunctionContext) {}
+
+// EnterFromFunction is called when production FromFunction is entered.
+func (s *BaseAbacusListener) EnterFromFunction(ctx *FromFunctionContext) {}
+
+// ExitFromFunction is called when production FromFunction is exited.
+func (s *BaseAbacusListener) ExitFromFunction(ctx *FromFunctionContext) {}
+
+// EnterReverseFunction is called when production ReverseFunction is entered.
+func (s *BaseAbacusListener) EnterReverseFunction(ctx *ReverseFunctionContext) {}
+
+// ExitReverseFunction is called when production ReverseFunction is exited.
+func (s *BaseAbacusListener) ExitReverseFunction(ctx *ReverseFunctionContext) {}
+
+// EnterNthFunction is called when production NthFunction is entered.
+func (s *BaseAbacusListener) EnterNthFunction(ctx *NthFunctionContext) {}
+
+// ExitNthFunction is called when production NthFunction is exited.
+func (s *BaseAbacusListener) ExitNthFunction(ctx *NthFunctionContext) {}

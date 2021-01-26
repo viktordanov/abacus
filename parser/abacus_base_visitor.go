@@ -195,3 +195,19 @@ func (v *BaseAbacusVisitor) VisitMaxFunction(ctx *MaxFunctionContext) interface{
 func (v *BaseAbacusVisitor) VisitAvgFunction(ctx *AvgFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
+
+func (v *BaseAbacusVisitor) VisitUntilFunction(ctx *UntilFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitFromFunction(ctx *FromFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitReverseFunction(ctx *ReverseFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitNthFunction(ctx *NthFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}

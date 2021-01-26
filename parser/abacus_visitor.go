@@ -148,4 +148,16 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#AvgFunction.
 	VisitAvgFunction(ctx *AvgFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#UntilFunction.
+	VisitUntilFunction(ctx *UntilFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#FromFunction.
+	VisitFromFunction(ctx *FromFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#ReverseFunction.
+	VisitReverseFunction(ctx *ReverseFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#NthFunction.
+	VisitNthFunction(ctx *NthFunctionContext) interface{}
 }

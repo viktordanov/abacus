@@ -149,6 +149,18 @@ type AbacusListener interface {
 	// EnterAvgFunction is called when entering the AvgFunction production.
 	EnterAvgFunction(c *AvgFunctionContext)
 
+	// EnterUntilFunction is called when entering the UntilFunction production.
+	EnterUntilFunction(c *UntilFunctionContext)
+
+	// EnterFromFunction is called when entering the FromFunction production.
+	EnterFromFunction(c *FromFunctionContext)
+
+	// EnterReverseFunction is called when entering the ReverseFunction production.
+	EnterReverseFunction(c *ReverseFunctionContext)
+
+	// EnterNthFunction is called when entering the NthFunction production.
+	EnterNthFunction(c *NthFunctionContext)
+
 	// ExitRoot is called when exiting the root production.
 	ExitRoot(c *RootContext)
 
@@ -289,4 +301,16 @@ type AbacusListener interface {
 
 	// ExitAvgFunction is called when exiting the AvgFunction production.
 	ExitAvgFunction(c *AvgFunctionContext)
+
+	// ExitUntilFunction is called when exiting the UntilFunction production.
+	ExitUntilFunction(c *UntilFunctionContext)
+
+	// ExitFromFunction is called when exiting the FromFunction production.
+	ExitFromFunction(c *FromFunctionContext)
+
+	// ExitReverseFunction is called when exiting the ReverseFunction production.
+	ExitReverseFunction(c *ReverseFunctionContext)
+
+	// ExitNthFunction is called when exiting the NthFunction production.
+	ExitNthFunction(c *NthFunctionContext)
 }

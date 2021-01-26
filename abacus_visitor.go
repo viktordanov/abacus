@@ -162,8 +162,14 @@ func (a *AbacusVisitor) VisitTuple(c *parser.TupleContext) interface{} {
 	}
 
 	evaledTuple := NewResultTuple()
-	val, _ := c.Expression().Accept(a).(*apd.Decimal)
-	evaledTuple.Values = append(evaledTuple.Values, val)
+	val := c.Expression().Accept(a)
+
+	switch v := val.(type) {
+	case *apd.Decimal:
+		evaledTuple.Values = append(evaledTuple.Values, v)
+	case ResultTuple:
+		evaledTuple.Values = append(evaledTuple.Values, v.Values...)
+	}
 	a.visitTupleTail(c.Tuple(), &evaledTuple)
 
 	return evaledTuple
@@ -364,19 +370,7 @@ func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface
 }
 
 func (a *AbacusVisitor) VisitAtomExpr(c *parser.AtomExprContext) interface{} {
-	atomValue := c.Atom().Accept(a).(*apd.Decimal)
-
-	//multiplier := New(1)
-	//
-	//if c.Sign() != nil {
-	//	sign := c.Sign().Accept(a).(rune)
-	//	if sign == '-' {
-	//		multiplier = New(-1)
-	//	}
-	//}
-	//
-	//return Zero().Mul(atomValue, multiplier)
-	return atomValue
+	return c.Atom().Accept(a)
 }
 
 func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
@@ -559,6 +553,76 @@ func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface
 	}
 	a.decimalCtx.Quo(sum, sum, apd.New(int64(len(tuple.Values)), 0))
 	return sum
+}
+
+func (a *AbacusVisitor) VisitUntilFunction(c *parser.UntilFunctionContext) interface{} {
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	arg := c.Expression().Accept(a).(*apd.Decimal)
+	intValue, _ := arg.Int64()
+
+	newTuple := NewResultTuple()
+	length := int64(len(tuple.Values))
+
+	if intValue > length {
+		intValue = length
+	}
+	for i := 0; i < int(intValue); i++ {
+		newTuple.Values = append(newTuple.Values, tuple.Values[i])
+	}
+
+	if len(newTuple.Values) == 0 {
+		return newDecimal(0)
+	}
+	return newTuple
+}
+
+func (a *AbacusVisitor) VisitFromFunction(c *parser.FromFunctionContext) interface{} {
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+	arg := tuple.Values[len(tuple.Values)-1]
+	intValue, _ := arg.Int64()
+
+	newTuple := NewResultTuple()
+	length := int64(len(tuple.Values))
+
+	if intValue < 0 {
+		intValue = 0
+	}
+	for i := intValue; i < length-1; i++ {
+		newTuple.Values = append(newTuple.Values, tuple.Values[i])
+	}
+
+	if len(newTuple.Values) == 0 {
+		return newDecimal(0)
+	}
+	return newTuple
+}
+
+func (a *AbacusVisitor) VisitReverseFunction(c *parser.ReverseFunctionContext) interface{} {
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	values := make([]*apd.Decimal, 0)
+	for i := len(tuple.Values) - 1; i >= 0; i-- {
+		values = append(values, tuple.Values[i])
+	}
+	tuple.Values = values
+	return tuple
+}
+
+func (a *AbacusVisitor) VisitNthFunction(c *parser.NthFunctionContext) interface{} {
+	resValues := c.Tuple().Accept(a)
+	tuple := a.convertTupleResult(resValues)
+
+	arg1 := c.Expression().Accept(a).(*apd.Decimal)
+	intValue1, _ := arg1.Int64()
+
+	if intValue1 >= int64(len(tuple.Values)) || intValue1 < 0 {
+		return newDecimal(0)
+	}
+	return tuple.Values[intValue1]
 }
 
 func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
