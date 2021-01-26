@@ -5,7 +5,7 @@ grammar Abacus;
 // Rules
 root
     : declaration EOF
-    | comparison EOF
+    | boolExpression EOF
     | tuple  EOF
     ;
 
@@ -14,14 +14,25 @@ declaration
     | LAMBDA_VARIABLE EQ lambda     # LambdaDeclaration
     ;
 
-comparison
-    : expression EQ EQ expression               # EqualComparison
-    | expression LS expression                  # LessComparison
-    | expression GR expression                  # GreaterComparison
-    | expression ((LS EQ) | (EQ LS)) expression   # LessOrEqualComparison
-    | expression ((GR EQ) | (EQ GR)) expression   # GreaterOrEqualComparison
+boolExpression
+    : expression EQ EQ expression                   # EqualComparison
+    | expression LS expression                      # LessComparison
+    | expression GR expression                      # GreaterComparison
+    | expression ((LS EQ) | (EQ LS)) expression     # LessOrEqualComparison
+    | expression ((GR EQ) | (EQ GR)) expression     # GreaterOrEqualComparison
+    | boolExpression op=(AND|OR|XOR) boolExpression # AndOrXor
+    | NOT boolExpression                            # Not
+    | LPAREN boolExpression RPAREN                  # ParenthesesBoolean
+    | boolAtom                                      # BooleanAtom
     ;
 
+AND: '&&' ;
+OR: '||' ;
+XOR: 'xor' ;
+NOT: '¬' | '~' | '!' ;
+
+boolAtom
+    : 'true' | 'false';
 
 lambda
     : variablesTuple ARROW tuple            # VariablesLambda
@@ -42,7 +53,7 @@ expression
 
 
 recursionParameters
-    : LSQPAREN expression (',' expression (',' comparison)?)? RSQPAREN;
+    : LSQPAREN expression (',' expression (',' boolExpression)?)? RSQPAREN;
 
 EQ: '=';
 LS: '<';

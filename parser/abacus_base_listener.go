@@ -39,17 +39,17 @@ func (s *BaseAbacusListener) EnterLambdaDeclaration(ctx *LambdaDeclarationContex
 // ExitLambdaDeclaration is called when production LambdaDeclaration is exited.
 func (s *BaseAbacusListener) ExitLambdaDeclaration(ctx *LambdaDeclarationContext) {}
 
-// EnterEqualComparison is called when production EqualComparison is entered.
-func (s *BaseAbacusListener) EnterEqualComparison(ctx *EqualComparisonContext) {}
+// EnterNot is called when production Not is entered.
+func (s *BaseAbacusListener) EnterNot(ctx *NotContext) {}
 
-// ExitEqualComparison is called when production EqualComparison is exited.
-func (s *BaseAbacusListener) ExitEqualComparison(ctx *EqualComparisonContext) {}
+// ExitNot is called when production Not is exited.
+func (s *BaseAbacusListener) ExitNot(ctx *NotContext) {}
 
-// EnterLessComparison is called when production LessComparison is entered.
-func (s *BaseAbacusListener) EnterLessComparison(ctx *LessComparisonContext) {}
+// EnterGreaterOrEqualComparison is called when production GreaterOrEqualComparison is entered.
+func (s *BaseAbacusListener) EnterGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
 
-// ExitLessComparison is called when production LessComparison is exited.
-func (s *BaseAbacusListener) ExitLessComparison(ctx *LessComparisonContext) {}
+// ExitGreaterOrEqualComparison is called when production GreaterOrEqualComparison is exited.
+func (s *BaseAbacusListener) ExitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
 
 // EnterGreaterComparison is called when production GreaterComparison is entered.
 func (s *BaseAbacusListener) EnterGreaterComparison(ctx *GreaterComparisonContext) {}
@@ -63,11 +63,41 @@ func (s *BaseAbacusListener) EnterLessOrEqualComparison(ctx *LessOrEqualComparis
 // ExitLessOrEqualComparison is called when production LessOrEqualComparison is exited.
 func (s *BaseAbacusListener) ExitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) {}
 
-// EnterGreaterOrEqualComparison is called when production GreaterOrEqualComparison is entered.
-func (s *BaseAbacusListener) EnterGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
+// EnterBooleanAtom is called when production BooleanAtom is entered.
+func (s *BaseAbacusListener) EnterBooleanAtom(ctx *BooleanAtomContext) {}
 
-// ExitGreaterOrEqualComparison is called when production GreaterOrEqualComparison is exited.
-func (s *BaseAbacusListener) ExitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) {}
+// ExitBooleanAtom is called when production BooleanAtom is exited.
+func (s *BaseAbacusListener) ExitBooleanAtom(ctx *BooleanAtomContext) {}
+
+// EnterLessComparison is called when production LessComparison is entered.
+func (s *BaseAbacusListener) EnterLessComparison(ctx *LessComparisonContext) {}
+
+// ExitLessComparison is called when production LessComparison is exited.
+func (s *BaseAbacusListener) ExitLessComparison(ctx *LessComparisonContext) {}
+
+// EnterParenthesesBoolean is called when production ParenthesesBoolean is entered.
+func (s *BaseAbacusListener) EnterParenthesesBoolean(ctx *ParenthesesBooleanContext) {}
+
+// ExitParenthesesBoolean is called when production ParenthesesBoolean is exited.
+func (s *BaseAbacusListener) ExitParenthesesBoolean(ctx *ParenthesesBooleanContext) {}
+
+// EnterAndOrXor is called when production AndOrXor is entered.
+func (s *BaseAbacusListener) EnterAndOrXor(ctx *AndOrXorContext) {}
+
+// ExitAndOrXor is called when production AndOrXor is exited.
+func (s *BaseAbacusListener) ExitAndOrXor(ctx *AndOrXorContext) {}
+
+// EnterEqualComparison is called when production EqualComparison is entered.
+func (s *BaseAbacusListener) EnterEqualComparison(ctx *EqualComparisonContext) {}
+
+// ExitEqualComparison is called when production EqualComparison is exited.
+func (s *BaseAbacusListener) ExitEqualComparison(ctx *EqualComparisonContext) {}
+
+// EnterBoolAtom is called when production boolAtom is entered.
+func (s *BaseAbacusListener) EnterBoolAtom(ctx *BoolAtomContext) {}
+
+// ExitBoolAtom is called when production boolAtom is exited.
+func (s *BaseAbacusListener) ExitBoolAtom(ctx *BoolAtomContext) {}
 
 // EnterVariablesLambda is called when production VariablesLambda is entered.
 func (s *BaseAbacusListener) EnterVariablesLambda(ctx *VariablesLambdaContext) {}

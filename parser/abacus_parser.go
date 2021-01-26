@@ -16,157 +16,167 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 44, 294,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 50, 314,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
-	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 3, 2,
-	3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 5, 2, 34, 10, 2, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 43, 10, 3, 3, 4, 3, 4, 3, 4,
+	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
+	9, 13, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 5, 2, 36,
+	10, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 45, 10, 3, 3, 4,
 	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
-	3, 4, 3, 4, 3, 4, 5, 4, 63, 10, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
-	3, 4, 5, 4, 72, 10, 4, 3, 4, 3, 4, 5, 4, 76, 10, 4, 3, 5, 3, 5, 3, 5, 3,
-	5, 3, 5, 3, 5, 3, 5, 3, 5, 5, 5, 86, 10, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3,
-	6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 5, 6, 99, 10, 6, 3, 6, 3, 6, 5,
-	6, 103, 10, 6, 3, 6, 5, 6, 106, 10, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3,
-	6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 7, 6, 123, 10,
-	6, 12, 6, 14, 6, 126, 11, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 5, 7,
-	134, 10, 7, 5, 7, 136, 10, 7, 3, 7, 3, 7, 3, 8, 3, 8, 3, 8, 5, 8, 143,
-	10, 8, 3, 9, 3, 9, 3, 9, 5, 9, 148, 10, 9, 3, 9, 3, 9, 3, 9, 3, 9, 5, 9,
-	154, 10, 9, 3, 9, 5, 9, 157, 10, 9, 3, 10, 3, 10, 3, 10, 3, 10, 5, 10,
-	163, 10, 10, 3, 11, 3, 11, 5, 11, 167, 10, 11, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3,
-	12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
-	3, 12, 3, 12, 3, 12, 3, 12, 5, 12, 292, 10, 12, 3, 12, 2, 3, 10, 13, 2,
-	4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 2, 4, 3, 2, 30, 31, 3, 2, 32, 33,
-	2, 334, 2, 33, 3, 2, 2, 2, 4, 42, 3, 2, 2, 2, 6, 75, 3, 2, 2, 2, 8, 85,
-	3, 2, 2, 2, 10, 105, 3, 2, 2, 2, 12, 127, 3, 2, 2, 2, 14, 139, 3, 2, 2,
-	2, 16, 156, 3, 2, 2, 2, 18, 162, 3, 2, 2, 2, 20, 166, 3, 2, 2, 2, 22, 291,
-	3, 2, 2, 2, 24, 25, 5, 4, 3, 2, 25, 26, 7, 2, 2, 3, 26, 34, 3, 2, 2, 2,
-	27, 28, 5, 6, 4, 2, 28, 29, 7, 2, 2, 3, 29, 34, 3, 2, 2, 2, 30, 31, 5,
-	14, 8, 2, 31, 32, 7, 2, 2, 3, 32, 34, 3, 2, 2, 2, 33, 24, 3, 2, 2, 2, 33,
-	27, 3, 2, 2, 2, 33, 30, 3, 2, 2, 2, 34, 3, 3, 2, 2, 2, 35, 36, 5, 16, 9,
-	2, 36, 37, 7, 25, 2, 2, 37, 38, 5, 14, 8, 2, 38, 43, 3, 2, 2, 2, 39, 40,
-	7, 43, 2, 2, 40, 41, 7, 25, 2, 2, 41, 43, 5, 8, 5, 2, 42, 35, 3, 2, 2,
-	2, 42, 39, 3, 2, 2, 2, 43, 5, 3, 2, 2, 2, 44, 45, 5, 10, 6, 2, 45, 46,
-	7, 25, 2, 2, 46, 47, 7, 25, 2, 2, 47, 48, 5, 10, 6, 2, 48, 76, 3, 2, 2,
-	2, 49, 50, 5, 10, 6, 2, 50, 51, 7, 26, 2, 2, 51, 52, 5, 10, 6, 2, 52, 76,
-	3, 2, 2, 2, 53, 54, 5, 10, 6, 2, 54, 55, 7, 27, 2, 2, 55, 56, 5, 10, 6,
-	2, 56, 76, 3, 2, 2, 2, 57, 62, 5, 10, 6, 2, 58, 59, 7, 26, 2, 2, 59, 63,
-	7, 25, 2, 2, 60, 61, 7, 25, 2, 2, 61, 63, 7, 26, 2, 2, 62, 58, 3, 2, 2,
-	2, 62, 60, 3, 2, 2, 2, 63, 64, 3, 2, 2, 2, 64, 65, 5, 10, 6, 2, 65, 76,
-	3, 2, 2, 2, 66, 71, 5, 10, 6, 2, 67, 68, 7, 27, 2, 2, 68, 72, 7, 25, 2,
-	2, 69, 70, 7, 25, 2, 2, 70, 72, 7, 27, 2, 2, 71, 67, 3, 2, 2, 2, 71, 69,
-	3, 2, 2, 2, 72, 73, 3, 2, 2, 2, 73, 74, 5, 10, 6, 2, 74, 76, 3, 2, 2, 2,
-	75, 44, 3, 2, 2, 2, 75, 49, 3, 2, 2, 2, 75, 53, 3, 2, 2, 2, 75, 57, 3,
-	2, 2, 2, 75, 66, 3, 2, 2, 2, 76, 7, 3, 2, 2, 2, 77, 78, 5, 16, 9, 2, 78,
-	79, 7, 28, 2, 2, 79, 80, 5, 14, 8, 2, 80, 86, 3, 2, 2, 2, 81, 82, 7, 36,
-	2, 2, 82, 83, 7, 37, 2, 2, 83, 84, 7, 28, 2, 2, 84, 86, 5, 14, 8, 2, 85,
-	77, 3, 2, 2, 2, 85, 81, 3, 2, 2, 2, 86, 9, 3, 2, 2, 2, 87, 88, 8, 6, 1,
-	2, 88, 89, 5, 20, 11, 2, 89, 90, 5, 10, 6, 11, 90, 106, 3, 2, 2, 2, 91,
-	92, 7, 36, 2, 2, 92, 93, 5, 10, 6, 2, 93, 94, 7, 37, 2, 2, 94, 106, 3,
-	2, 2, 2, 95, 96, 7, 43, 2, 2, 96, 98, 7, 36, 2, 2, 97, 99, 5, 14, 8, 2,
-	98, 97, 3, 2, 2, 2, 98, 99, 3, 2, 2, 2, 99, 100, 3, 2, 2, 2, 100, 102,
-	7, 37, 2, 2, 101, 103, 5, 12, 7, 2, 102, 101, 3, 2, 2, 2, 102, 103, 3,
-	2, 2, 2, 103, 106, 3, 2, 2, 2, 104, 106, 5, 18, 10, 2, 105, 87, 3, 2, 2,
-	2, 105, 91, 3, 2, 2, 2, 105, 95, 3, 2, 2, 2, 105, 104, 3, 2, 2, 2, 106,
-	124, 3, 2, 2, 2, 107, 108, 12, 9, 2, 2, 108, 109, 7, 29, 2, 2, 109, 123,
-	5, 10, 6, 10, 110, 111, 12, 8, 2, 2, 111, 112, 7, 34, 2, 2, 112, 113, 7,
-	34, 2, 2, 113, 123, 5, 10, 6, 9, 114, 115, 12, 7, 2, 2, 115, 116, 9, 2,
-	2, 2, 116, 123, 5, 10, 6, 8, 117, 118, 12, 6, 2, 2, 118, 119, 9, 3, 2,
-	2, 119, 123, 5, 10, 6, 7, 120, 121, 12, 10, 2, 2, 121, 123, 7, 34, 2, 2,
-	122, 107, 3, 2, 2, 2, 122, 110, 3, 2, 2, 2, 122, 114, 3, 2, 2, 2, 122,
-	117, 3, 2, 2, 2, 122, 120, 3, 2, 2, 2, 123, 126, 3, 2, 2, 2, 124, 122,
-	3, 2, 2, 2, 124, 125, 3, 2, 2, 2, 125, 11, 3, 2, 2, 2, 126, 124, 3, 2,
-	2, 2, 127, 128, 7, 38, 2, 2, 128, 135, 5, 10, 6, 2, 129, 130, 7, 3, 2,
-	2, 130, 133, 5, 10, 6, 2, 131, 132, 7, 3, 2, 2, 132, 134, 5, 6, 4, 2, 133,
-	131, 3, 2, 2, 2, 133, 134, 3, 2, 2, 2, 134, 136, 3, 2, 2, 2, 135, 129,
-	3, 2, 2, 2, 135, 136, 3, 2, 2, 2, 136, 137, 3, 2, 2, 2, 137, 138, 7, 39,
-	2, 2, 138, 13, 3, 2, 2, 2, 139, 142, 5, 10, 6, 2, 140, 141, 7, 3, 2, 2,
-	141, 143, 5, 14, 8, 2, 142, 140, 3, 2, 2, 2, 142, 143, 3, 2, 2, 2, 143,
-	15, 3, 2, 2, 2, 144, 147, 7, 42, 2, 2, 145, 146, 7, 3, 2, 2, 146, 148,
-	5, 16, 9, 2, 147, 145, 3, 2, 2, 2, 147, 148, 3, 2, 2, 2, 148, 157, 3, 2,
-	2, 2, 149, 150, 7, 36, 2, 2, 150, 153, 7, 42, 2, 2, 151, 152, 7, 3, 2,
-	2, 152, 154, 5, 16, 9, 2, 153, 151, 3, 2, 2, 2, 153, 154, 3, 2, 2, 2, 154,
-	155, 3, 2, 2, 2, 155, 157, 7, 37, 2, 2, 156, 144, 3, 2, 2, 2, 156, 149,
-	3, 2, 2, 2, 157, 17, 3, 2, 2, 2, 158, 163, 5, 22, 12, 2, 159, 163, 7, 40,
-	2, 2, 160, 163, 7, 41, 2, 2, 161, 163, 7, 42, 2, 2, 162, 158, 3, 2, 2,
-	2, 162, 159, 3, 2, 2, 2, 162, 160, 3, 2, 2, 2, 162, 161, 3, 2, 2, 2, 163,
-	19, 3, 2, 2, 2, 164, 167, 7, 32, 2, 2, 165, 167, 7, 33, 2, 2, 166, 164,
-	3, 2, 2, 2, 166, 165, 3, 2, 2, 2, 167, 21, 3, 2, 2, 2, 168, 169, 7, 4,
-	2, 2, 169, 170, 7, 36, 2, 2, 170, 171, 5, 10, 6, 2, 171, 172, 7, 37, 2,
-	2, 172, 292, 3, 2, 2, 2, 173, 174, 7, 5, 2, 2, 174, 175, 7, 36, 2, 2, 175,
-	176, 5, 10, 6, 2, 176, 177, 7, 37, 2, 2, 177, 292, 3, 2, 2, 2, 178, 179,
-	7, 6, 2, 2, 179, 180, 7, 36, 2, 2, 180, 181, 5, 10, 6, 2, 181, 182, 7,
-	37, 2, 2, 182, 292, 3, 2, 2, 2, 183, 184, 7, 7, 2, 2, 184, 185, 7, 36,
-	2, 2, 185, 186, 5, 10, 6, 2, 186, 187, 7, 37, 2, 2, 187, 292, 3, 2, 2,
-	2, 188, 189, 7, 8, 2, 2, 189, 190, 7, 36, 2, 2, 190, 191, 5, 10, 6, 2,
-	191, 192, 7, 37, 2, 2, 192, 292, 3, 2, 2, 2, 193, 194, 7, 9, 2, 2, 194,
-	195, 7, 36, 2, 2, 195, 196, 5, 10, 6, 2, 196, 197, 7, 37, 2, 2, 197, 292,
-	3, 2, 2, 2, 198, 199, 7, 10, 2, 2, 199, 200, 7, 36, 2, 2, 200, 201, 5,
-	10, 6, 2, 201, 202, 7, 37, 2, 2, 202, 292, 3, 2, 2, 2, 203, 204, 7, 11,
-	2, 2, 204, 205, 7, 36, 2, 2, 205, 206, 5, 10, 6, 2, 206, 207, 7, 37, 2,
-	2, 207, 292, 3, 2, 2, 2, 208, 209, 7, 12, 2, 2, 209, 210, 7, 36, 2, 2,
-	210, 211, 5, 10, 6, 2, 211, 212, 7, 37, 2, 2, 212, 292, 3, 2, 2, 2, 213,
-	214, 7, 13, 2, 2, 214, 215, 7, 36, 2, 2, 215, 216, 5, 10, 6, 2, 216, 217,
-	7, 37, 2, 2, 217, 292, 3, 2, 2, 2, 218, 219, 7, 14, 2, 2, 219, 220, 7,
-	36, 2, 2, 220, 221, 5, 10, 6, 2, 221, 222, 7, 37, 2, 2, 222, 292, 3, 2,
-	2, 2, 223, 224, 7, 15, 2, 2, 224, 225, 7, 36, 2, 2, 225, 226, 5, 10, 6,
-	2, 226, 227, 7, 37, 2, 2, 227, 292, 3, 2, 2, 2, 228, 229, 7, 16, 2, 2,
-	229, 230, 7, 36, 2, 2, 230, 231, 5, 10, 6, 2, 231, 232, 7, 37, 2, 2, 232,
-	292, 3, 2, 2, 2, 233, 234, 7, 17, 2, 2, 234, 235, 7, 36, 2, 2, 235, 236,
-	5, 10, 6, 2, 236, 237, 7, 37, 2, 2, 237, 292, 3, 2, 2, 2, 238, 239, 7,
-	16, 2, 2, 239, 240, 7, 36, 2, 2, 240, 241, 5, 10, 6, 2, 241, 242, 7, 3,
-	2, 2, 242, 243, 5, 10, 6, 2, 243, 244, 7, 37, 2, 2, 244, 292, 3, 2, 2,
-	2, 245, 246, 7, 7, 2, 2, 246, 247, 7, 36, 2, 2, 247, 248, 5, 10, 6, 2,
-	248, 249, 7, 3, 2, 2, 249, 250, 5, 10, 6, 2, 250, 251, 7, 37, 2, 2, 251,
-	292, 3, 2, 2, 2, 252, 253, 7, 18, 2, 2, 253, 254, 7, 36, 2, 2, 254, 255,
-	5, 14, 8, 2, 255, 256, 7, 37, 2, 2, 256, 292, 3, 2, 2, 2, 257, 258, 7,
-	19, 2, 2, 258, 259, 7, 36, 2, 2, 259, 260, 5, 14, 8, 2, 260, 261, 7, 37,
-	2, 2, 261, 292, 3, 2, 2, 2, 262, 263, 7, 20, 2, 2, 263, 264, 7, 36, 2,
-	2, 264, 265, 5, 14, 8, 2, 265, 266, 7, 37, 2, 2, 266, 292, 3, 2, 2, 2,
-	267, 268, 7, 21, 2, 2, 268, 269, 7, 36, 2, 2, 269, 270, 5, 14, 8, 2, 270,
-	271, 7, 3, 2, 2, 271, 272, 5, 10, 6, 2, 272, 273, 7, 37, 2, 2, 273, 292,
-	3, 2, 2, 2, 274, 275, 7, 22, 2, 2, 275, 276, 7, 36, 2, 2, 276, 277, 5,
-	14, 8, 2, 277, 278, 7, 37, 2, 2, 278, 292, 3, 2, 2, 2, 279, 280, 7, 23,
-	2, 2, 280, 281, 7, 36, 2, 2, 281, 282, 5, 14, 8, 2, 282, 283, 7, 37, 2,
-	2, 283, 292, 3, 2, 2, 2, 284, 285, 7, 24, 2, 2, 285, 286, 7, 36, 2, 2,
-	286, 287, 5, 14, 8, 2, 287, 288, 7, 3, 2, 2, 288, 289, 5, 10, 6, 2, 289,
-	290, 7, 37, 2, 2, 290, 292, 3, 2, 2, 2, 291, 168, 3, 2, 2, 2, 291, 173,
-	3, 2, 2, 2, 291, 178, 3, 2, 2, 2, 291, 183, 3, 2, 2, 2, 291, 188, 3, 2,
-	2, 2, 291, 193, 3, 2, 2, 2, 291, 198, 3, 2, 2, 2, 291, 203, 3, 2, 2, 2,
-	291, 208, 3, 2, 2, 2, 291, 213, 3, 2, 2, 2, 291, 218, 3, 2, 2, 2, 291,
-	223, 3, 2, 2, 2, 291, 228, 3, 2, 2, 2, 291, 233, 3, 2, 2, 2, 291, 238,
-	3, 2, 2, 2, 291, 245, 3, 2, 2, 2, 291, 252, 3, 2, 2, 2, 291, 257, 3, 2,
-	2, 2, 291, 262, 3, 2, 2, 2, 291, 267, 3, 2, 2, 2, 291, 274, 3, 2, 2, 2,
-	291, 279, 3, 2, 2, 2, 291, 284, 3, 2, 2, 2, 292, 23, 3, 2, 2, 2, 22, 33,
-	42, 62, 71, 75, 85, 98, 102, 105, 122, 124, 133, 135, 142, 147, 153, 156,
-	162, 166, 291,
+	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 66, 10, 4, 3, 4, 3, 4, 3, 4,
+	3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 75, 10, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
+	3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 86, 10, 4, 3, 4, 3, 4, 3, 4, 7, 4, 91, 10,
+	4, 12, 4, 14, 4, 94, 11, 4, 3, 5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3,
+	6, 3, 6, 3, 6, 5, 6, 106, 10, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
+	7, 3, 7, 3, 7, 3, 7, 3, 7, 5, 7, 119, 10, 7, 3, 7, 3, 7, 5, 7, 123, 10,
+	7, 3, 7, 5, 7, 126, 10, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
+	7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 7, 7, 143, 10, 7, 12, 7, 14,
+	7, 146, 11, 7, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 5, 8, 154, 10, 8, 5,
+	8, 156, 10, 8, 3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 5, 9, 163, 10, 9, 3, 10, 3,
+	10, 3, 10, 5, 10, 168, 10, 10, 3, 10, 3, 10, 3, 10, 3, 10, 5, 10, 174,
+	10, 10, 3, 10, 5, 10, 177, 10, 10, 3, 11, 3, 11, 3, 11, 3, 11, 5, 11, 183,
+	10, 11, 3, 12, 3, 12, 5, 12, 187, 10, 12, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 13, 5, 13, 312, 10, 13, 3, 13, 2, 4, 6, 12, 14, 2, 4,
+	6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 2, 6, 3, 2, 27, 29, 3, 2, 3, 4, 3,
+	2, 36, 37, 3, 2, 38, 39, 2, 357, 2, 35, 3, 2, 2, 2, 4, 44, 3, 2, 2, 2,
+	6, 85, 3, 2, 2, 2, 8, 95, 3, 2, 2, 2, 10, 105, 3, 2, 2, 2, 12, 125, 3,
+	2, 2, 2, 14, 147, 3, 2, 2, 2, 16, 159, 3, 2, 2, 2, 18, 176, 3, 2, 2, 2,
+	20, 182, 3, 2, 2, 2, 22, 186, 3, 2, 2, 2, 24, 311, 3, 2, 2, 2, 26, 27,
+	5, 4, 3, 2, 27, 28, 7, 2, 2, 3, 28, 36, 3, 2, 2, 2, 29, 30, 5, 6, 4, 2,
+	30, 31, 7, 2, 2, 3, 31, 36, 3, 2, 2, 2, 32, 33, 5, 16, 9, 2, 33, 34, 7,
+	2, 2, 3, 34, 36, 3, 2, 2, 2, 35, 26, 3, 2, 2, 2, 35, 29, 3, 2, 2, 2, 35,
+	32, 3, 2, 2, 2, 36, 3, 3, 2, 2, 2, 37, 38, 5, 18, 10, 2, 38, 39, 7, 31,
+	2, 2, 39, 40, 5, 16, 9, 2, 40, 45, 3, 2, 2, 2, 41, 42, 7, 49, 2, 2, 42,
+	43, 7, 31, 2, 2, 43, 45, 5, 10, 6, 2, 44, 37, 3, 2, 2, 2, 44, 41, 3, 2,
+	2, 2, 45, 5, 3, 2, 2, 2, 46, 47, 8, 4, 1, 2, 47, 48, 5, 12, 7, 2, 48, 49,
+	7, 31, 2, 2, 49, 50, 7, 31, 2, 2, 50, 51, 5, 12, 7, 2, 51, 86, 3, 2, 2,
+	2, 52, 53, 5, 12, 7, 2, 53, 54, 7, 32, 2, 2, 54, 55, 5, 12, 7, 2, 55, 86,
+	3, 2, 2, 2, 56, 57, 5, 12, 7, 2, 57, 58, 7, 33, 2, 2, 58, 59, 5, 12, 7,
+	2, 59, 86, 3, 2, 2, 2, 60, 65, 5, 12, 7, 2, 61, 62, 7, 32, 2, 2, 62, 66,
+	7, 31, 2, 2, 63, 64, 7, 31, 2, 2, 64, 66, 7, 32, 2, 2, 65, 61, 3, 2, 2,
+	2, 65, 63, 3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 68, 5, 12, 7, 2, 68, 86,
+	3, 2, 2, 2, 69, 74, 5, 12, 7, 2, 70, 71, 7, 33, 2, 2, 71, 75, 7, 31, 2,
+	2, 72, 73, 7, 31, 2, 2, 73, 75, 7, 33, 2, 2, 74, 70, 3, 2, 2, 2, 74, 72,
+	3, 2, 2, 2, 75, 76, 3, 2, 2, 2, 76, 77, 5, 12, 7, 2, 77, 86, 3, 2, 2, 2,
+	78, 79, 7, 30, 2, 2, 79, 86, 5, 6, 4, 5, 80, 81, 7, 42, 2, 2, 81, 82, 5,
+	6, 4, 2, 82, 83, 7, 43, 2, 2, 83, 86, 3, 2, 2, 2, 84, 86, 5, 8, 5, 2, 85,
+	46, 3, 2, 2, 2, 85, 52, 3, 2, 2, 2, 85, 56, 3, 2, 2, 2, 85, 60, 3, 2, 2,
+	2, 85, 69, 3, 2, 2, 2, 85, 78, 3, 2, 2, 2, 85, 80, 3, 2, 2, 2, 85, 84,
+	3, 2, 2, 2, 86, 92, 3, 2, 2, 2, 87, 88, 12, 6, 2, 2, 88, 89, 9, 2, 2, 2,
+	89, 91, 5, 6, 4, 7, 90, 87, 3, 2, 2, 2, 91, 94, 3, 2, 2, 2, 92, 90, 3,
+	2, 2, 2, 92, 93, 3, 2, 2, 2, 93, 7, 3, 2, 2, 2, 94, 92, 3, 2, 2, 2, 95,
+	96, 9, 3, 2, 2, 96, 9, 3, 2, 2, 2, 97, 98, 5, 18, 10, 2, 98, 99, 7, 34,
+	2, 2, 99, 100, 5, 16, 9, 2, 100, 106, 3, 2, 2, 2, 101, 102, 7, 42, 2, 2,
+	102, 103, 7, 43, 2, 2, 103, 104, 7, 34, 2, 2, 104, 106, 5, 16, 9, 2, 105,
+	97, 3, 2, 2, 2, 105, 101, 3, 2, 2, 2, 106, 11, 3, 2, 2, 2, 107, 108, 8,
+	7, 1, 2, 108, 109, 5, 22, 12, 2, 109, 110, 5, 12, 7, 11, 110, 126, 3, 2,
+	2, 2, 111, 112, 7, 42, 2, 2, 112, 113, 5, 12, 7, 2, 113, 114, 7, 43, 2,
+	2, 114, 126, 3, 2, 2, 2, 115, 116, 7, 49, 2, 2, 116, 118, 7, 42, 2, 2,
+	117, 119, 5, 16, 9, 2, 118, 117, 3, 2, 2, 2, 118, 119, 3, 2, 2, 2, 119,
+	120, 3, 2, 2, 2, 120, 122, 7, 43, 2, 2, 121, 123, 5, 14, 8, 2, 122, 121,
+	3, 2, 2, 2, 122, 123, 3, 2, 2, 2, 123, 126, 3, 2, 2, 2, 124, 126, 5, 20,
+	11, 2, 125, 107, 3, 2, 2, 2, 125, 111, 3, 2, 2, 2, 125, 115, 3, 2, 2, 2,
+	125, 124, 3, 2, 2, 2, 126, 144, 3, 2, 2, 2, 127, 128, 12, 9, 2, 2, 128,
+	129, 7, 35, 2, 2, 129, 143, 5, 12, 7, 10, 130, 131, 12, 8, 2, 2, 131, 132,
+	7, 40, 2, 2, 132, 133, 7, 40, 2, 2, 133, 143, 5, 12, 7, 9, 134, 135, 12,
+	7, 2, 2, 135, 136, 9, 4, 2, 2, 136, 143, 5, 12, 7, 8, 137, 138, 12, 6,
+	2, 2, 138, 139, 9, 5, 2, 2, 139, 143, 5, 12, 7, 7, 140, 141, 12, 10, 2,
+	2, 141, 143, 7, 40, 2, 2, 142, 127, 3, 2, 2, 2, 142, 130, 3, 2, 2, 2, 142,
+	134, 3, 2, 2, 2, 142, 137, 3, 2, 2, 2, 142, 140, 3, 2, 2, 2, 143, 146,
+	3, 2, 2, 2, 144, 142, 3, 2, 2, 2, 144, 145, 3, 2, 2, 2, 145, 13, 3, 2,
+	2, 2, 146, 144, 3, 2, 2, 2, 147, 148, 7, 44, 2, 2, 148, 155, 5, 12, 7,
+	2, 149, 150, 7, 5, 2, 2, 150, 153, 5, 12, 7, 2, 151, 152, 7, 5, 2, 2, 152,
+	154, 5, 6, 4, 2, 153, 151, 3, 2, 2, 2, 153, 154, 3, 2, 2, 2, 154, 156,
+	3, 2, 2, 2, 155, 149, 3, 2, 2, 2, 155, 156, 3, 2, 2, 2, 156, 157, 3, 2,
+	2, 2, 157, 158, 7, 45, 2, 2, 158, 15, 3, 2, 2, 2, 159, 162, 5, 12, 7, 2,
+	160, 161, 7, 5, 2, 2, 161, 163, 5, 16, 9, 2, 162, 160, 3, 2, 2, 2, 162,
+	163, 3, 2, 2, 2, 163, 17, 3, 2, 2, 2, 164, 167, 7, 48, 2, 2, 165, 166,
+	7, 5, 2, 2, 166, 168, 5, 18, 10, 2, 167, 165, 3, 2, 2, 2, 167, 168, 3,
+	2, 2, 2, 168, 177, 3, 2, 2, 2, 169, 170, 7, 42, 2, 2, 170, 173, 7, 48,
+	2, 2, 171, 172, 7, 5, 2, 2, 172, 174, 5, 18, 10, 2, 173, 171, 3, 2, 2,
+	2, 173, 174, 3, 2, 2, 2, 174, 175, 3, 2, 2, 2, 175, 177, 7, 43, 2, 2, 176,
+	164, 3, 2, 2, 2, 176, 169, 3, 2, 2, 2, 177, 19, 3, 2, 2, 2, 178, 183, 5,
+	24, 13, 2, 179, 183, 7, 46, 2, 2, 180, 183, 7, 47, 2, 2, 181, 183, 7, 48,
+	2, 2, 182, 178, 3, 2, 2, 2, 182, 179, 3, 2, 2, 2, 182, 180, 3, 2, 2, 2,
+	182, 181, 3, 2, 2, 2, 183, 21, 3, 2, 2, 2, 184, 187, 7, 38, 2, 2, 185,
+	187, 7, 39, 2, 2, 186, 184, 3, 2, 2, 2, 186, 185, 3, 2, 2, 2, 187, 23,
+	3, 2, 2, 2, 188, 189, 7, 6, 2, 2, 189, 190, 7, 42, 2, 2, 190, 191, 5, 12,
+	7, 2, 191, 192, 7, 43, 2, 2, 192, 312, 3, 2, 2, 2, 193, 194, 7, 7, 2, 2,
+	194, 195, 7, 42, 2, 2, 195, 196, 5, 12, 7, 2, 196, 197, 7, 43, 2, 2, 197,
+	312, 3, 2, 2, 2, 198, 199, 7, 8, 2, 2, 199, 200, 7, 42, 2, 2, 200, 201,
+	5, 12, 7, 2, 201, 202, 7, 43, 2, 2, 202, 312, 3, 2, 2, 2, 203, 204, 7,
+	9, 2, 2, 204, 205, 7, 42, 2, 2, 205, 206, 5, 12, 7, 2, 206, 207, 7, 43,
+	2, 2, 207, 312, 3, 2, 2, 2, 208, 209, 7, 10, 2, 2, 209, 210, 7, 42, 2,
+	2, 210, 211, 5, 12, 7, 2, 211, 212, 7, 43, 2, 2, 212, 312, 3, 2, 2, 2,
+	213, 214, 7, 11, 2, 2, 214, 215, 7, 42, 2, 2, 215, 216, 5, 12, 7, 2, 216,
+	217, 7, 43, 2, 2, 217, 312, 3, 2, 2, 2, 218, 219, 7, 12, 2, 2, 219, 220,
+	7, 42, 2, 2, 220, 221, 5, 12, 7, 2, 221, 222, 7, 43, 2, 2, 222, 312, 3,
+	2, 2, 2, 223, 224, 7, 13, 2, 2, 224, 225, 7, 42, 2, 2, 225, 226, 5, 12,
+	7, 2, 226, 227, 7, 43, 2, 2, 227, 312, 3, 2, 2, 2, 228, 229, 7, 14, 2,
+	2, 229, 230, 7, 42, 2, 2, 230, 231, 5, 12, 7, 2, 231, 232, 7, 43, 2, 2,
+	232, 312, 3, 2, 2, 2, 233, 234, 7, 15, 2, 2, 234, 235, 7, 42, 2, 2, 235,
+	236, 5, 12, 7, 2, 236, 237, 7, 43, 2, 2, 237, 312, 3, 2, 2, 2, 238, 239,
+	7, 16, 2, 2, 239, 240, 7, 42, 2, 2, 240, 241, 5, 12, 7, 2, 241, 242, 7,
+	43, 2, 2, 242, 312, 3, 2, 2, 2, 243, 244, 7, 17, 2, 2, 244, 245, 7, 42,
+	2, 2, 245, 246, 5, 12, 7, 2, 246, 247, 7, 43, 2, 2, 247, 312, 3, 2, 2,
+	2, 248, 249, 7, 18, 2, 2, 249, 250, 7, 42, 2, 2, 250, 251, 5, 12, 7, 2,
+	251, 252, 7, 43, 2, 2, 252, 312, 3, 2, 2, 2, 253, 254, 7, 19, 2, 2, 254,
+	255, 7, 42, 2, 2, 255, 256, 5, 12, 7, 2, 256, 257, 7, 43, 2, 2, 257, 312,
+	3, 2, 2, 2, 258, 259, 7, 18, 2, 2, 259, 260, 7, 42, 2, 2, 260, 261, 5,
+	12, 7, 2, 261, 262, 7, 5, 2, 2, 262, 263, 5, 12, 7, 2, 263, 264, 7, 43,
+	2, 2, 264, 312, 3, 2, 2, 2, 265, 266, 7, 9, 2, 2, 266, 267, 7, 42, 2, 2,
+	267, 268, 5, 12, 7, 2, 268, 269, 7, 5, 2, 2, 269, 270, 5, 12, 7, 2, 270,
+	271, 7, 43, 2, 2, 271, 312, 3, 2, 2, 2, 272, 273, 7, 20, 2, 2, 273, 274,
+	7, 42, 2, 2, 274, 275, 5, 16, 9, 2, 275, 276, 7, 43, 2, 2, 276, 312, 3,
+	2, 2, 2, 277, 278, 7, 21, 2, 2, 278, 279, 7, 42, 2, 2, 279, 280, 5, 16,
+	9, 2, 280, 281, 7, 43, 2, 2, 281, 312, 3, 2, 2, 2, 282, 283, 7, 22, 2,
+	2, 283, 284, 7, 42, 2, 2, 284, 285, 5, 16, 9, 2, 285, 286, 7, 43, 2, 2,
+	286, 312, 3, 2, 2, 2, 287, 288, 7, 23, 2, 2, 288, 289, 7, 42, 2, 2, 289,
+	290, 5, 16, 9, 2, 290, 291, 7, 5, 2, 2, 291, 292, 5, 12, 7, 2, 292, 293,
+	7, 43, 2, 2, 293, 312, 3, 2, 2, 2, 294, 295, 7, 24, 2, 2, 295, 296, 7,
+	42, 2, 2, 296, 297, 5, 16, 9, 2, 297, 298, 7, 43, 2, 2, 298, 312, 3, 2,
+	2, 2, 299, 300, 7, 25, 2, 2, 300, 301, 7, 42, 2, 2, 301, 302, 5, 16, 9,
+	2, 302, 303, 7, 43, 2, 2, 303, 312, 3, 2, 2, 2, 304, 305, 7, 26, 2, 2,
+	305, 306, 7, 42, 2, 2, 306, 307, 5, 16, 9, 2, 307, 308, 7, 5, 2, 2, 308,
+	309, 5, 12, 7, 2, 309, 310, 7, 43, 2, 2, 310, 312, 3, 2, 2, 2, 311, 188,
+	3, 2, 2, 2, 311, 193, 3, 2, 2, 2, 311, 198, 3, 2, 2, 2, 311, 203, 3, 2,
+	2, 2, 311, 208, 3, 2, 2, 2, 311, 213, 3, 2, 2, 2, 311, 218, 3, 2, 2, 2,
+	311, 223, 3, 2, 2, 2, 311, 228, 3, 2, 2, 2, 311, 233, 3, 2, 2, 2, 311,
+	238, 3, 2, 2, 2, 311, 243, 3, 2, 2, 2, 311, 248, 3, 2, 2, 2, 311, 253,
+	3, 2, 2, 2, 311, 258, 3, 2, 2, 2, 311, 265, 3, 2, 2, 2, 311, 272, 3, 2,
+	2, 2, 311, 277, 3, 2, 2, 2, 311, 282, 3, 2, 2, 2, 311, 287, 3, 2, 2, 2,
+	311, 294, 3, 2, 2, 2, 311, 299, 3, 2, 2, 2, 311, 304, 3, 2, 2, 2, 312,
+	25, 3, 2, 2, 2, 23, 35, 44, 65, 74, 85, 92, 105, 118, 122, 125, 142, 144,
+	153, 155, 162, 167, 173, 176, 182, 186, 311,
 }
 var literalNames = []string{
-	"", "','", "'sqrt'", "'cbrt'", "'ln'", "'log'", "'log2'", "'log10'", "'floor'",
-	"'ceil'", "'exp'", "'sin'", "'cos'", "'tan'", "'round'", "'abs'", "'min'",
-	"'max'", "'avg'", "'until'", "'from'", "'reverse'", "'nth'", "'='", "'<'",
-	"'>'", "'->'", "", "'*'", "'/'", "'+'", "'-'", "'%'", "'.'", "'('", "')'",
-	"'['", "']'",
+	"", "'true'", "'false'", "','", "'sqrt'", "'cbrt'", "'ln'", "'log'", "'log2'",
+	"'log10'", "'floor'", "'ceil'", "'exp'", "'sin'", "'cos'", "'tan'", "'round'",
+	"'abs'", "'min'", "'max'", "'avg'", "'until'", "'from'", "'reverse'", "'nth'",
+	"'&&'", "'||'", "'xor'", "", "'='", "'<'", "'>'", "'->'", "", "'*'", "'/'",
+	"'+'", "'-'", "'%'", "'.'", "'('", "')'", "'['", "']'",
 }
 var symbolicNames = []string{
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	"", "", "", "", "", "EQ", "LS", "GR", "ARROW", "POW", "MUL", "DIV", "ADD",
-	"SUB", "PER", "POINT", "LPAREN", "RPAREN", "LSQPAREN", "RSQPAREN", "CONSTANT",
-	"SCIENTIFIC_NUMBER", "VARIABLE", "LAMBDA_VARIABLE", "WHITESPACE",
+	"", "", "", "", "", "", "", "AND", "OR", "XOR", "NOT", "EQ", "LS", "GR",
+	"ARROW", "POW", "MUL", "DIV", "ADD", "SUB", "PER", "POINT", "LPAREN", "RPAREN",
+	"LSQPAREN", "RSQPAREN", "CONSTANT", "SCIENTIFIC_NUMBER", "VARIABLE", "LAMBDA_VARIABLE",
+	"WHITESPACE",
 }
 
 var ruleNames = []string{
-	"root", "declaration", "comparison", "lambda", "expression", "recursionParameters",
-	"tuple", "variablesTuple", "atom", "sign", "function",
+	"root", "declaration", "boolExpression", "boolAtom", "lambda", "expression",
+	"recursionParameters", "tuple", "variablesTuple", "atom", "sign", "function",
 }
 
 type AbacusParser struct {
@@ -223,41 +233,48 @@ const (
 	AbacusParserT__19             = 20
 	AbacusParserT__20             = 21
 	AbacusParserT__21             = 22
-	AbacusParserEQ                = 23
-	AbacusParserLS                = 24
-	AbacusParserGR                = 25
-	AbacusParserARROW             = 26
-	AbacusParserPOW               = 27
-	AbacusParserMUL               = 28
-	AbacusParserDIV               = 29
-	AbacusParserADD               = 30
-	AbacusParserSUB               = 31
-	AbacusParserPER               = 32
-	AbacusParserPOINT             = 33
-	AbacusParserLPAREN            = 34
-	AbacusParserRPAREN            = 35
-	AbacusParserLSQPAREN          = 36
-	AbacusParserRSQPAREN          = 37
-	AbacusParserCONSTANT          = 38
-	AbacusParserSCIENTIFIC_NUMBER = 39
-	AbacusParserVARIABLE          = 40
-	AbacusParserLAMBDA_VARIABLE   = 41
-	AbacusParserWHITESPACE        = 42
+	AbacusParserT__22             = 23
+	AbacusParserT__23             = 24
+	AbacusParserAND               = 25
+	AbacusParserOR                = 26
+	AbacusParserXOR               = 27
+	AbacusParserNOT               = 28
+	AbacusParserEQ                = 29
+	AbacusParserLS                = 30
+	AbacusParserGR                = 31
+	AbacusParserARROW             = 32
+	AbacusParserPOW               = 33
+	AbacusParserMUL               = 34
+	AbacusParserDIV               = 35
+	AbacusParserADD               = 36
+	AbacusParserSUB               = 37
+	AbacusParserPER               = 38
+	AbacusParserPOINT             = 39
+	AbacusParserLPAREN            = 40
+	AbacusParserRPAREN            = 41
+	AbacusParserLSQPAREN          = 42
+	AbacusParserRSQPAREN          = 43
+	AbacusParserCONSTANT          = 44
+	AbacusParserSCIENTIFIC_NUMBER = 45
+	AbacusParserVARIABLE          = 46
+	AbacusParserLAMBDA_VARIABLE   = 47
+	AbacusParserWHITESPACE        = 48
 )
 
 // AbacusParser rules.
 const (
 	AbacusParserRULE_root                = 0
 	AbacusParserRULE_declaration         = 1
-	AbacusParserRULE_comparison          = 2
-	AbacusParserRULE_lambda              = 3
-	AbacusParserRULE_expression          = 4
-	AbacusParserRULE_recursionParameters = 5
-	AbacusParserRULE_tuple               = 6
-	AbacusParserRULE_variablesTuple      = 7
-	AbacusParserRULE_atom                = 8
-	AbacusParserRULE_sign                = 9
-	AbacusParserRULE_function            = 10
+	AbacusParserRULE_boolExpression      = 2
+	AbacusParserRULE_boolAtom            = 3
+	AbacusParserRULE_lambda              = 4
+	AbacusParserRULE_expression          = 5
+	AbacusParserRULE_recursionParameters = 6
+	AbacusParserRULE_tuple               = 7
+	AbacusParserRULE_variablesTuple      = 8
+	AbacusParserRULE_atom                = 9
+	AbacusParserRULE_sign                = 10
+	AbacusParserRULE_function            = 11
 )
 
 // IRootContext is an interface to support dynamic dispatch.
@@ -312,14 +329,14 @@ func (s *RootContext) EOF() antlr.TerminalNode {
 	return s.GetToken(AbacusParserEOF, 0)
 }
 
-func (s *RootContext) Comparison() IComparisonContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IComparisonContext)(nil)).Elem(), 0)
+func (s *RootContext) BoolExpression() IBoolExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IComparisonContext)
+	return t.(IBoolExpressionContext)
 }
 
 func (s *RootContext) Tuple() ITupleContext {
@@ -382,39 +399,39 @@ func (p *AbacusParser) Root() (localctx IRootContext) {
 		}
 	}()
 
-	p.SetState(31)
+	p.SetState(33)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(22)
+			p.SetState(24)
 			p.Declaration()
 		}
 		{
-			p.SetState(23)
+			p.SetState(25)
 			p.Match(AbacusParserEOF)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(25)
-			p.Comparison()
+			p.SetState(27)
+			p.boolExpression(0)
 		}
 		{
-			p.SetState(26)
+			p.SetState(28)
 			p.Match(AbacusParserEOF)
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(28)
+			p.SetState(30)
 			p.Tuple()
 		}
 		{
-			p.SetState(29)
+			p.SetState(31)
 			p.Match(AbacusParserEOF)
 		}
 
@@ -615,7 +632,7 @@ func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
 		}
 	}()
 
-	p.SetState(40)
+	p.SetState(42)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -623,15 +640,15 @@ func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
 		localctx = NewVariableDeclarationContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(33)
+			p.SetState(35)
 			p.VariablesTuple()
 		}
 		{
-			p.SetState(34)
+			p.SetState(36)
 			p.Match(AbacusParserEQ)
 		}
 		{
-			p.SetState(35)
+			p.SetState(37)
 			p.Tuple()
 		}
 
@@ -639,15 +656,15 @@ func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
 		localctx = NewLambdaDeclarationContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(37)
+			p.SetState(39)
 			p.Match(AbacusParserLAMBDA_VARIABLE)
 		}
 		{
-			p.SetState(38)
+			p.SetState(40)
 			p.Match(AbacusParserEQ)
 		}
 		{
-			p.SetState(39)
+			p.SetState(41)
 			p.Lambda()
 		}
 
@@ -658,66 +675,120 @@ func (p *AbacusParser) Declaration() (localctx IDeclarationContext) {
 	return localctx
 }
 
-// IComparisonContext is an interface to support dynamic dispatch.
-type IComparisonContext interface {
+// IBoolExpressionContext is an interface to support dynamic dispatch.
+type IBoolExpressionContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsComparisonContext differentiates from other interfaces.
-	IsComparisonContext()
+	// IsBoolExpressionContext differentiates from other interfaces.
+	IsBoolExpressionContext()
 }
 
-type ComparisonContext struct {
+type BoolExpressionContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyComparisonContext() *ComparisonContext {
-	var p = new(ComparisonContext)
+func NewEmptyBoolExpressionContext() *BoolExpressionContext {
+	var p = new(BoolExpressionContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AbacusParserRULE_comparison
+	p.RuleIndex = AbacusParserRULE_boolExpression
 	return p
 }
 
-func (*ComparisonContext) IsComparisonContext() {}
+func (*BoolExpressionContext) IsBoolExpressionContext() {}
 
-func NewComparisonContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ComparisonContext {
-	var p = new(ComparisonContext)
+func NewBoolExpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BoolExpressionContext {
+	var p = new(BoolExpressionContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AbacusParserRULE_comparison
+	p.RuleIndex = AbacusParserRULE_boolExpression
 
 	return p
 }
 
-func (s *ComparisonContext) GetParser() antlr.Parser { return s.parser }
+func (s *BoolExpressionContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *ComparisonContext) CopyFrom(ctx *ComparisonContext) {
+func (s *BoolExpressionContext) CopyFrom(ctx *BoolExpressionContext) {
 	s.BaseParserRuleContext.CopyFrom(ctx.BaseParserRuleContext)
 }
 
-func (s *ComparisonContext) GetRuleContext() antlr.RuleContext {
+func (s *BoolExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *ComparisonContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *BoolExpressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
+type NotContext struct {
+	*BoolExpressionContext
+}
+
+func NewNotContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *NotContext {
+	var p = new(NotContext)
+
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*BoolExpressionContext))
+
+	return p
+}
+
+func (s *NotContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *NotContext) NOT() antlr.TerminalNode {
+	return s.GetToken(AbacusParserNOT, 0)
+}
+
+func (s *NotContext) BoolExpression() IBoolExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBoolExpressionContext)
+}
+
+func (s *NotContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterNot(s)
+	}
+}
+
+func (s *NotContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitNot(s)
+	}
+}
+
+func (s *NotContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitNot(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 type GreaterOrEqualComparisonContext struct {
-	*ComparisonContext
+	*BoolExpressionContext
 }
 
 func NewGreaterOrEqualComparisonContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *GreaterOrEqualComparisonContext {
 	var p = new(GreaterOrEqualComparisonContext)
 
-	p.ComparisonContext = NewEmptyComparisonContext()
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
 	p.parser = parser
-	p.CopyFrom(ctx.(*ComparisonContext))
+	p.CopyFrom(ctx.(*BoolExpressionContext))
 
 	return p
 }
@@ -780,15 +851,15 @@ func (s *GreaterOrEqualComparisonContext) Accept(visitor antlr.ParseTreeVisitor)
 }
 
 type GreaterComparisonContext struct {
-	*ComparisonContext
+	*BoolExpressionContext
 }
 
 func NewGreaterComparisonContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *GreaterComparisonContext {
 	var p = new(GreaterComparisonContext)
 
-	p.ComparisonContext = NewEmptyComparisonContext()
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
 	p.parser = parser
-	p.CopyFrom(ctx.(*ComparisonContext))
+	p.CopyFrom(ctx.(*BoolExpressionContext))
 
 	return p
 }
@@ -847,15 +918,15 @@ func (s *GreaterComparisonContext) Accept(visitor antlr.ParseTreeVisitor) interf
 }
 
 type LessOrEqualComparisonContext struct {
-	*ComparisonContext
+	*BoolExpressionContext
 }
 
 func NewLessOrEqualComparisonContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *LessOrEqualComparisonContext {
 	var p = new(LessOrEqualComparisonContext)
 
-	p.ComparisonContext = NewEmptyComparisonContext()
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
 	p.parser = parser
-	p.CopyFrom(ctx.(*ComparisonContext))
+	p.CopyFrom(ctx.(*BoolExpressionContext))
 
 	return p
 }
@@ -917,16 +988,66 @@ func (s *LessOrEqualComparisonContext) Accept(visitor antlr.ParseTreeVisitor) in
 	}
 }
 
+type BooleanAtomContext struct {
+	*BoolExpressionContext
+}
+
+func NewBooleanAtomContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *BooleanAtomContext {
+	var p = new(BooleanAtomContext)
+
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*BoolExpressionContext))
+
+	return p
+}
+
+func (s *BooleanAtomContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *BooleanAtomContext) BoolAtom() IBoolAtomContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolAtomContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBoolAtomContext)
+}
+
+func (s *BooleanAtomContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterBooleanAtom(s)
+	}
+}
+
+func (s *BooleanAtomContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitBooleanAtom(s)
+	}
+}
+
+func (s *BooleanAtomContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitBooleanAtom(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 type LessComparisonContext struct {
-	*ComparisonContext
+	*BoolExpressionContext
 }
 
 func NewLessComparisonContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *LessComparisonContext {
 	var p = new(LessComparisonContext)
 
-	p.ComparisonContext = NewEmptyComparisonContext()
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
 	p.parser = parser
-	p.CopyFrom(ctx.(*ComparisonContext))
+	p.CopyFrom(ctx.(*BoolExpressionContext))
 
 	return p
 }
@@ -984,16 +1105,154 @@ func (s *LessComparisonContext) Accept(visitor antlr.ParseTreeVisitor) interface
 	}
 }
 
+type ParenthesesBooleanContext struct {
+	*BoolExpressionContext
+}
+
+func NewParenthesesBooleanContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ParenthesesBooleanContext {
+	var p = new(ParenthesesBooleanContext)
+
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*BoolExpressionContext))
+
+	return p
+}
+
+func (s *ParenthesesBooleanContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ParenthesesBooleanContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserLPAREN, 0)
+}
+
+func (s *ParenthesesBooleanContext) BoolExpression() IBoolExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBoolExpressionContext)
+}
+
+func (s *ParenthesesBooleanContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(AbacusParserRPAREN, 0)
+}
+
+func (s *ParenthesesBooleanContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterParenthesesBoolean(s)
+	}
+}
+
+func (s *ParenthesesBooleanContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitParenthesesBoolean(s)
+	}
+}
+
+func (s *ParenthesesBooleanContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitParenthesesBoolean(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type AndOrXorContext struct {
+	*BoolExpressionContext
+	op antlr.Token
+}
+
+func NewAndOrXorContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *AndOrXorContext {
+	var p = new(AndOrXorContext)
+
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*BoolExpressionContext))
+
+	return p
+}
+
+func (s *AndOrXorContext) GetOp() antlr.Token { return s.op }
+
+func (s *AndOrXorContext) SetOp(v antlr.Token) { s.op = v }
+
+func (s *AndOrXorContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *AndOrXorContext) AllBoolExpression() []IBoolExpressionContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem())
+	var tst = make([]IBoolExpressionContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(IBoolExpressionContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *AndOrXorContext) BoolExpression(i int) IBoolExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBoolExpressionContext)
+}
+
+func (s *AndOrXorContext) AND() antlr.TerminalNode {
+	return s.GetToken(AbacusParserAND, 0)
+}
+
+func (s *AndOrXorContext) OR() antlr.TerminalNode {
+	return s.GetToken(AbacusParserOR, 0)
+}
+
+func (s *AndOrXorContext) XOR() antlr.TerminalNode {
+	return s.GetToken(AbacusParserXOR, 0)
+}
+
+func (s *AndOrXorContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterAndOrXor(s)
+	}
+}
+
+func (s *AndOrXorContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitAndOrXor(s)
+	}
+}
+
+func (s *AndOrXorContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitAndOrXor(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 type EqualComparisonContext struct {
-	*ComparisonContext
+	*BoolExpressionContext
 }
 
 func NewEqualComparisonContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *EqualComparisonContext {
 	var p = new(EqualComparisonContext)
 
-	p.ComparisonContext = NewEmptyComparisonContext()
+	p.BoolExpressionContext = NewEmptyBoolExpressionContext()
 	p.parser = parser
-	p.CopyFrom(ctx.(*ComparisonContext))
+	p.CopyFrom(ctx.(*BoolExpressionContext))
 
 	return p
 }
@@ -1055,9 +1314,339 @@ func (s *EqualComparisonContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 	}
 }
 
-func (p *AbacusParser) Comparison() (localctx IComparisonContext) {
-	localctx = NewComparisonContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, AbacusParserRULE_comparison)
+func (p *AbacusParser) BoolExpression() (localctx IBoolExpressionContext) {
+	return p.boolExpression(0)
+}
+
+func (p *AbacusParser) boolExpression(_p int) (localctx IBoolExpressionContext) {
+	var _parentctx antlr.ParserRuleContext = p.GetParserRuleContext()
+	_parentState := p.GetState()
+	localctx = NewBoolExpressionContext(p, p.GetParserRuleContext(), _parentState)
+	var _prevctx IBoolExpressionContext = localctx
+	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
+	_startState := 4
+	p.EnterRecursionRule(localctx, 4, AbacusParserRULE_boolExpression, _p)
+	var _la int
+
+	defer func() {
+		p.UnrollRecursionContexts(_parentctx)
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	var _alt int
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(83)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
+	case 1:
+		localctx = NewEqualComparisonContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+
+		{
+			p.SetState(45)
+			p.expression(0)
+		}
+		{
+			p.SetState(46)
+			p.Match(AbacusParserEQ)
+		}
+		{
+			p.SetState(47)
+			p.Match(AbacusParserEQ)
+		}
+		{
+			p.SetState(48)
+			p.expression(0)
+		}
+
+	case 2:
+		localctx = NewLessComparisonContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(50)
+			p.expression(0)
+		}
+		{
+			p.SetState(51)
+			p.Match(AbacusParserLS)
+		}
+		{
+			p.SetState(52)
+			p.expression(0)
+		}
+
+	case 3:
+		localctx = NewGreaterComparisonContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(54)
+			p.expression(0)
+		}
+		{
+			p.SetState(55)
+			p.Match(AbacusParserGR)
+		}
+		{
+			p.SetState(56)
+			p.expression(0)
+		}
+
+	case 4:
+		localctx = NewLessOrEqualComparisonContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(58)
+			p.expression(0)
+		}
+		p.SetState(63)
+		p.GetErrorHandler().Sync(p)
+
+		switch p.GetTokenStream().LA(1) {
+		case AbacusParserLS:
+			{
+				p.SetState(59)
+				p.Match(AbacusParserLS)
+			}
+			{
+				p.SetState(60)
+				p.Match(AbacusParserEQ)
+			}
+
+		case AbacusParserEQ:
+			{
+				p.SetState(61)
+				p.Match(AbacusParserEQ)
+			}
+			{
+				p.SetState(62)
+				p.Match(AbacusParserLS)
+			}
+
+		default:
+			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		}
+		{
+			p.SetState(65)
+			p.expression(0)
+		}
+
+	case 5:
+		localctx = NewGreaterOrEqualComparisonContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(67)
+			p.expression(0)
+		}
+		p.SetState(72)
+		p.GetErrorHandler().Sync(p)
+
+		switch p.GetTokenStream().LA(1) {
+		case AbacusParserGR:
+			{
+				p.SetState(68)
+				p.Match(AbacusParserGR)
+			}
+			{
+				p.SetState(69)
+				p.Match(AbacusParserEQ)
+			}
+
+		case AbacusParserEQ:
+			{
+				p.SetState(70)
+				p.Match(AbacusParserEQ)
+			}
+			{
+				p.SetState(71)
+				p.Match(AbacusParserGR)
+			}
+
+		default:
+			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		}
+		{
+			p.SetState(74)
+			p.expression(0)
+		}
+
+	case 6:
+		localctx = NewNotContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(76)
+			p.Match(AbacusParserNOT)
+		}
+		{
+			p.SetState(77)
+			p.boolExpression(3)
+		}
+
+	case 7:
+		localctx = NewParenthesesBooleanContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(78)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(79)
+			p.boolExpression(0)
+		}
+		{
+			p.SetState(80)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case 8:
+		localctx = NewBooleanAtomContext(p, localctx)
+		p.SetParserRuleContext(localctx)
+		_prevctx = localctx
+		{
+			p.SetState(82)
+			p.BoolAtom()
+		}
+
+	}
+	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
+	p.SetState(90)
+	p.GetErrorHandler().Sync(p)
+	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
+
+	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+		if _alt == 1 {
+			if p.GetParseListeners() != nil {
+				p.TriggerExitRuleEvent()
+			}
+			_prevctx = localctx
+			localctx = NewAndOrXorContext(p, NewBoolExpressionContext(p, _parentctx, _parentState))
+			p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_boolExpression)
+			p.SetState(85)
+
+			if !(p.Precpred(p.GetParserRuleContext(), 4)) {
+				panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
+			}
+			{
+				p.SetState(86)
+
+				var _lt = p.GetTokenStream().LT(1)
+
+				localctx.(*AndOrXorContext).op = _lt
+
+				_la = p.GetTokenStream().LA(1)
+
+				if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AbacusParserAND)|(1<<AbacusParserOR)|(1<<AbacusParserXOR))) != 0) {
+					var _ri = p.GetErrorHandler().RecoverInline(p)
+
+					localctx.(*AndOrXorContext).op = _ri
+				} else {
+					p.GetErrorHandler().ReportMatch(p)
+					p.Consume()
+				}
+			}
+			{
+				p.SetState(87)
+				p.boolExpression(5)
+			}
+
+		}
+		p.SetState(92)
+		p.GetErrorHandler().Sync(p)
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
+	}
+
+	return localctx
+}
+
+// IBoolAtomContext is an interface to support dynamic dispatch.
+type IBoolAtomContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsBoolAtomContext differentiates from other interfaces.
+	IsBoolAtomContext()
+}
+
+type BoolAtomContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyBoolAtomContext() *BoolAtomContext {
+	var p = new(BoolAtomContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AbacusParserRULE_boolAtom
+	return p
+}
+
+func (*BoolAtomContext) IsBoolAtomContext() {}
+
+func NewBoolAtomContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BoolAtomContext {
+	var p = new(BoolAtomContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AbacusParserRULE_boolAtom
+
+	return p
+}
+
+func (s *BoolAtomContext) GetParser() antlr.Parser { return s.parser }
+func (s *BoolAtomContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *BoolAtomContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *BoolAtomContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.EnterBoolAtom(s)
+	}
+}
+
+func (s *BoolAtomContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AbacusListener); ok {
+		listenerT.ExitBoolAtom(s)
+	}
+}
+
+func (s *BoolAtomContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AbacusVisitor:
+		return t.VisitBoolAtom(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *AbacusParser) BoolAtom() (localctx IBoolAtomContext) {
+	localctx = NewBoolAtomContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 6, AbacusParserRULE_boolAtom)
+	var _la int
 
 	defer func() {
 		p.ExitRule()
@@ -1075,139 +1664,17 @@ func (p *AbacusParser) Comparison() (localctx IComparisonContext) {
 		}
 	}()
 
-	p.SetState(73)
-	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
-	case 1:
-		localctx = NewEqualComparisonContext(p, localctx)
-		p.EnterOuterAlt(localctx, 1)
-		{
-			p.SetState(42)
-			p.expression(0)
-		}
-		{
-			p.SetState(43)
-			p.Match(AbacusParserEQ)
-		}
-		{
-			p.SetState(44)
-			p.Match(AbacusParserEQ)
-		}
-		{
-			p.SetState(45)
-			p.expression(0)
-		}
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(93)
+		_la = p.GetTokenStream().LA(1)
 
-	case 2:
-		localctx = NewLessComparisonContext(p, localctx)
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(47)
-			p.expression(0)
+		if !(_la == AbacusParserT__0 || _la == AbacusParserT__1) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
 		}
-		{
-			p.SetState(48)
-			p.Match(AbacusParserLS)
-		}
-		{
-			p.SetState(49)
-			p.expression(0)
-		}
-
-	case 3:
-		localctx = NewGreaterComparisonContext(p, localctx)
-		p.EnterOuterAlt(localctx, 3)
-		{
-			p.SetState(51)
-			p.expression(0)
-		}
-		{
-			p.SetState(52)
-			p.Match(AbacusParserGR)
-		}
-		{
-			p.SetState(53)
-			p.expression(0)
-		}
-
-	case 4:
-		localctx = NewLessOrEqualComparisonContext(p, localctx)
-		p.EnterOuterAlt(localctx, 4)
-		{
-			p.SetState(55)
-			p.expression(0)
-		}
-		p.SetState(60)
-		p.GetErrorHandler().Sync(p)
-
-		switch p.GetTokenStream().LA(1) {
-		case AbacusParserLS:
-			{
-				p.SetState(56)
-				p.Match(AbacusParserLS)
-			}
-			{
-				p.SetState(57)
-				p.Match(AbacusParserEQ)
-			}
-
-		case AbacusParserEQ:
-			{
-				p.SetState(58)
-				p.Match(AbacusParserEQ)
-			}
-			{
-				p.SetState(59)
-				p.Match(AbacusParserLS)
-			}
-
-		default:
-			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-		}
-		{
-			p.SetState(62)
-			p.expression(0)
-		}
-
-	case 5:
-		localctx = NewGreaterOrEqualComparisonContext(p, localctx)
-		p.EnterOuterAlt(localctx, 5)
-		{
-			p.SetState(64)
-			p.expression(0)
-		}
-		p.SetState(69)
-		p.GetErrorHandler().Sync(p)
-
-		switch p.GetTokenStream().LA(1) {
-		case AbacusParserGR:
-			{
-				p.SetState(65)
-				p.Match(AbacusParserGR)
-			}
-			{
-				p.SetState(66)
-				p.Match(AbacusParserEQ)
-			}
-
-		case AbacusParserEQ:
-			{
-				p.SetState(67)
-				p.Match(AbacusParserEQ)
-			}
-			{
-				p.SetState(68)
-				p.Match(AbacusParserGR)
-			}
-
-		default:
-			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-		}
-		{
-			p.SetState(71)
-			p.expression(0)
-		}
-
 	}
 
 	return localctx
@@ -1391,7 +1858,7 @@ func (s *VariablesLambdaContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 
 func (p *AbacusParser) Lambda() (localctx ILambdaContext) {
 	localctx = NewLambdaContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 6, AbacusParserRULE_lambda)
+	p.EnterRule(localctx, 8, AbacusParserRULE_lambda)
 
 	defer func() {
 		p.ExitRule()
@@ -1409,22 +1876,22 @@ func (p *AbacusParser) Lambda() (localctx ILambdaContext) {
 		}
 	}()
 
-	p.SetState(83)
+	p.SetState(103)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 6, p.GetParserRuleContext()) {
 	case 1:
 		localctx = NewVariablesLambdaContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(75)
+			p.SetState(95)
 			p.VariablesTuple()
 		}
 		{
-			p.SetState(76)
+			p.SetState(96)
 			p.Match(AbacusParserARROW)
 		}
 		{
-			p.SetState(77)
+			p.SetState(97)
 			p.Tuple()
 		}
 
@@ -1432,19 +1899,19 @@ func (p *AbacusParser) Lambda() (localctx ILambdaContext) {
 		localctx = NewNullArityLambdaContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(79)
+			p.SetState(99)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(80)
+			p.SetState(100)
 			p.Match(AbacusParserRPAREN)
 		}
 		{
-			p.SetState(81)
+			p.SetState(101)
 			p.Match(AbacusParserARROW)
 		}
 		{
-			p.SetState(82)
+			p.SetState(102)
 			p.Tuple()
 		}
 
@@ -2097,8 +2564,8 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 	localctx = NewExpressionContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IExpressionContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
-	_startState := 8
-	p.EnterRecursionRule(localctx, 8, AbacusParserRULE_expression, _p)
+	_startState := 10
+	p.EnterRecursionRule(localctx, 10, AbacusParserRULE_expression, _p)
 	var _la int
 
 	defer func() {
@@ -2120,7 +2587,7 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(103)
+	p.SetState(123)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -2130,11 +2597,11 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		_prevctx = localctx
 
 		{
-			p.SetState(86)
+			p.SetState(106)
 			p.Sign()
 		}
 		{
-			p.SetState(87)
+			p.SetState(107)
 			p.expression(9)
 		}
 
@@ -2143,15 +2610,15 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(89)
+			p.SetState(109)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(90)
+			p.SetState(110)
 			p.expression(0)
 		}
 		{
-			p.SetState(91)
+			p.SetState(111)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -2160,45 +2627,45 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(93)
+			p.SetState(113)
 			p.Match(AbacusParserLAMBDA_VARIABLE)
 		}
 		{
-			p.SetState(94)
+			p.SetState(114)
 			p.Match(AbacusParserLPAREN)
 		}
-		p.SetState(96)
+		p.SetState(116)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AbacusParserT__1)|(1<<AbacusParserT__2)|(1<<AbacusParserT__3)|(1<<AbacusParserT__4)|(1<<AbacusParserT__5)|(1<<AbacusParserT__6)|(1<<AbacusParserT__7)|(1<<AbacusParserT__8)|(1<<AbacusParserT__9)|(1<<AbacusParserT__10)|(1<<AbacusParserT__11)|(1<<AbacusParserT__12)|(1<<AbacusParserT__13)|(1<<AbacusParserT__14)|(1<<AbacusParserT__15)|(1<<AbacusParserT__16)|(1<<AbacusParserT__17)|(1<<AbacusParserT__18)|(1<<AbacusParserT__19)|(1<<AbacusParserT__20)|(1<<AbacusParserT__21)|(1<<AbacusParserADD)|(1<<AbacusParserSUB))) != 0) || (((_la-34)&-(0x1f+1)) == 0 && ((1<<uint((_la-34)))&((1<<(AbacusParserLPAREN-34))|(1<<(AbacusParserCONSTANT-34))|(1<<(AbacusParserSCIENTIFIC_NUMBER-34))|(1<<(AbacusParserVARIABLE-34))|(1<<(AbacusParserLAMBDA_VARIABLE-34)))) != 0) {
+		if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AbacusParserT__3)|(1<<AbacusParserT__4)|(1<<AbacusParserT__5)|(1<<AbacusParserT__6)|(1<<AbacusParserT__7)|(1<<AbacusParserT__8)|(1<<AbacusParserT__9)|(1<<AbacusParserT__10)|(1<<AbacusParserT__11)|(1<<AbacusParserT__12)|(1<<AbacusParserT__13)|(1<<AbacusParserT__14)|(1<<AbacusParserT__15)|(1<<AbacusParserT__16)|(1<<AbacusParserT__17)|(1<<AbacusParserT__18)|(1<<AbacusParserT__19)|(1<<AbacusParserT__20)|(1<<AbacusParserT__21)|(1<<AbacusParserT__22)|(1<<AbacusParserT__23))) != 0) || (((_la-36)&-(0x1f+1)) == 0 && ((1<<uint((_la-36)))&((1<<(AbacusParserADD-36))|(1<<(AbacusParserSUB-36))|(1<<(AbacusParserLPAREN-36))|(1<<(AbacusParserCONSTANT-36))|(1<<(AbacusParserSCIENTIFIC_NUMBER-36))|(1<<(AbacusParserVARIABLE-36))|(1<<(AbacusParserLAMBDA_VARIABLE-36)))) != 0) {
 			{
-				p.SetState(95)
+				p.SetState(115)
 				p.Tuple()
 			}
 
 		}
 		{
-			p.SetState(98)
+			p.SetState(118)
 			p.Match(AbacusParserRPAREN)
 		}
-		p.SetState(100)
+		p.SetState(120)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext()) == 1 {
 			{
-				p.SetState(99)
+				p.SetState(119)
 				p.RecursionParameters()
 			}
 
 		}
 
-	case AbacusParserT__1, AbacusParserT__2, AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7, AbacusParserT__8, AbacusParserT__9, AbacusParserT__10, AbacusParserT__11, AbacusParserT__12, AbacusParserT__13, AbacusParserT__14, AbacusParserT__15, AbacusParserT__16, AbacusParserT__17, AbacusParserT__18, AbacusParserT__19, AbacusParserT__20, AbacusParserT__21, AbacusParserCONSTANT, AbacusParserSCIENTIFIC_NUMBER, AbacusParserVARIABLE:
+	case AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7, AbacusParserT__8, AbacusParserT__9, AbacusParserT__10, AbacusParserT__11, AbacusParserT__12, AbacusParserT__13, AbacusParserT__14, AbacusParserT__15, AbacusParserT__16, AbacusParserT__17, AbacusParserT__18, AbacusParserT__19, AbacusParserT__20, AbacusParserT__21, AbacusParserT__22, AbacusParserT__23, AbacusParserCONSTANT, AbacusParserSCIENTIFIC_NUMBER, AbacusParserVARIABLE:
 		localctx = NewAtomExprContext(p, localctx)
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(102)
+			p.SetState(122)
 			p.Atom()
 		}
 
@@ -2206,9 +2673,9 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(122)
+	p.SetState(142)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 11, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
@@ -2216,57 +2683,57 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(120)
+			p.SetState(140)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 9, p.GetParserRuleContext()) {
+			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewPowContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(105)
+				p.SetState(125)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 7)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 7)", ""))
 				}
 				{
-					p.SetState(106)
+					p.SetState(126)
 					p.Match(AbacusParserPOW)
 				}
 				{
-					p.SetState(107)
+					p.SetState(127)
 					p.expression(8)
 				}
 
 			case 2:
 				localctx = NewModContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(108)
+				p.SetState(128)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				{
-					p.SetState(109)
+					p.SetState(129)
 					p.Match(AbacusParserPER)
 				}
 				{
-					p.SetState(110)
+					p.SetState(130)
 					p.Match(AbacusParserPER)
 				}
 				{
-					p.SetState(111)
+					p.SetState(131)
 					p.expression(7)
 				}
 
 			case 3:
 				localctx = NewMulDivContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(112)
+				p.SetState(132)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(113)
+					p.SetState(133)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2284,20 +2751,20 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(114)
+					p.SetState(134)
 					p.expression(6)
 				}
 
 			case 4:
 				localctx = NewAddSubContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(115)
+				p.SetState(135)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(116)
+					p.SetState(136)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2315,29 +2782,29 @@ func (p *AbacusParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(117)
+					p.SetState(137)
 					p.expression(5)
 				}
 
 			case 5:
 				localctx = NewPercentContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, AbacusParserRULE_expression)
-				p.SetState(118)
+				p.SetState(138)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 8)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 8)", ""))
 				}
 				{
-					p.SetState(119)
+					p.SetState(139)
 					p.Match(AbacusParserPER)
 				}
 
 			}
 
 		}
-		p.SetState(124)
+		p.SetState(144)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 11, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -2412,14 +2879,14 @@ func (s *RecursionParametersContext) RSQPAREN() antlr.TerminalNode {
 	return s.GetToken(AbacusParserRSQPAREN, 0)
 }
 
-func (s *RecursionParametersContext) Comparison() IComparisonContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IComparisonContext)(nil)).Elem(), 0)
+func (s *RecursionParametersContext) BoolExpression() IBoolExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IBoolExpressionContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IComparisonContext)
+	return t.(IBoolExpressionContext)
 }
 
 func (s *RecursionParametersContext) GetRuleContext() antlr.RuleContext {
@@ -2454,7 +2921,7 @@ func (s *RecursionParametersContext) Accept(visitor antlr.ParseTreeVisitor) inte
 
 func (p *AbacusParser) RecursionParameters() (localctx IRecursionParametersContext) {
 	localctx = NewRecursionParametersContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, AbacusParserRULE_recursionParameters)
+	p.EnterRule(localctx, 12, AbacusParserRULE_recursionParameters)
 	var _la int
 
 	defer func() {
@@ -2475,45 +2942,45 @@ func (p *AbacusParser) RecursionParameters() (localctx IRecursionParametersConte
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(125)
+		p.SetState(145)
 		p.Match(AbacusParserLSQPAREN)
 	}
 	{
-		p.SetState(126)
+		p.SetState(146)
 		p.expression(0)
 	}
-	p.SetState(133)
+	p.SetState(153)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == AbacusParserT__0 {
+	if _la == AbacusParserT__2 {
 		{
-			p.SetState(127)
-			p.Match(AbacusParserT__0)
+			p.SetState(147)
+			p.Match(AbacusParserT__2)
 		}
 		{
-			p.SetState(128)
+			p.SetState(148)
 			p.expression(0)
 		}
-		p.SetState(131)
+		p.SetState(151)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == AbacusParserT__0 {
+		if _la == AbacusParserT__2 {
 			{
-				p.SetState(129)
-				p.Match(AbacusParserT__0)
+				p.SetState(149)
+				p.Match(AbacusParserT__2)
 			}
 			{
-				p.SetState(130)
-				p.Comparison()
+				p.SetState(150)
+				p.boolExpression(0)
 			}
 
 		}
 
 	}
 	{
-		p.SetState(135)
+		p.SetState(155)
 		p.Match(AbacusParserRSQPAREN)
 	}
 
@@ -2610,7 +3077,7 @@ func (s *TupleContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *AbacusParser) Tuple() (localctx ITupleContext) {
 	localctx = NewTupleContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, AbacusParserRULE_tuple)
+	p.EnterRule(localctx, 14, AbacusParserRULE_tuple)
 
 	defer func() {
 		p.ExitRule()
@@ -2630,19 +3097,19 @@ func (p *AbacusParser) Tuple() (localctx ITupleContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(137)
+		p.SetState(157)
 		p.expression(0)
 	}
-	p.SetState(140)
+	p.SetState(160)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 13, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 14, p.GetParserRuleContext()) == 1 {
 		{
-			p.SetState(138)
-			p.Match(AbacusParserT__0)
+			p.SetState(158)
+			p.Match(AbacusParserT__2)
 		}
 		{
-			p.SetState(139)
+			p.SetState(159)
 			p.Tuple()
 		}
 
@@ -2743,7 +3210,7 @@ func (s *VariablesTupleContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *AbacusParser) VariablesTuple() (localctx IVariablesTupleContext) {
 	localctx = NewVariablesTupleContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, AbacusParserRULE_variablesTuple)
+	p.EnterRule(localctx, 16, AbacusParserRULE_variablesTuple)
 	var _la int
 
 	defer func() {
@@ -2762,27 +3229,27 @@ func (p *AbacusParser) VariablesTuple() (localctx IVariablesTupleContext) {
 		}
 	}()
 
-	p.SetState(154)
+	p.SetState(174)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case AbacusParserVARIABLE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(142)
+			p.SetState(162)
 			p.Match(AbacusParserVARIABLE)
 		}
-		p.SetState(145)
+		p.SetState(165)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == AbacusParserT__0 {
+		if _la == AbacusParserT__2 {
 			{
-				p.SetState(143)
-				p.Match(AbacusParserT__0)
+				p.SetState(163)
+				p.Match(AbacusParserT__2)
 			}
 			{
-				p.SetState(144)
+				p.SetState(164)
 				p.VariablesTuple()
 			}
 
@@ -2791,30 +3258,30 @@ func (p *AbacusParser) VariablesTuple() (localctx IVariablesTupleContext) {
 	case AbacusParserLPAREN:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(147)
+			p.SetState(167)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(148)
+			p.SetState(168)
 			p.Match(AbacusParserVARIABLE)
 		}
-		p.SetState(151)
+		p.SetState(171)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == AbacusParserT__0 {
+		if _la == AbacusParserT__2 {
 			{
-				p.SetState(149)
-				p.Match(AbacusParserT__0)
+				p.SetState(169)
+				p.Match(AbacusParserT__2)
 			}
 			{
-				p.SetState(150)
+				p.SetState(170)
 				p.VariablesTuple()
 			}
 
 		}
 		{
-			p.SetState(153)
+			p.SetState(173)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -3059,7 +3526,7 @@ func (s *FuncExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *AbacusParser) Atom() (localctx IAtomContext) {
 	localctx = NewAtomContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, AbacusParserRULE_atom)
+	p.EnterRule(localctx, 18, AbacusParserRULE_atom)
 
 	defer func() {
 		p.ExitRule()
@@ -3077,15 +3544,15 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		}
 	}()
 
-	p.SetState(160)
+	p.SetState(180)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case AbacusParserT__1, AbacusParserT__2, AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7, AbacusParserT__8, AbacusParserT__9, AbacusParserT__10, AbacusParserT__11, AbacusParserT__12, AbacusParserT__13, AbacusParserT__14, AbacusParserT__15, AbacusParserT__16, AbacusParserT__17, AbacusParserT__18, AbacusParserT__19, AbacusParserT__20, AbacusParserT__21:
+	case AbacusParserT__3, AbacusParserT__4, AbacusParserT__5, AbacusParserT__6, AbacusParserT__7, AbacusParserT__8, AbacusParserT__9, AbacusParserT__10, AbacusParserT__11, AbacusParserT__12, AbacusParserT__13, AbacusParserT__14, AbacusParserT__15, AbacusParserT__16, AbacusParserT__17, AbacusParserT__18, AbacusParserT__19, AbacusParserT__20, AbacusParserT__21, AbacusParserT__22, AbacusParserT__23:
 		localctx = NewFuncExprContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(156)
+			p.SetState(176)
 			p.Function()
 		}
 
@@ -3093,7 +3560,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		localctx = NewConstantContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(157)
+			p.SetState(177)
 			p.Match(AbacusParserCONSTANT)
 		}
 
@@ -3101,7 +3568,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		localctx = NewNumberContext(p, localctx)
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(158)
+			p.SetState(178)
 			p.Match(AbacusParserSCIENTIFIC_NUMBER)
 		}
 
@@ -3109,7 +3576,7 @@ func (p *AbacusParser) Atom() (localctx IAtomContext) {
 		localctx = NewVariableContext(p, localctx)
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(159)
+			p.SetState(179)
 			p.Match(AbacusParserVARIABLE)
 		}
 
@@ -3260,7 +3727,7 @@ func (s *MinusSignContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *AbacusParser) Sign() (localctx ISignContext) {
 	localctx = NewSignContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, AbacusParserRULE_sign)
+	p.EnterRule(localctx, 20, AbacusParserRULE_sign)
 
 	defer func() {
 		p.ExitRule()
@@ -3278,7 +3745,7 @@ func (p *AbacusParser) Sign() (localctx ISignContext) {
 		}
 	}()
 
-	p.SetState(164)
+	p.SetState(184)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -3286,7 +3753,7 @@ func (p *AbacusParser) Sign() (localctx ISignContext) {
 		localctx = NewPlusSignContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(162)
+			p.SetState(182)
 			p.Match(AbacusParserADD)
 		}
 
@@ -3294,7 +3761,7 @@ func (p *AbacusParser) Sign() (localctx ISignContext) {
 		localctx = NewMinusSignContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(163)
+			p.SetState(183)
 			p.Match(AbacusParserSUB)
 		}
 
@@ -4737,7 +5204,7 @@ func (s *RoundDefFunctionContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 
 func (p *AbacusParser) Function() (localctx IFunctionContext) {
 	localctx = NewFunctionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, AbacusParserRULE_function)
+	p.EnterRule(localctx, 22, AbacusParserRULE_function)
 
 	defer func() {
 		p.ExitRule()
@@ -4755,95 +5222,15 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		}
 	}()
 
-	p.SetState(289)
+	p.SetState(309)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 19, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 20, p.GetParserRuleContext()) {
 	case 1:
 		localctx = NewSqrtFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(166)
-			p.Match(AbacusParserT__1)
-		}
-		{
-			p.SetState(167)
-			p.Match(AbacusParserLPAREN)
-		}
-		{
-			p.SetState(168)
-			p.expression(0)
-		}
-		{
-			p.SetState(169)
-			p.Match(AbacusParserRPAREN)
-		}
-
-	case 2:
-		localctx = NewCbrtFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(171)
-			p.Match(AbacusParserT__2)
-		}
-		{
-			p.SetState(172)
-			p.Match(AbacusParserLPAREN)
-		}
-		{
-			p.SetState(173)
-			p.expression(0)
-		}
-		{
-			p.SetState(174)
-			p.Match(AbacusParserRPAREN)
-		}
-
-	case 3:
-		localctx = NewLnFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 3)
-		{
-			p.SetState(176)
-			p.Match(AbacusParserT__3)
-		}
-		{
-			p.SetState(177)
-			p.Match(AbacusParserLPAREN)
-		}
-		{
-			p.SetState(178)
-			p.expression(0)
-		}
-		{
-			p.SetState(179)
-			p.Match(AbacusParserRPAREN)
-		}
-
-	case 4:
-		localctx = NewLogDefFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 4)
-		{
-			p.SetState(181)
-			p.Match(AbacusParserT__4)
-		}
-		{
-			p.SetState(182)
-			p.Match(AbacusParserLPAREN)
-		}
-		{
-			p.SetState(183)
-			p.expression(0)
-		}
-		{
-			p.SetState(184)
-			p.Match(AbacusParserRPAREN)
-		}
-
-	case 5:
-		localctx = NewLog2FunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 5)
-		{
 			p.SetState(186)
-			p.Match(AbacusParserT__5)
+			p.Match(AbacusParserT__3)
 		}
 		{
 			p.SetState(187)
@@ -4858,12 +5245,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 6:
-		localctx = NewLog10FunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 6)
+	case 2:
+		localctx = NewCbrtFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(191)
-			p.Match(AbacusParserT__6)
+			p.Match(AbacusParserT__4)
 		}
 		{
 			p.SetState(192)
@@ -4878,12 +5265,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 7:
-		localctx = NewFloorFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 7)
+	case 3:
+		localctx = NewLnFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(196)
-			p.Match(AbacusParserT__7)
+			p.Match(AbacusParserT__5)
 		}
 		{
 			p.SetState(197)
@@ -4898,12 +5285,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 8:
-		localctx = NewCeilFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 8)
+	case 4:
+		localctx = NewLogDefFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 4)
 		{
 			p.SetState(201)
-			p.Match(AbacusParserT__8)
+			p.Match(AbacusParserT__6)
 		}
 		{
 			p.SetState(202)
@@ -4918,12 +5305,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 9:
-		localctx = NewExpFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 9)
+	case 5:
+		localctx = NewLog2FunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 5)
 		{
 			p.SetState(206)
-			p.Match(AbacusParserT__9)
+			p.Match(AbacusParserT__7)
 		}
 		{
 			p.SetState(207)
@@ -4938,12 +5325,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 10:
-		localctx = NewSinFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 10)
+	case 6:
+		localctx = NewLog10FunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 6)
 		{
 			p.SetState(211)
-			p.Match(AbacusParserT__10)
+			p.Match(AbacusParserT__8)
 		}
 		{
 			p.SetState(212)
@@ -4958,12 +5345,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 11:
-		localctx = NewCosFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 11)
+	case 7:
+		localctx = NewFloorFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 7)
 		{
 			p.SetState(216)
-			p.Match(AbacusParserT__11)
+			p.Match(AbacusParserT__9)
 		}
 		{
 			p.SetState(217)
@@ -4978,12 +5365,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 12:
-		localctx = NewTanFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 12)
+	case 8:
+		localctx = NewCeilFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 8)
 		{
 			p.SetState(221)
-			p.Match(AbacusParserT__12)
+			p.Match(AbacusParserT__10)
 		}
 		{
 			p.SetState(222)
@@ -4998,12 +5385,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 13:
-		localctx = NewRoundDefFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 13)
+	case 9:
+		localctx = NewExpFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 9)
 		{
 			p.SetState(226)
-			p.Match(AbacusParserT__13)
+			p.Match(AbacusParserT__11)
 		}
 		{
 			p.SetState(227)
@@ -5018,12 +5405,12 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 14:
-		localctx = NewAbsFunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 14)
+	case 10:
+		localctx = NewSinFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 10)
 		{
 			p.SetState(231)
-			p.Match(AbacusParserT__14)
+			p.Match(AbacusParserT__12)
 		}
 		{
 			p.SetState(232)
@@ -5038,9 +5425,9 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 			p.Match(AbacusParserRPAREN)
 		}
 
-	case 15:
-		localctx = NewRound2FunctionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 15)
+	case 11:
+		localctx = NewCosFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 11)
 		{
 			p.SetState(236)
 			p.Match(AbacusParserT__13)
@@ -5055,14 +5442,94 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		}
 		{
 			p.SetState(239)
-			p.Match(AbacusParserT__0)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case 12:
+		localctx = NewTanFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 12)
+		{
+			p.SetState(241)
+			p.Match(AbacusParserT__14)
 		}
 		{
-			p.SetState(240)
+			p.SetState(242)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(243)
 			p.expression(0)
 		}
 		{
-			p.SetState(241)
+			p.SetState(244)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case 13:
+		localctx = NewRoundDefFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 13)
+		{
+			p.SetState(246)
+			p.Match(AbacusParserT__15)
+		}
+		{
+			p.SetState(247)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(248)
+			p.expression(0)
+		}
+		{
+			p.SetState(249)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case 14:
+		localctx = NewAbsFunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 14)
+		{
+			p.SetState(251)
+			p.Match(AbacusParserT__16)
+		}
+		{
+			p.SetState(252)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(253)
+			p.expression(0)
+		}
+		{
+			p.SetState(254)
+			p.Match(AbacusParserRPAREN)
+		}
+
+	case 15:
+		localctx = NewRound2FunctionContext(p, localctx)
+		p.EnterOuterAlt(localctx, 15)
+		{
+			p.SetState(256)
+			p.Match(AbacusParserT__15)
+		}
+		{
+			p.SetState(257)
+			p.Match(AbacusParserLPAREN)
+		}
+		{
+			p.SetState(258)
+			p.expression(0)
+		}
+		{
+			p.SetState(259)
+			p.Match(AbacusParserT__2)
+		}
+		{
+			p.SetState(260)
+			p.expression(0)
+		}
+		{
+			p.SetState(261)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5070,27 +5537,27 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewLogFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 16)
 		{
-			p.SetState(243)
-			p.Match(AbacusParserT__4)
+			p.SetState(263)
+			p.Match(AbacusParserT__6)
 		}
 		{
-			p.SetState(244)
+			p.SetState(264)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(245)
+			p.SetState(265)
 			p.expression(0)
 		}
 		{
-			p.SetState(246)
-			p.Match(AbacusParserT__0)
+			p.SetState(266)
+			p.Match(AbacusParserT__2)
 		}
 		{
-			p.SetState(247)
+			p.SetState(267)
 			p.expression(0)
 		}
 		{
-			p.SetState(248)
+			p.SetState(268)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5098,19 +5565,19 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewMinFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 17)
 		{
-			p.SetState(250)
-			p.Match(AbacusParserT__15)
+			p.SetState(270)
+			p.Match(AbacusParserT__17)
 		}
 		{
-			p.SetState(251)
+			p.SetState(271)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(252)
+			p.SetState(272)
 			p.Tuple()
 		}
 		{
-			p.SetState(253)
+			p.SetState(273)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5118,19 +5585,19 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewMaxFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 18)
 		{
-			p.SetState(255)
-			p.Match(AbacusParserT__16)
+			p.SetState(275)
+			p.Match(AbacusParserT__18)
 		}
 		{
-			p.SetState(256)
+			p.SetState(276)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(257)
+			p.SetState(277)
 			p.Tuple()
 		}
 		{
-			p.SetState(258)
+			p.SetState(278)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5138,19 +5605,19 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewAvgFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 19)
 		{
-			p.SetState(260)
-			p.Match(AbacusParserT__17)
+			p.SetState(280)
+			p.Match(AbacusParserT__19)
 		}
 		{
-			p.SetState(261)
+			p.SetState(281)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(262)
+			p.SetState(282)
 			p.Tuple()
 		}
 		{
-			p.SetState(263)
+			p.SetState(283)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5158,27 +5625,27 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewUntilFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 20)
 		{
-			p.SetState(265)
-			p.Match(AbacusParserT__18)
+			p.SetState(285)
+			p.Match(AbacusParserT__20)
 		}
 		{
-			p.SetState(266)
+			p.SetState(286)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(267)
+			p.SetState(287)
 			p.Tuple()
 		}
 		{
-			p.SetState(268)
-			p.Match(AbacusParserT__0)
+			p.SetState(288)
+			p.Match(AbacusParserT__2)
 		}
 		{
-			p.SetState(269)
+			p.SetState(289)
 			p.expression(0)
 		}
 		{
-			p.SetState(270)
+			p.SetState(290)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5186,19 +5653,19 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewFromFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 21)
 		{
-			p.SetState(272)
-			p.Match(AbacusParserT__19)
+			p.SetState(292)
+			p.Match(AbacusParserT__21)
 		}
 		{
-			p.SetState(273)
+			p.SetState(293)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(274)
+			p.SetState(294)
 			p.Tuple()
 		}
 		{
-			p.SetState(275)
+			p.SetState(295)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5206,19 +5673,19 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewReverseFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 22)
 		{
-			p.SetState(277)
-			p.Match(AbacusParserT__20)
+			p.SetState(297)
+			p.Match(AbacusParserT__22)
 		}
 		{
-			p.SetState(278)
+			p.SetState(298)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(279)
+			p.SetState(299)
 			p.Tuple()
 		}
 		{
-			p.SetState(280)
+			p.SetState(300)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5226,27 +5693,27 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 		localctx = NewNthFunctionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 23)
 		{
-			p.SetState(282)
-			p.Match(AbacusParserT__21)
+			p.SetState(302)
+			p.Match(AbacusParserT__23)
 		}
 		{
-			p.SetState(283)
+			p.SetState(303)
 			p.Match(AbacusParserLPAREN)
 		}
 		{
-			p.SetState(284)
+			p.SetState(304)
 			p.Tuple()
 		}
 		{
-			p.SetState(285)
-			p.Match(AbacusParserT__0)
+			p.SetState(305)
+			p.Match(AbacusParserT__2)
 		}
 		{
-			p.SetState(286)
+			p.SetState(306)
 			p.expression(0)
 		}
 		{
-			p.SetState(287)
+			p.SetState(307)
 			p.Match(AbacusParserRPAREN)
 		}
 
@@ -5257,7 +5724,14 @@ func (p *AbacusParser) Function() (localctx IFunctionContext) {
 
 func (p *AbacusParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {
 	switch ruleIndex {
-	case 4:
+	case 2:
+		var t *BoolExpressionContext = nil
+		if localctx != nil {
+			t = localctx.(*BoolExpressionContext)
+		}
+		return p.BoolExpression_Sempred(t, predIndex)
+
+	case 5:
 		var t *ExpressionContext = nil
 		if localctx != nil {
 			t = localctx.(*ExpressionContext)
@@ -5269,21 +5743,31 @@ func (p *AbacusParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex 
 	}
 }
 
-func (p *AbacusParser) Expression_Sempred(localctx antlr.RuleContext, predIndex int) bool {
+func (p *AbacusParser) BoolExpression_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 7)
-
-	case 1:
-		return p.Precpred(p.GetParserRuleContext(), 6)
-
-	case 2:
-		return p.Precpred(p.GetParserRuleContext(), 5)
-
-	case 3:
 		return p.Precpred(p.GetParserRuleContext(), 4)
 
+	default:
+		panic("No predicate with index: " + fmt.Sprint(predIndex))
+	}
+}
+
+func (p *AbacusParser) Expression_Sempred(localctx antlr.RuleContext, predIndex int) bool {
+	switch predIndex {
+	case 1:
+		return p.Precpred(p.GetParserRuleContext(), 7)
+
+	case 2:
+		return p.Precpred(p.GetParserRuleContext(), 6)
+
+	case 3:
+		return p.Precpred(p.GetParserRuleContext(), 5)
+
 	case 4:
+		return p.Precpred(p.GetParserRuleContext(), 4)
+
+	case 5:
 		return p.Precpred(p.GetParserRuleContext(), 8)
 
 	default:

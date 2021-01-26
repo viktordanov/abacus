@@ -17,11 +17,11 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#LambdaDeclaration.
 	VisitLambdaDeclaration(ctx *LambdaDeclarationContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#EqualComparison.
-	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#Not.
+	VisitNot(ctx *NotContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#LessComparison.
-	VisitLessComparison(ctx *LessComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
+	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#GreaterComparison.
 	VisitGreaterComparison(ctx *GreaterComparisonContext) interface{}
@@ -29,8 +29,23 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#LessOrEqualComparison.
 	VisitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
-	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#BooleanAtom.
+	VisitBooleanAtom(ctx *BooleanAtomContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LessComparison.
+	VisitLessComparison(ctx *LessComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#ParenthesesBoolean.
+	VisitParenthesesBoolean(ctx *ParenthesesBooleanContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#AndOrXor.
+	VisitAndOrXor(ctx *AndOrXorContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#EqualComparison.
+	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#boolAtom.
+	VisitBoolAtom(ctx *BoolAtomContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#VariablesLambda.
 	VisitVariablesLambda(ctx *VariablesLambdaContext) interface{}

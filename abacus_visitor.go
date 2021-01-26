@@ -16,7 +16,7 @@ type Lambda struct {
 type RecursionParameters struct {
 	MaxRecurrences uint
 	LastValue      *apd.Decimal
-	StopWhen       parser.IComparisonContext
+	StopWhen       parser.IBoolExpressionContext
 }
 
 func NewRecursionParameters() *RecursionParameters {
@@ -117,7 +117,7 @@ func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 	case *parser.DeclarationContext:
 		return val.Accept(a)
 
-	case *parser.ComparisonContext:
+	case *parser.BoolExpressionContext:
 		return val.Accept(a)
 
 	case *parser.ExpressionContext:
@@ -133,8 +133,8 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 	if c.Declaration() != nil {
 		return c.Declaration().Accept(a)
 	}
-	if c.Comparison() != nil {
-		return c.Comparison().Accept(a)
+	if c.BoolExpression() != nil {
+		return c.BoolExpression().Accept(a)
 	}
 	return nil
 }
@@ -302,6 +302,42 @@ func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualCo
 	left := c.Expression(0).Accept(a).(*apd.Decimal)
 	right := c.Expression(1).Accept(a).(*apd.Decimal)
 	return left.Cmp(right) >= 0
+}
+
+func (a *AbacusVisitor) VisitAndOrXor(c *parser.AndOrXorContext) interface{} {
+	left := c.BoolExpression(0).Accept(a).(bool)
+	right := c.BoolExpression(1).Accept(a).(bool)
+	op := c.GetOp().GetTokenType()
+	switch op {
+	case parser.AbacusParserAND:
+		return left && right
+	case parser.AbacusParserOR:
+		return left || right
+	case parser.AbacusParserXOR:
+		return left != right
+
+	}
+	return false
+}
+
+func (a *AbacusVisitor) VisitNot(c *parser.NotContext) interface{} {
+	val := c.BoolExpression().Accept(a).(bool)
+	return !val
+}
+
+func (a *AbacusVisitor) VisitParenthesesBoolean(c *parser.ParenthesesBooleanContext) interface{} {
+	return c.BoolExpression().Accept(a)
+}
+
+func (a *AbacusVisitor) VisitBoolAtom(c *parser.BoolAtomContext) interface{} {
+	val := c.GetText()
+	if val == "true" {
+		return true
+	}
+	return false
+}
+func (a *AbacusVisitor) VisitBooleanAtom(c *parser.BooleanAtomContext) interface{} {
+	return c.BoolAtom().Accept(a)
 }
 
 func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {
@@ -693,7 +729,7 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 			recursionParameters.LastValue = v
 		}
 	}
-	recursionParameters.StopWhen = c.Comparison()
+	recursionParameters.StopWhen = c.BoolExpression()
 	return recursionParameters
 }
 
@@ -749,7 +785,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 			if shouldStop {
 				v := newDecimal(0)
 				v.Set(lambda.parameters.LastValue)
-				return 0
+				return v
 			}
 			if recurrences == lambda.parameters.MaxRecurrences {
 				v := newDecimal(0)

@@ -17,11 +17,11 @@ type AbacusListener interface {
 	// EnterLambdaDeclaration is called when entering the LambdaDeclaration production.
 	EnterLambdaDeclaration(c *LambdaDeclarationContext)
 
-	// EnterEqualComparison is called when entering the EqualComparison production.
-	EnterEqualComparison(c *EqualComparisonContext)
+	// EnterNot is called when entering the Not production.
+	EnterNot(c *NotContext)
 
-	// EnterLessComparison is called when entering the LessComparison production.
-	EnterLessComparison(c *LessComparisonContext)
+	// EnterGreaterOrEqualComparison is called when entering the GreaterOrEqualComparison production.
+	EnterGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
 	// EnterGreaterComparison is called when entering the GreaterComparison production.
 	EnterGreaterComparison(c *GreaterComparisonContext)
@@ -29,8 +29,23 @@ type AbacusListener interface {
 	// EnterLessOrEqualComparison is called when entering the LessOrEqualComparison production.
 	EnterLessOrEqualComparison(c *LessOrEqualComparisonContext)
 
-	// EnterGreaterOrEqualComparison is called when entering the GreaterOrEqualComparison production.
-	EnterGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
+	// EnterBooleanAtom is called when entering the BooleanAtom production.
+	EnterBooleanAtom(c *BooleanAtomContext)
+
+	// EnterLessComparison is called when entering the LessComparison production.
+	EnterLessComparison(c *LessComparisonContext)
+
+	// EnterParenthesesBoolean is called when entering the ParenthesesBoolean production.
+	EnterParenthesesBoolean(c *ParenthesesBooleanContext)
+
+	// EnterAndOrXor is called when entering the AndOrXor production.
+	EnterAndOrXor(c *AndOrXorContext)
+
+	// EnterEqualComparison is called when entering the EqualComparison production.
+	EnterEqualComparison(c *EqualComparisonContext)
+
+	// EnterBoolAtom is called when entering the boolAtom production.
+	EnterBoolAtom(c *BoolAtomContext)
 
 	// EnterVariablesLambda is called when entering the VariablesLambda production.
 	EnterVariablesLambda(c *VariablesLambdaContext)
@@ -170,11 +185,11 @@ type AbacusListener interface {
 	// ExitLambdaDeclaration is called when exiting the LambdaDeclaration production.
 	ExitLambdaDeclaration(c *LambdaDeclarationContext)
 
-	// ExitEqualComparison is called when exiting the EqualComparison production.
-	ExitEqualComparison(c *EqualComparisonContext)
+	// ExitNot is called when exiting the Not production.
+	ExitNot(c *NotContext)
 
-	// ExitLessComparison is called when exiting the LessComparison production.
-	ExitLessComparison(c *LessComparisonContext)
+	// ExitGreaterOrEqualComparison is called when exiting the GreaterOrEqualComparison production.
+	ExitGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
 
 	// ExitGreaterComparison is called when exiting the GreaterComparison production.
 	ExitGreaterComparison(c *GreaterComparisonContext)
@@ -182,8 +197,23 @@ type AbacusListener interface {
 	// ExitLessOrEqualComparison is called when exiting the LessOrEqualComparison production.
 	ExitLessOrEqualComparison(c *LessOrEqualComparisonContext)
 
-	// ExitGreaterOrEqualComparison is called when exiting the GreaterOrEqualComparison production.
-	ExitGreaterOrEqualComparison(c *GreaterOrEqualComparisonContext)
+	// ExitBooleanAtom is called when exiting the BooleanAtom production.
+	ExitBooleanAtom(c *BooleanAtomContext)
+
+	// ExitLessComparison is called when exiting the LessComparison production.
+	ExitLessComparison(c *LessComparisonContext)
+
+	// ExitParenthesesBoolean is called when exiting the ParenthesesBoolean production.
+	ExitParenthesesBoolean(c *ParenthesesBooleanContext)
+
+	// ExitAndOrXor is called when exiting the AndOrXor production.
+	ExitAndOrXor(c *AndOrXorContext)
+
+	// ExitEqualComparison is called when exiting the EqualComparison production.
+	ExitEqualComparison(c *EqualComparisonContext)
+
+	// ExitBoolAtom is called when exiting the boolAtom production.
+	ExitBoolAtom(c *BoolAtomContext)
 
 	// ExitVariablesLambda is called when exiting the VariablesLambda production.
 	ExitVariablesLambda(c *VariablesLambdaContext)

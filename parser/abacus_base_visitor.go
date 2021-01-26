@@ -20,11 +20,11 @@ func (v *BaseAbacusVisitor) VisitLambdaDeclaration(ctx *LambdaDeclarationContext
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitEqualComparison(ctx *EqualComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitNot(ctx *NotContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitLessComparison(ctx *LessComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -36,7 +36,27 @@ func (v *BaseAbacusVisitor) VisitLessOrEqualComparison(ctx *LessOrEqualCompariso
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitBooleanAtom(ctx *BooleanAtomContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLessComparison(ctx *LessComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitParenthesesBoolean(ctx *ParenthesesBooleanContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitAndOrXor(ctx *AndOrXorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitEqualComparison(ctx *EqualComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitBoolAtom(ctx *BoolAtomContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
