@@ -722,7 +722,8 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 	if recursionParameters.StopWhen != nil {
 		recursionParameters.StopWhen.SetParent(lambda.ctx)
 	}
-	if lambda.parameters == nil {
+
+	if c.RecursionParameters() != nil {
 		lambda.parameters = recursionParameters
 	}
 
