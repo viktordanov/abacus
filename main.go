@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/cockroachdb/apd"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -30,9 +31,10 @@ var (
 )
 
 type args struct {
-	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	IgnoreColor       bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	Precision         uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	Expression        string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	ImportDefinitions string `arg:"-i,--import" help:"import statements from file and continue"`
 }
 
 func (args) Version() string {
@@ -153,6 +155,17 @@ func run() error {
 		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
 		return nil
 	}
+
+	if len(arguments.ImportDefinitions) != 0 {
+		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
+		if err != nil {
+			panic(err)
+		}
+
+		printAnswer(evaluateExpression(string(dat), abacusVisitor))
+		return nil
+	}
+
 	updateCompletions(line, abacusVisitor)
 
 	ctx := context.Background()
