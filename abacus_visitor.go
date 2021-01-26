@@ -676,7 +676,12 @@ func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) i
 
 func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersContext) interface{} {
 	recursionParameters := NewRecursionParameters()
+	inLambda, lambda := a.checkParentCtxForLambda(c.GetParent())
+
 	for i := 0; i < len(c.AllExpression()); i++ {
+		if inLambda {
+			c.Expression(i).SetParent(a.lambdas[lambda].ctx)
+		}
 		val := c.Expression(i).Accept(a).(*apd.Decimal)
 		switch i {
 		case 0:
@@ -694,18 +699,10 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 
 func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{} {
 	lambdaName := c.LAMBDA_VARIABLE().GetText()
-	recursionParameters := NewRecursionParameters()
-	if c.RecursionParameters() != nil {
-		recursionParameters = c.RecursionParameters().Accept(a).(*RecursionParameters)
-	}
 
 	lambda, found := a.lambdas[lambdaName]
 	if !found {
 		return newDecimal(0)
-	}
-
-	if recursionParameters.StopWhen != nil {
-		recursionParameters.StopWhen.SetParent(lambda.ctx)
 	}
 
 	parameters := make([]*apd.Decimal, 0)
@@ -717,7 +714,15 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 
 	// Handle recursion
 	inLambda, nested := a.checkParentCtxForLambda(c.GetParent())
-	if !inLambda {
+
+	recursionParameters := NewRecursionParameters()
+	if c.RecursionParameters() != nil {
+		recursionParameters = c.RecursionParameters().Accept(a).(*RecursionParameters)
+	}
+	if recursionParameters.StopWhen != nil {
+		recursionParameters.StopWhen.SetParent(lambda.ctx)
+	}
+	if lambda.parameters == nil {
 		lambda.parameters = recursionParameters
 	}
 
