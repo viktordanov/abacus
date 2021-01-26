@@ -144,8 +144,15 @@ func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *Resu
 	if !ok || ctx == nil {
 		return
 	}
-	val, _ := ctx.Expression().Accept(a).(*apd.Decimal)
-	resultTuple.Values = append(resultTuple.Values, val)
+	val := ctx.Expression().Accept(a)
+
+	switch v := val.(type) {
+	case *apd.Decimal:
+		resultTuple.Values = append(resultTuple.Values, v)
+	case ResultTuple:
+		resultTuple.Values = append(resultTuple.Values, v.Values...)
+	}
+
 	a.visitTupleTail(ctx.Tuple(), resultTuple)
 }
 
