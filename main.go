@@ -162,8 +162,7 @@ func run() error {
 			panic(err)
 		}
 
-		printAnswer(evaluateExpression(string(dat), abacusVisitor))
-		return nil
+		evaluateExpression(string(dat), abacusVisitor)
 	}
 
 	updateCompletions(line, abacusVisitor)
