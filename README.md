@@ -1,9 +1,13 @@
-# abacus
-
+<h1 align="center">abacus</h2>
+<p align="center">
 Abacus is a simple interactive calculator CLI with support for variables, comparison checks, and math functions
+</p>
+<p align="center">
+<img align="center" src="./docs/abacus.png" />
+</p>
 
 ```
-λ ./abacus -h         
+λ abacus -h         
 abacus - a simple interactive calculator CLI with support for variables, 
 comparison checks, and math functions
 

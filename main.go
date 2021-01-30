@@ -36,7 +36,7 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.1.2b\n"
+	return "v1.2.0a\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
