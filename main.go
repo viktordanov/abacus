@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/cockroachdb/apd"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/alexflint/go-arg"
@@ -44,19 +42,6 @@ func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
 }
 
-func green(arg string) {
-	fmt.Println(string("\033[32m") + arg + string("\033[0m"))
-}
-func magenta(arg string) {
-	fmt.Println(string("\033[35m") + arg + string("\033[0m"))
-}
-func red(arg string) {
-	fmt.Println(string("\033[91m") + arg + string("\033[0m"))
-}
-func white(arg string) {
-	fmt.Println(string("\033[37m") + arg + string("\033[0m"))
-}
-
 func main() {
 	if err := run(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -85,69 +70,27 @@ func run() error {
 	}
 	f.Close()
 
-	printAnswer := func(ans interface{}) {
-		switch val := ans.(type) {
-		case ResultLambdaAssignment:
-			updateCompletions(line, abacusVisitor)
-			if !arguments.IgnoreColor {
-				magenta(string(val))
-			} else {
-				white(string(val))
-			}
+	printAnswer := func(res *Result) {
+		switch res.Value.(type) {
 		case ResultAssignment:
 			updateCompletions(line, abacusVisitor)
+		case ResultLambdaAssignment:
+			updateCompletions(line, abacusVisitor)
+		}
 
-			tupleString := val.Values[0].Text('g')
-			if len(val.Values) > 1 {
-				tupleValues := make([]string, 0)
-				for _, value := range val.Values {
-					tupleValues = append(tupleValues, value.Text('g'))
-				}
-				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
+		if len(res.Errors) != 0 {
+			for _, e := range res.Errors {
+				fmt.Print(Red)
+				fmt.Print(e.Error())
+				fmt.Println(Reset)
 			}
-			if !arguments.IgnoreColor {
-				magenta(tupleString)
-			} else {
-				white(tupleString)
-			}
-		case ResultTuple:
-			tupleString := val.Values[0].Text('g')
-			if len(val.Values) > 1 {
-				tupleValues := make([]string, 0)
-				for _, value := range val.Values {
-					tupleValues = append(tupleValues, value.Text('g'))
-				}
-				tupleString = "(" + strings.Join(tupleValues, ", ") + ")"
-			}
-			if !arguments.IgnoreColor {
-				green(tupleString)
-			} else {
-				white(tupleString)
-			}
-		case ResultError:
-			if !arguments.IgnoreColor {
-				red(string(val))
-			} else {
-				white(string(val))
-			}
-		case *apd.Decimal:
-			if !arguments.IgnoreColor {
-				green(val.Text('g'))
-			} else {
-				white(val.Text('g'))
-			}
-		case string:
-			if !arguments.IgnoreColor {
-				green(val)
-			} else {
-				white(val)
-			}
-		case bool:
-			if !arguments.IgnoreColor {
-				magenta(strconv.FormatBool(val))
-			} else {
-				white(strconv.FormatBool(val))
-			}
+			return
+		}
+
+		if arguments.IgnoreColor {
+			fmt.Println(res.Value.String())
+		} else {
+			fmt.Println(res.Value.Color())
 		}
 	}
 
@@ -197,7 +140,9 @@ func run() error {
 
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
+func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
+	result := NewResult(nil).WithErrors(nil, "expression did not yield a result")
+	ok := false
 	for _, e := range strings.Split(expr, ";") {
 		if len(e) == 0 {
 			continue
@@ -208,9 +153,13 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
 
 		p := parser.NewAbacusParser(stream)
 		tree := p.Root()
-		ans = visitor.Visit(tree)
+		t := visitor.Visit(tree)
+		result, ok = t.(*Result)
+		if !ok {
+			return NewResult(nil).WithErrors(nil, "expression did not yield a result")
+		}
 	}
-	return
+	return result
 }
 
 func writeHistoryFile(line *liner.State) error {
