@@ -1334,3 +1334,4 @@ func lambdaVarName(lambdaName, varName string, stack uint) string {
 func hasErrors(r *Result) bool {
 	return len(r.Errors) != 0
 }
+
