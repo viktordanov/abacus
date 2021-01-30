@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+// TODO: Rewrite tests for new return system
+
 func newBigFloat(val float64) *big.Float {
 	return big.NewFloat(val)
 }
