@@ -141,7 +141,7 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 	if c.BoolExpression() != nil {
 		return c.BoolExpression().Accept(a)
 	}
-	return NewResult(nil).WithErrors(nil, "edge case")
+	return NewResult(nil).WithErrors(nil, "syntax error")
 }
 
 func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *ResultTuple) {
@@ -1018,8 +1018,15 @@ func (a *AbacusVisitor) VisitNthFunction(c *parser.NthFunctionContext) interface
 		panic("unable to cast tupleRes to ResultTuple")
 	}
 
-	arg1 := c.Expression().Accept(a).(*apd.Decimal)
-	intValue1, _ := arg1.Int64()
+	argRes := c.Expression().Accept(a).(*Result)
+	if hasErrors(argRes) {
+		return argRes
+	}
+	arg, ok := argRes.Value.(ResultNumber)
+	if !ok {
+		panic("unable to cast argRes to ResultNumber")
+	}
+	intValue1, _ := arg.Int64()
 
 	if intValue1 >= int64(len(tuple)) || intValue1 < 0 {
 		return NewResult(newNumber(0))
@@ -1334,4 +1341,3 @@ func lambdaVarName(lambdaName, varName string, stack uint) string {
 func hasErrors(r *Result) bool {
 	return len(r.Errors) != 0
 }
-
