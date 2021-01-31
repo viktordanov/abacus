@@ -91,7 +91,7 @@ recursion is disabled
 To specify recursion parameters use `[]` after the lambda call.
 
 `Factorial(10)[max_recurrences, last_value, stop_condition]`
-- `max-recurrences` specifies the maximum number of times the lambda can call itself during the evaluation of the current expression [Default: 0];
+- `max_recurrences` specifies the maximum number of times the lambda can call itself during the evaluation of the current expression [Default: 0];
 - `last_value` specifies the value which the last lambda automatically returns when **max_recurrences** is reached or when **stop_condition** is true [Default: 0];
 - `stop_condition` is a boolean expression which can use the lambda's variables; if true, the lambda returns **last_value** and stops recurring 
 
