@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/alexflint/go-arg"
+	arg "github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
@@ -73,6 +73,10 @@ func run() error {
 
 	defer line.Close()
 	line.SetCtrlCAborts(true)
+
+	if _, err := os.Stat(historyFile); os.IsNotExist(err) {
+		os.Create(historyFile)
+	}
 
 	f, err := os.Open(historyFile)
 	if err != nil {
