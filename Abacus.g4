@@ -154,7 +154,7 @@ fragment VALID_ID_START
 
 
 fragment VALID_ID_CHAR
-   : VALID_ID_START | ('0' .. '9')
+   : VALID_ID_START | ('A' .. 'Z') | ('0' .. '9')
    ;
 
 WHITESPACE: [ \r\n\t]+ -> skip;
