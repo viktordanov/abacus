@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/alexflint/go-arg"
+	arg "github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
@@ -125,6 +125,7 @@ func run() error {
 	defer goodbye.Exit(ctx, -1)
 	goodbye.Notify(ctx)
 	goodbye.Register(func(ctx context.Context, sig os.Signal) {
+		line.Close()
 		writeHistoryFile(line)
 	})
 
