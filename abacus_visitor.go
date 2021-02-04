@@ -81,6 +81,11 @@ type LambdaDeclaration struct {
 	argSet    map[string]bool
 }
 
+type Parameter struct {
+	Name  string
+	Value interface{}
+}
+
 type RecursionParameters struct {
 	MaxRecurrences uint
 	LastValue      Number
@@ -105,6 +110,7 @@ type LambdaCallStack struct {
 	trace     []*CalledLambda
 	invokes   map[string]uint
 	recursion map[string]*RecursionParameters
+	memoized  map[string]Number
 }
 
 func (s *LambdaCallStack) TracePeek() *CalledLambda {
@@ -471,7 +477,7 @@ func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) i
 		panic("unable to cast left to Number")
 	}
 
-	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == 0))
+	return NewResult(Bool(leftVal.Cmp(rightVal.Decimal) == 0))
 }
 
 func (a *AbacusVisitor) VisitLessComparison(c *parser.LessComparisonContext) interface{} {
@@ -491,7 +497,7 @@ func (a *AbacusVisitor) VisitLessComparison(c *parser.LessComparisonContext) int
 		panic("unable to cast left to Number")
 	}
 
-	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == -1))
+	return NewResult(Bool(leftVal.Cmp(rightVal.Decimal) == -1))
 }
 
 func (a *AbacusVisitor) VisitGreaterComparison(c *parser.GreaterComparisonContext) interface{} {
@@ -511,7 +517,7 @@ func (a *AbacusVisitor) VisitGreaterComparison(c *parser.GreaterComparisonContex
 		panic("unable to cast left to Number")
 	}
 
-	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == 1))
+	return NewResult(Bool(leftVal.Cmp(rightVal.Decimal) == 1))
 }
 
 func (a *AbacusVisitor) VisitLessOrEqualComparison(c *parser.LessOrEqualComparisonContext) interface{} {
@@ -531,7 +537,7 @@ func (a *AbacusVisitor) VisitLessOrEqualComparison(c *parser.LessOrEqualComparis
 		panic("unable to cast left to Number")
 	}
 
-	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) <= 0))
+	return NewResult(Bool(leftVal.Cmp(rightVal.Decimal) <= 0))
 }
 
 func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualComparisonContext) interface{} {
@@ -551,7 +557,7 @@ func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualCo
 		panic("unable to cast left to Number")
 	}
 
-	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) >= 0))
+	return NewResult(Bool(leftVal.Cmp(rightVal.Decimal) >= 0))
 }
 
 func (a *AbacusVisitor) VisitAndOrXor(c *parser.AndOrXorContext) interface{} {
@@ -562,17 +568,17 @@ func (a *AbacusVisitor) VisitAndOrXor(c *parser.AndOrXorContext) interface{} {
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultBool)
+	leftVal, ok := left.Value.(Bool)
 	if !ok {
-		panic("unable to cast right to ResultBool")
+		panic("unable to cast right to Bool")
 	}
-	rightVal, ok := right.Value.(ResultBool)
+	rightVal, ok := right.Value.(Bool)
 	if !ok {
-		panic("unable to cast left to ResultBool")
+		panic("unable to cast left to Bool")
 	}
 
 	op := c.GetOp().GetTokenType()
-	result := ResultBool(false)
+	result := Bool(false)
 
 	switch op {
 	case parser.AbacusParserAND:
@@ -591,9 +597,9 @@ func (a *AbacusVisitor) VisitNot(c *parser.NotContext) interface{} {
 	if hasErrors(valRes) {
 		return valRes
 	}
-	val, ok := valRes.Value.(ResultBool)
+	val, ok := valRes.Value.(Bool)
 	if !ok {
-		panic("unable to cast right to ResultBool")
+		panic("unable to cast right to Bool")
 	}
 	return NewResult(!val)
 }
@@ -605,9 +611,9 @@ func (a *AbacusVisitor) VisitParenthesesBoolean(c *parser.ParenthesesBooleanCont
 func (a *AbacusVisitor) VisitBoolAtom(c *parser.BoolAtomContext) interface{} {
 	val := c.GetText()
 	if val == "true" {
-		return ResultBool(true)
+		return Bool(true)
 	}
-	return ResultBool(false)
+	return Bool(false)
 }
 
 func (a *AbacusVisitor) VisitBooleanAtom(c *parser.BooleanAtomContext) interface{} {
@@ -1285,34 +1291,59 @@ func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) i
 	return NewResult(tuple)
 }
 
+func (a *AbacusVisitor) VisitParameter(c *parser.ParameterContext) interface{} {
+	paramName := c.VARIABLE().GetText()
+
+	if c.Expression() != nil {
+		expRes := c.Expression().Accept(a).(*Result)
+		if hasErrors(expRes) {
+			return expRes
+		}
+		number := expRes.Value.(Number)
+		return Parameter{
+			Name:  paramName,
+			Value: number,
+		}
+	} else if c.BoolExpression() != nil {
+		return Parameter{
+			Name:  paramName,
+			Value: c.BoolExpression(),
+		}
+	}
+
+	// shouldn't be reached
+	return nil
+}
+
 // TODO: Errors aren't handled
 func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersContext) interface{} {
 	recursionParameters := NewRecursionParameters()
-	inLambda, lambda := a.checkParentCtxForLambda(c.GetParent())
 
-	for i := 0; i < len(c.AllExpression()); i++ {
-		if inLambda {
-			c.Expression(i).SetParent(a.lambdaDeclarations[lambda].ctx)
-		}
-		valRes := c.Expression(i).Accept(a).(*Result)
-		if hasErrors(valRes) {
-			return valRes
-		}
-		val, ok := valRes.Value.(Number)
-		if !ok {
-			panic("unable to case valRes to Number")
-		}
-		switch i {
-		case 0:
-			intValue, _ := val.Abs(val.Decimal).Int64()
-			recursionParameters.MaxRecurrences = uint(intValue)
-		case 1:
-			v := newNumber(0)
-			v.Set(val.Decimal)
-			recursionParameters.LastValue = v
+	for i := 0; i < len(c.AllParameter()); i++ {
+
+		valRes := c.Parameter(i).Accept(a)
+		switch val := valRes.(type) {
+		case *Result:
+			return val
+		case Parameter:
+			switch parameterValue := val.Value.(type) {
+			case Number:
+				if val.Name == "rec" {
+					intValue, _ := parameterValue.Abs(parameterValue.Decimal).Int64()
+					recursionParameters.MaxRecurrences = uint(intValue)
+				} else if val.Name == "last" {
+					v := newNumber(0)
+					v.Set(parameterValue.Decimal)
+					recursionParameters.LastValue = v
+				}
+			case parser.IBoolExpressionContext:
+				if val.Name == "stop" {
+					recursionParameters.StopWhen = parameterValue
+				}
+			}
 		}
 	}
-	recursionParameters.StopWhen = c.BoolExpression()
+
 	return recursionParameters
 }
 
@@ -1413,9 +1444,9 @@ getDeclaration:
 		if hasErrors(conditionRes) {
 			return conditionRes
 		}
-		condition, ok := conditionRes.Value.(ResultBool)
+		condition, ok := conditionRes.Value.(Bool)
 		if !ok {
-			panic("unable to cast conditionRes to ResultBool")
+			panic("unable to cast conditionRes to Bool")
 		}
 		shouldStop = bool(condition)
 	}
@@ -1528,9 +1559,9 @@ top:
 				if hasErrors(conditionRes) {
 					return conditionRes
 				}
-				condition, ok := conditionRes.Value.(ResultBool)
+				condition, ok := conditionRes.Value.(Bool)
 				if !ok {
-					panic("unable to cast conditionRes to ResultBool")
+					panic("unable to cast conditionRes to Bool")
 				}
 				shouldStop = bool(condition)
 			}

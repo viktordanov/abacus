@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 	"strings"
 
 	arg "github.com/alexflint/go-arg"
@@ -36,13 +37,23 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.2.0a\n"
+	return "v1.2\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
 }
 
 func main() {
+	f, err := os.Create("cpu.prof")
+	if err != nil {
+		log.Fatal("could not create CPU profile: ", err)
+	}
+	defer f.Close() // error handling omitted for example
+	if err := pprof.StartCPUProfile(f); err != nil {
+		log.Fatal("could not start CPU profile: ", err)
+	}
+	defer pprof.StopCPUProfile()
+
 	if err := run(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)

@@ -174,12 +174,12 @@ func (r Number) Color() string {
 	return addColor(r.String(), Green)
 }
 
-type ResultBool bool
+type Bool bool
 
-func (r ResultBool) String() string {
+func (r Bool) String() string {
 	return strconv.FormatBool(bool(r))
 }
-func (r ResultBool) Color() string {
+func (r Bool) Color() string {
 	return addColor(r.String(), Green)
 }
 

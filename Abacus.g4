@@ -52,8 +52,11 @@ expression
    ;
 
 
+parameter
+    : VARIABLE (':'|EQ) (boolExpression | expression);
+
 recursionParameters
-    : LSQPAREN expression (',' expression (',' boolExpression)?)? RSQPAREN;
+    : LSQPAREN (parameter (',' parameter)*)? RSQPAREN;
 
 EQ: '=';
 LS: '<';
@@ -143,7 +146,7 @@ fragment SIGN:
 '+'|'-';
 
 fragment NUMBER
-   : ('0' .. '9')+ (POINT ('0' .. '9') +)?
+   : DIGITS+ (POINT DIGITS +)?
    ;
 
 VARIABLE
@@ -151,17 +154,22 @@ VARIABLE
    ;
 
 LAMBDA_VARIABLE
-   :  ('A' .. 'Z') VALID_ID_CHAR*
+   :  UPPERCASE VALID_ID_CHAR*
    ;
 
 
 fragment VALID_ID_START
-   : ('a' .. 'z') | '_'
+   : LOWERCASE | '_'
    ;
 
 
 fragment VALID_ID_CHAR
-   : VALID_ID_START | ('A' .. 'Z') | ('0' .. '9')
+   : VALID_ID_START | UPPERCASE | DIGITS
    ;
+
+
+DIGITS: ('0' .. '9');
+UPPERCASE:  ('A' .. 'Z');
+LOWERCASE: ('a' .. 'z');
 
 WHITESPACE: [ \r\n\t]+ -> skip;

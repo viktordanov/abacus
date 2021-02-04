@@ -80,6 +80,9 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#Parentheses.
 	VisitParentheses(ctx *ParenthesesContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#parameter.
+	VisitParameter(ctx *ParameterContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#recursionParameters.
 	VisitRecursionParameters(ctx *RecursionParametersContext) interface{}
 
