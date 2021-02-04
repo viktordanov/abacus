@@ -83,8 +83,14 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#recursionParameters.
 	VisitRecursionParameters(ctx *RecursionParametersContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#mixedTuple.
+	VisitMixedTuple(ctx *MixedTupleContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#tuple.
 	VisitTuple(ctx *TupleContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#lambdaArguments.
+	VisitLambdaArguments(ctx *LambdaArgumentsContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#variablesTuple.
 	VisitVariablesTuple(ctx *VariablesTupleContext) interface{}

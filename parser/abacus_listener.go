@@ -83,8 +83,14 @@ type AbacusListener interface {
 	// EnterRecursionParameters is called when entering the recursionParameters production.
 	EnterRecursionParameters(c *RecursionParametersContext)
 
+	// EnterMixedTuple is called when entering the mixedTuple production.
+	EnterMixedTuple(c *MixedTupleContext)
+
 	// EnterTuple is called when entering the tuple production.
 	EnterTuple(c *TupleContext)
+
+	// EnterLambdaArguments is called when entering the lambdaArguments production.
+	EnterLambdaArguments(c *LambdaArgumentsContext)
 
 	// EnterVariablesTuple is called when entering the variablesTuple production.
 	EnterVariablesTuple(c *VariablesTupleContext)
@@ -251,8 +257,14 @@ type AbacusListener interface {
 	// ExitRecursionParameters is called when exiting the recursionParameters production.
 	ExitRecursionParameters(c *RecursionParametersContext)
 
+	// ExitMixedTuple is called when exiting the mixedTuple production.
+	ExitMixedTuple(c *MixedTupleContext)
+
 	// ExitTuple is called when exiting the tuple production.
 	ExitTuple(c *TupleContext)
+
+	// ExitLambdaArguments is called when exiting the lambdaArguments production.
+	ExitLambdaArguments(c *LambdaArgumentsContext)
 
 	// ExitVariablesTuple is called when exiting the variablesTuple production.
 	ExitVariablesTuple(c *VariablesTupleContext)

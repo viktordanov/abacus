@@ -171,11 +171,23 @@ func (s *BaseAbacusListener) EnterRecursionParameters(ctx *RecursionParametersCo
 // ExitRecursionParameters is called when production recursionParameters is exited.
 func (s *BaseAbacusListener) ExitRecursionParameters(ctx *RecursionParametersContext) {}
 
+// EnterMixedTuple is called when production mixedTuple is entered.
+func (s *BaseAbacusListener) EnterMixedTuple(ctx *MixedTupleContext) {}
+
+// ExitMixedTuple is called when production mixedTuple is exited.
+func (s *BaseAbacusListener) ExitMixedTuple(ctx *MixedTupleContext) {}
+
 // EnterTuple is called when production tuple is entered.
 func (s *BaseAbacusListener) EnterTuple(ctx *TupleContext) {}
 
 // ExitTuple is called when production tuple is exited.
 func (s *BaseAbacusListener) ExitTuple(ctx *TupleContext) {}
+
+// EnterLambdaArguments is called when production lambdaArguments is entered.
+func (s *BaseAbacusListener) EnterLambdaArguments(ctx *LambdaArgumentsContext) {}
+
+// ExitLambdaArguments is called when production lambdaArguments is exited.
+func (s *BaseAbacusListener) ExitLambdaArguments(ctx *LambdaArgumentsContext) {}
 
 // EnterVariablesTuple is called when production variablesTuple is entered.
 func (s *BaseAbacusListener) EnterVariablesTuple(ctx *VariablesTupleContext) {}

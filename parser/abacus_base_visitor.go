@@ -108,7 +108,15 @@ func (v *BaseAbacusVisitor) VisitRecursionParameters(ctx *RecursionParametersCon
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitMixedTuple(ctx *MixedTupleContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitTuple(ctx *TupleContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLambdaArguments(ctx *LambdaArgumentsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

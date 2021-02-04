@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// Result is struct returned after evaluating each leaf in the parser tree. 
-// Errors are propagated up 
+// Result is struct returned after evaluating each leaf in the parser tree.
+// Errors are propagated up
 type Result struct {
 	Value  Formatter
 	Errors []error
@@ -67,6 +67,33 @@ func stringsToStringList(ss []ResultString) string {
 	return b.String()
 }
 
+func mixedToStringList(dd ResultMixedTuple) string {
+	var b strings.Builder
+	count := len(dd)
+	if count > 1 {
+		b.WriteRune('(')
+	}
+	for i, d := range dd {
+		switch val := d.(type) {
+		case ResultString:
+			b.WriteString(string(val))
+			if i+1 != count {
+				b.WriteString(", ")
+			}
+		case ResultNumber:
+			b.WriteString(val.Text('g'))
+			if i+1 != count {
+				b.WriteString(", ")
+			}
+		}
+	}
+
+	if count > 1 {
+		b.WriteRune(')')
+	}
+	return b.String()
+}
+
 func addColor(str string, color Color) string {
 	var b strings.Builder
 	b.WriteString(string(color))
@@ -104,6 +131,16 @@ func (r ResultTuple) Color() string {
 	return addColor(r.String(), Green)
 }
 
+type ResultMixedTuple []interface{}
+
+func (r ResultMixedTuple) String() string {
+	return mixedToStringList(r)
+}
+
+func (r ResultMixedTuple) Color() string {
+	return addColor(r.String(), Green)
+}
+
 type ResultVariablesTuple []ResultString
 
 func (r ResultVariablesTuple) String() string {
@@ -111,6 +148,17 @@ func (r ResultVariablesTuple) String() string {
 }
 
 func (r ResultVariablesTuple) Color() string {
+	return addColor(r.String(), Magenta)
+}
+
+type ResultLambdaArguments []ResultString
+
+func (r ResultLambdaArguments) String() string {
+	return stringsToStringList(r)
+}
+
+// Color variables and Lambdas differently
+func (r ResultLambdaArguments) Color() string {
 	return addColor(r.String(), Magenta)
 }
 
@@ -149,6 +197,8 @@ func (r ResultString) Color() string {
 func (r *Result) Length() int {
 	switch val := r.Value.(type) {
 	case ResultVariablesTuple:
+		return len(val)
+	case ResultLambdaArguments:
 		return len(val)
 	case ResultTuple:
 		return len(val)

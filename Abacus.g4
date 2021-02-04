@@ -35,20 +35,20 @@ boolAtom
     : 'true' | 'false';
 
 lambda
-    : variablesTuple ARROW tuple            # VariablesLambda
+    : lambdaArguments ARROW tuple           # VariablesLambda
     | LPAREN RPAREN ARROW tuple             # NullArityLambda
     ;
 
 expression
-   : sign expression                                            # SignedExpr
-   | expression PER                                             # Percent
-   | expression POW expression                                  # Pow
-   | expression PER PER expression                              # Mod
-   | expression op=(MUL|DIV) expression                         # MulDiv
-   | expression op=(ADD|SUB) expression                         # AddSub
-   | LPAREN expression RPAREN                                   # Parentheses
-   | LAMBDA_VARIABLE LPAREN tuple? RPAREN recursionParameters?  # LambdaExpr
-   | atom                                                       # AtomExpr
+   : sign expression                                                 # SignedExpr
+   | expression PER                                                  # Percent
+   | expression POW expression                                       # Pow
+   | expression PER PER expression                                   # Mod
+   | expression op=(MUL|DIV) expression                              # MulDiv
+   | expression op=(ADD|SUB) expression                              # AddSub
+   | LPAREN expression RPAREN                                        # Parentheses
+   | LAMBDA_VARIABLE LPAREN mixedTuple? RPAREN recursionParameters?  # LambdaExpr
+   | atom                                                            # AtomExpr
    ;
 
 
@@ -77,8 +77,15 @@ RPAREN: ')';
 LSQPAREN: '[';
 RSQPAREN: ']';
 
+mixedTuple
+    : (expression|LAMBDA_VARIABLE) (',' mixedTuple)?;
+
 tuple
     : expression (',' tuple)?;
+
+lambdaArguments
+    : (VARIABLE | LAMBDA_VARIABLE) (',' lambdaArguments)?
+    | LPAREN (VARIABLE | LAMBDA_VARIABLE) (',' lambdaArguments)? RPAREN;
 
 variablesTuple
     : VARIABLE (',' variablesTuple)?

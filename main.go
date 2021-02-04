@@ -179,11 +179,11 @@ func writeHistoryFile(line *liner.State) error {
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
 	completions := make([]string, 0)
 	completions = append(completions, funcs...)
-	for k := range a.vars {
+	for k := range a.variables {
 		completions = append(completions, k)
 	}
 
-	for k := range a.lambdas {
+	for k := range a.lambdaDeclarations {
 		completions = append(completions, k+"(")
 	}
 
