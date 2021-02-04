@@ -76,9 +76,9 @@ func run() error {
 
 	printAnswer := func(res *Result) {
 		switch res.Value.(type) {
-		case ResultAssignment:
+		case Assignment:
 			updateCompletions(line, abacusVisitor)
-		case ResultLambdaAssignment:
+		case LambdaAssignment:
 			updateCompletions(line, abacusVisitor)
 		}
 

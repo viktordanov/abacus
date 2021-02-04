@@ -9,18 +9,18 @@ import (
 )
 
 var (
-	logCache   map[string]ResultNumber
+	logCache   map[string]Number
 	decimalCtx *apd.Context
-	PI         ResultNumber
-	PHI        ResultNumber
-	E          ResultNumber
+	PI         Number
+	PHI        Number
+	E          Number
 )
 
 func init() {
-	logCache = make(map[string]ResultNumber)
+	logCache = make(map[string]Number)
 	decimalCtx = apd.BaseContext.WithPrecision(arguments.Precision)
-	cachedLog(ResultNumber{apd.New(2, 0)})
-	cachedLog(ResultNumber{apd.New(10, 0)})
+	cachedLog(Number{apd.New(2, 0)})
+	cachedLog(Number{apd.New(10, 0)})
 
 	pi, _, _ := decimalCtx.NewFromString("3." +
 		"14159265358979323846264338327950288419716939937510" +
@@ -49,21 +49,21 @@ func init() {
 		"13614438149758701220340805887954454749246185695364" +
 		"86444924104432077134494704956584678850987433944221")
 
-	PI = ResultNumber{pi}
-	PHI = ResultNumber{phi}
-	E = ResultNumber{e}
+	PI = Number{pi}
+	PHI = Number{phi}
+	E = Number{e}
 }
 
-func newNumber(f float64) ResultNumber {
+func newNumber(f float64) Number {
 	res := apd.New(0, 0)
 	res.SetFloat64(f)
-	return ResultNumber{res}
+	return Number{res}
 }
 
-func cachedLog(n ResultNumber) ResultNumber {
+func cachedLog(n Number) Number {
 	out := newNumber(0)
 
-	var r ResultNumber
+	var r Number
 	var ok bool
 	if r, ok = logCache[n.String()]; !ok {
 		decimalCtx.Ln(out.Decimal, n.Decimal)
@@ -77,13 +77,13 @@ func cachedLog(n ResultNumber) ResultNumber {
 
 type LambdaDeclaration struct {
 	ctx       *parser.LambdaDeclarationContext
-	arguments ResultLambdaArguments
+	arguments LambdaArguments
 	argSet    map[string]bool
 }
 
 type RecursionParameters struct {
 	MaxRecurrences uint
-	LastValue      ResultNumber
+	LastValue      Number
 	StopWhen       parser.IBoolExpressionContext
 }
 
@@ -139,7 +139,7 @@ func (s *LambdaCallStack) IsRecurring(lambdaName string) bool {
 
 type AbacusVisitor struct {
 	antlr.ParseTreeVisitor
-	variables          map[string]ResultNumber
+	variables          map[string]Number
 	lambdaDeclarations map[string]*LambdaDeclaration
 	lambdaCallStack    *LambdaCallStack
 	decimalCtx         *apd.Context
@@ -148,7 +148,7 @@ type AbacusVisitor struct {
 func NewAbacusVisitor() *AbacusVisitor {
 	return &AbacusVisitor{
 		ParseTreeVisitor:   &parser.BaseAbacusVisitor{},
-		variables:          make(map[string]ResultNumber),
+		variables:          make(map[string]Number),
 		lambdaDeclarations: make(map[string]*LambdaDeclaration),
 		lambdaCallStack:    &LambdaCallStack{root: nil, invokes: map[string]uint{}, trace: []*CalledLambda{}, recursion: map[string]*RecursionParameters{}},
 		decimalCtx:         apd.BaseContext.WithPrecision(arguments.Precision),
@@ -180,7 +180,7 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 	return NewResult(nil).WithErrors(nil, "syntax error")
 }
 
-func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *ResultTuple) {
+func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *Tuple) {
 	ctx, ok := c.(*parser.TupleContext)
 	if !ok || ctx == nil {
 		return
@@ -188,9 +188,9 @@ func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *Resu
 	val := ctx.Expression().Accept(a).(*Result)
 
 	switch v := val.Value.(type) {
-	case ResultNumber:
+	case Number:
 		*resultTuple = append(*resultTuple, v)
-	case ResultTuple:
+	case Tuple:
 		*resultTuple = append(*resultTuple, v...)
 	}
 
@@ -202,13 +202,13 @@ func (a *AbacusVisitor) VisitTuple(c *parser.TupleContext) interface{} {
 		return c.Expression().Accept(a)
 	}
 
-	evaledTuple := ResultTuple{}
+	evaledTuple := Tuple{}
 	val := c.Expression().Accept(a).(*Result)
 
 	switch v := val.Value.(type) {
-	case ResultNumber:
+	case Number:
 		evaledTuple = append(evaledTuple, v)
-	case ResultTuple:
+	case Tuple:
 		evaledTuple = append(evaledTuple, v...)
 	}
 	a.visitTupleTail(c.Tuple(), &evaledTuple)
@@ -216,7 +216,7 @@ func (a *AbacusVisitor) VisitTuple(c *parser.TupleContext) interface{} {
 	return NewResult(evaledTuple)
 }
 
-func (a *AbacusVisitor) visitMixedTupleTail(c parser.IMixedTupleContext, resultMixedTuple *ResultMixedTuple) {
+func (a *AbacusVisitor) visitMixedTupleTail(c parser.IMixedTupleContext, resultMixedTuple *MixedTuple) {
 	ctx, ok := c.(*parser.MixedTupleContext)
 	if !ok || ctx == nil {
 		return
@@ -225,15 +225,15 @@ func (a *AbacusVisitor) visitMixedTupleTail(c parser.IMixedTupleContext, resultM
 	if ctx.Expression() != nil {
 		val = ctx.Expression().Accept(a).(*Result)
 	} else if ctx.LAMBDA_VARIABLE() != nil {
-		val.Value = ResultString(ctx.LAMBDA_VARIABLE().GetText())
+		val.Value = String(ctx.LAMBDA_VARIABLE().GetText())
 	}
 
 	switch v := val.Value.(type) {
-	case ResultNumber:
+	case Number:
 		*resultMixedTuple = append(*resultMixedTuple, v)
-	case ResultString:
+	case String:
 		*resultMixedTuple = append(*resultMixedTuple, v)
-	case ResultMixedTuple:
+	case MixedTuple:
 		*resultMixedTuple = append(*resultMixedTuple, v...)
 	}
 
@@ -246,25 +246,25 @@ func (a *AbacusVisitor) VisitMixedTuple(c *parser.MixedTupleContext) interface{}
 		if c.Expression() != nil {
 			val = c.Expression().Accept(a).(*Result)
 		} else if c.LAMBDA_VARIABLE() != nil {
-			val.Value = ResultString(c.LAMBDA_VARIABLE().GetText())
+			val.Value = String(c.LAMBDA_VARIABLE().GetText())
 		}
 		return val
 	}
 
-	evaledMixedTuple := ResultMixedTuple{}
+	evaledMixedTuple := MixedTuple{}
 	val := NewResult(nil)
 	if c.Expression() != nil {
 		val = c.Expression().Accept(a).(*Result)
 	} else if c.LAMBDA_VARIABLE() != nil {
-		val.Value = ResultString(c.LAMBDA_VARIABLE().GetText())
+		val.Value = String(c.LAMBDA_VARIABLE().GetText())
 	}
 
 	switch v := val.Value.(type) {
-	case ResultNumber:
+	case Number:
 		evaledMixedTuple = append(evaledMixedTuple, v)
-	case ResultString:
+	case String:
 		evaledMixedTuple = append(evaledMixedTuple, v)
-	case ResultMixedTuple:
+	case MixedTuple:
 		evaledMixedTuple = append(evaledMixedTuple, v...)
 	}
 	a.visitMixedTupleTail(c.MixedTuple(), &evaledMixedTuple)
@@ -272,25 +272,25 @@ func (a *AbacusVisitor) VisitMixedTuple(c *parser.MixedTupleContext) interface{}
 	return NewResult(evaledMixedTuple)
 }
 
-func (a *AbacusVisitor) visitVariableTupleTail(c parser.IVariablesTupleContext, resultTuple *ResultVariablesTuple) {
+func (a *AbacusVisitor) visitVariableTupleTail(c parser.IVariablesTupleContext, resultTuple *VariablesTuple) {
 	ctx, ok := c.(*parser.VariablesTupleContext)
 	if !ok || ctx == nil {
 		return
 	}
 	val := ctx.VARIABLE().GetText()
-	*resultTuple = append(*resultTuple, ResultString(val))
+	*resultTuple = append(*resultTuple, String(val))
 	a.visitVariableTupleTail(ctx.VariablesTuple(), resultTuple)
 }
 
 func (a *AbacusVisitor) VisitVariablesTuple(c *parser.VariablesTupleContext) interface{} {
 	if c.VariablesTuple() == nil {
-		return NewResult(ResultString(c.VARIABLE().GetText()))
+		return NewResult(String(c.VARIABLE().GetText()))
 	}
 
-	evaledTuple := ResultVariablesTuple{}
+	evaledTuple := VariablesTuple{}
 
 	val := c.VARIABLE().GetText()
-	evaledTuple = append(evaledTuple, ResultString(val))
+	evaledTuple = append(evaledTuple, String(val))
 	a.visitVariableTupleTail(c.VariablesTuple(), &evaledTuple)
 
 	foundVars := make(map[string]bool)
@@ -307,29 +307,29 @@ func (a *AbacusVisitor) VisitVariablesTuple(c *parser.VariablesTupleContext) int
 
 func (a *AbacusVisitor) convertVariablesTupleResult(result *Result) {
 	switch val := result.Value.(type) {
-	case ResultString:
-		result.Value = ResultVariablesTuple{val}
+	case String:
+		result.Value = VariablesTuple{val}
 	}
 }
 func (a *AbacusVisitor) convertLambdaArgumentsResult(result *Result) {
 	switch val := result.Value.(type) {
-	case ResultString:
-		result.Value = ResultLambdaArguments{val}
+	case String:
+		result.Value = LambdaArguments{val}
 	}
 }
 
 func (a *AbacusVisitor) convertTupleResult(result *Result) {
 	switch val := result.Value.(type) {
-	case ResultNumber:
-		result.Value = ResultTuple{val}
+	case Number:
+		result.Value = Tuple{val}
 	}
 }
 func (a *AbacusVisitor) convertMixedTupleResult(result *Result) {
 	switch val := result.Value.(type) {
-	case ResultNumber:
-		result.Value = ResultMixedTuple{val}
-	case ResultString:
-		result.Value = ResultMixedTuple{val}
+	case Number:
+		result.Value = MixedTuple{val}
+	case String:
+		result.Value = MixedTuple{val}
 	}
 }
 
@@ -341,10 +341,10 @@ func (a *AbacusVisitor) VisitLambdaArguments(c *parser.LambdaArgumentsContext) i
 		} else if c.LAMBDA_VARIABLE() != nil {
 			val = c.LAMBDA_VARIABLE().GetText()
 		}
-		return NewResult(ResultString(val))
+		return NewResult(String(val))
 	}
 
-	evaledArgs := ResultLambdaArguments{}
+	evaledArgs := LambdaArguments{}
 
 	val := ""
 	if c.VARIABLE() != nil {
@@ -352,7 +352,7 @@ func (a *AbacusVisitor) VisitLambdaArguments(c *parser.LambdaArgumentsContext) i
 	} else if c.LAMBDA_VARIABLE() != nil {
 		val = c.LAMBDA_VARIABLE().GetText()
 	}
-	evaledArgs = append(evaledArgs, ResultString(val))
+	evaledArgs = append(evaledArgs, String(val))
 	a.visitLambdaArgsTail(c.LambdaArguments(), &evaledArgs)
 
 	foundVars := make(map[string]bool)
@@ -372,7 +372,7 @@ func (a *AbacusVisitor) VisitLambdaArguments(c *parser.LambdaArgumentsContext) i
 	return NewResult(evaledArgs)
 }
 
-func (a *AbacusVisitor) visitLambdaArgsTail(c parser.ILambdaArgumentsContext, resultArgs *ResultLambdaArguments) {
+func (a *AbacusVisitor) visitLambdaArgsTail(c parser.ILambdaArgumentsContext, resultArgs *LambdaArguments) {
 	ctx, ok := c.(*parser.LambdaArgumentsContext)
 	if !ok || ctx == nil {
 		return
@@ -383,7 +383,7 @@ func (a *AbacusVisitor) visitLambdaArgsTail(c parser.ILambdaArgumentsContext, re
 	} else if ctx.LAMBDA_VARIABLE() != nil {
 		val = ctx.LAMBDA_VARIABLE().GetText()
 	}
-	*resultArgs = append(*resultArgs, ResultString(val))
+	*resultArgs = append(*resultArgs, String(val))
 	a.visitLambdaArgsTail(ctx.LambdaArguments(), resultArgs)
 }
 
@@ -404,11 +404,11 @@ func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationCo
 		return variablesRes.WithErrors(nil, "wrong number of valuesRes "+strconv.FormatInt(int64(valuesRes.Length()), 10)+"; expected "+strconv.FormatInt(int64(variablesRes.Length()), 10))
 	}
 
-	variables, ok := variablesRes.Value.(ResultVariablesTuple)
+	variables, ok := variablesRes.Value.(VariablesTuple)
 	if !ok {
 		panic("unable to convert variables result to its raw type")
 	}
-	values, ok := valuesRes.Value.(ResultTuple)
+	values, ok := valuesRes.Value.(Tuple)
 	if !ok {
 		panic("unable to convert values result to its raw type")
 	}
@@ -416,7 +416,7 @@ func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationCo
 	for i, variable := range variables {
 		a.variables[variable.String()] = values[i]
 	}
-	return NewResult(ResultAssignment(values))
+	return NewResult(Assignment(values))
 }
 
 func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContext) interface{} {
@@ -425,7 +425,7 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 
 	// Check if 1) multiple variables && duped variables
 	multipleVarLambda, ok := lambda.(*parser.VariablesLambdaContext)
-	arguments := ResultLambdaArguments{}
+	arguments := LambdaArguments{}
 	argMap := map[string]bool{}
 	if ok {
 		argsRes := multipleVarLambda.LambdaArguments().Accept(a).(*Result)
@@ -434,9 +434,9 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 		}
 		a.convertLambdaArgumentsResult(argsRes)
 
-		arguments, ok = argsRes.Value.(ResultLambdaArguments)
+		arguments, ok = argsRes.Value.(LambdaArguments)
 		if !ok {
-			panic("unable to cast argsRes to ResultLambdaArguments")
+			panic("unable to cast argsRes to LambdaArguments")
 		}
 		for _, arg := range arguments {
 			argMap[string(arg)] = true
@@ -451,7 +451,7 @@ func (a *AbacusVisitor) VisitLambdaDeclaration(c *parser.LambdaDeclarationContex
 	}
 
 	formattedLambda := lambdaName + " = " + lambda.GetText()
-	return NewResult(ResultLambdaAssignment(formattedLambda))
+	return NewResult(LambdaAssignment(formattedLambda))
 }
 
 func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) interface{} {
@@ -462,13 +462,13 @@ func (a *AbacusVisitor) VisitEqualComparison(c *parser.EqualComparisonContext) i
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == 0))
@@ -482,13 +482,13 @@ func (a *AbacusVisitor) VisitLessComparison(c *parser.LessComparisonContext) int
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == -1))
@@ -502,13 +502,13 @@ func (a *AbacusVisitor) VisitGreaterComparison(c *parser.GreaterComparisonContex
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) == 1))
@@ -522,13 +522,13 @@ func (a *AbacusVisitor) VisitLessOrEqualComparison(c *parser.LessOrEqualComparis
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) <= 0))
@@ -542,13 +542,13 @@ func (a *AbacusVisitor) VisitGreaterOrEqualComparison(c *parser.GreaterOrEqualCo
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	return NewResult(ResultBool(leftVal.Cmp(rightVal.Decimal) >= 0))
@@ -622,13 +622,13 @@ func (a *AbacusVisitor) VisitMulDiv(c *parser.MulDivContext) interface{} {
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	res := newNumber(0)
@@ -649,13 +649,13 @@ func (a *AbacusVisitor) VisitAddSub(c *parser.AddSubContext) interface{} {
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	res := newNumber(0)
@@ -676,13 +676,13 @@ func (a *AbacusVisitor) VisitPow(c *parser.PowContext) interface{} {
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 	res := newNumber(0)
 	a.decimalCtx.Pow(res.Decimal, leftVal.Decimal, rightVal.Decimal)
@@ -697,13 +697,13 @@ func (a *AbacusVisitor) VisitMod(c *parser.ModContext) interface{} {
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 	res := newNumber(0)
 	a.decimalCtx.Rem(res.Decimal, leftVal.Decimal, rightVal.Decimal)
@@ -716,9 +716,9 @@ func (a *AbacusVisitor) VisitSignedExpr(c *parser.SignedExprContext) interface{}
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	sign := c.Sign().Accept(a).(rune)
@@ -747,9 +747,9 @@ func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interfa
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -763,9 +763,9 @@ func (a *AbacusVisitor) VisitCbrtFunction(c *parser.CbrtFunctionContext) interfa
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -779,9 +779,9 @@ func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{}
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -795,9 +795,9 @@ func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) int
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -811,9 +811,9 @@ func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interfa
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -828,9 +828,9 @@ func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) inter
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -846,9 +846,9 @@ func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) inter
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -862,9 +862,9 @@ func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interfa
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -878,9 +878,9 @@ func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	toFloat, _ := val.Float64()
@@ -895,9 +895,9 @@ func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	toFloat, _ := val.Float64()
@@ -912,9 +912,9 @@ func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	toFloat, _ := val.Float64()
@@ -929,9 +929,9 @@ func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -945,9 +945,9 @@ func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -961,9 +961,9 @@ func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext)
 		return valRes
 	}
 
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast val to ResultNumber")
+		panic("unable to cast val to Number")
 	}
 
 	v := newNumber(0)
@@ -979,13 +979,13 @@ func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) int
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	intValue, _ := rightVal.Decimal.Int64()
@@ -1007,13 +1007,13 @@ func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface
 		return left.WithErrors(right)
 	}
 
-	leftVal, ok := left.Value.(ResultNumber)
+	leftVal, ok := left.Value.(Number)
 	if !ok {
-		panic("unable to cast right to ResultNumber")
+		panic("unable to cast right to Number")
 	}
-	rightVal, ok := right.Value.(ResultNumber)
+	rightVal, ok := right.Value.(Number)
 	if !ok {
-		panic("unable to cast left to ResultNumber")
+		panic("unable to cast left to Number")
 	}
 
 	v := newNumber(0)
@@ -1031,9 +1031,9 @@ func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	smallest := newNumber(0)
@@ -1056,9 +1056,9 @@ func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	biggest := newNumber(0)
@@ -1081,9 +1081,9 @@ func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	sum := newNumber(0)
@@ -1104,9 +1104,9 @@ func (a *AbacusVisitor) VisitUntilFunction(c *parser.UntilFunctionContext) inter
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	argRes := c.Expression().Accept(a).(*Result)
@@ -1114,13 +1114,13 @@ func (a *AbacusVisitor) VisitUntilFunction(c *parser.UntilFunctionContext) inter
 		return argRes
 	}
 
-	arg, ok := argRes.Value.(ResultNumber)
+	arg, ok := argRes.Value.(Number)
 	if !ok {
-		panic("unable to cast argRes to ResultNumber")
+		panic("unable to cast argRes to Number")
 	}
 	intValue, _ := arg.Int64()
 
-	newTuple := ResultTuple{}
+	newTuple := Tuple{}
 	length := int64(len(tuple))
 
 	if intValue > length {
@@ -1143,14 +1143,14 @@ func (a *AbacusVisitor) VisitFromFunction(c *parser.FromFunctionContext) interfa
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 	arg := tuple[len(tuple)-1]
 	intValue, _ := arg.Int64()
 
-	newTuple := ResultTuple{}
+	newTuple := Tuple{}
 	length := int64(len(tuple))
 
 	if intValue < 0 {
@@ -1173,12 +1173,12 @@ func (a *AbacusVisitor) VisitReverseFunction(c *parser.ReverseFunctionContext) i
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
-	newTuple := ResultTuple{}
+	newTuple := Tuple{}
 	for i := len(tuple) - 1; i >= 0; i-- {
 		newTuple = append(newTuple, tuple[i])
 	}
@@ -1192,18 +1192,18 @@ func (a *AbacusVisitor) VisitNthFunction(c *parser.NthFunctionContext) interface
 	}
 	a.convertTupleResult(tupleRes)
 
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	argRes := c.Expression().Accept(a).(*Result)
 	if hasErrors(argRes) {
 		return argRes
 	}
-	arg, ok := argRes.Value.(ResultNumber)
+	arg, ok := argRes.Value.(Number)
 	if !ok {
-		panic("unable to cast argRes to ResultNumber")
+		panic("unable to cast argRes to Number")
 	}
 	intValue1, _ := arg.Int64()
 
@@ -1230,9 +1230,9 @@ func (a *AbacusVisitor) VisitPercent(c *parser.PercentContext) interface{} {
 	if hasErrors(valRes) {
 		return valRes
 	}
-	val, ok := valRes.Value.(ResultNumber)
+	val, ok := valRes.Value.(Number)
 	if !ok {
-		panic("unable to cast valRes to ResultNumber")
+		panic("unable to cast valRes to Number")
 	}
 
 	a.decimalCtx.Quo(val.Decimal, val.Decimal, newNumber(100).Decimal)
@@ -1246,7 +1246,7 @@ func (a *AbacusVisitor) VisitNumber(c *parser.NumberContext) interface{} {
 	if err != nil {
 		panic(err)
 	}
-	return NewResult(ResultNumber{out})
+	return NewResult(Number{out})
 }
 
 func (a *AbacusVisitor) VisitPlusSign(c *parser.PlusSignContext) interface{} {
@@ -1263,9 +1263,9 @@ func (a *AbacusVisitor) VisitVariablesLambda(c *parser.VariablesLambdaContext) i
 		return tupleRes
 	}
 	a.convertTupleResult(tupleRes)
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	return NewResult(tuple)
@@ -1277,9 +1277,9 @@ func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) i
 		return tupleRes
 	}
 	a.convertTupleResult(tupleRes)
-	tuple, ok := tupleRes.Value.(ResultTuple)
+	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
-		panic("unable to cast tupleRes to ResultTuple")
+		panic("unable to cast tupleRes to Tuple")
 	}
 
 	return NewResult(tuple)
@@ -1298,9 +1298,9 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 		if hasErrors(valRes) {
 			return valRes
 		}
-		val, ok := valRes.Value.(ResultNumber)
+		val, ok := valRes.Value.(Number)
 		if !ok {
-			panic("unable to case valRes to ResultNumber")
+			panic("unable to case valRes to Number")
 		}
 		switch i {
 		case 0:
@@ -1336,7 +1336,7 @@ getDeclaration:
 		parent := stack.TracePeek()
 		if parent != nil {
 			if value, ok := parent.arguments[lambda.name]; ok {
-				lambda.name = value.(ResultString).String()
+				lambda.name = value.(String).String()
 				goto getDeclaration
 			}
 		}
@@ -1350,9 +1350,9 @@ getDeclaration:
 			return valuesRes
 		}
 		a.convertMixedTupleResult(valuesRes)
-		tuple, ok := valuesRes.Value.(ResultMixedTuple)
+		tuple, ok := valuesRes.Value.(MixedTuple)
 		if !ok {
-			panic("unable to cast valuesRes to ResultMixedTuple")
+			panic("unable to cast valuesRes to MixedTuple")
 		}
 
 		// Check arity
@@ -1456,7 +1456,7 @@ getDeclaration:
 	stack.TracePop()
 
 	switch value := result.Value.(type) {
-	case ResultTuple:
+	case Tuple:
 		if len(value) == 1 {
 			v := newNumber(0)
 			v.Set(value[0].Decimal)
@@ -1474,16 +1474,16 @@ lambdaName := c.LAMBDA_VARIABLE().GetText()
 top:
 	lambda, found := a.lambdaDeclarations[lambdaName]
 
-	parameters := ResultMixedTuple{}
+	parameters := MixedTuple{}
 	if c.MixedTuple() != nil {
 		valuesRes := c.MixedTuple().Accept(a).(*Result)
 		if hasErrors(valuesRes) {
 			return valuesRes
 		}
 		a.convertMixedTupleResult(valuesRes)
-		tuple, ok := valuesRes.Value.(ResultMixedTuple)
+		tuple, ok := valuesRes.Value.(MixedTuple)
 		if !ok {
-			panic("unable to cast valuesRes to ResultMixedTuple")
+			panic("unable to cast valuesRes to MixedTuple")
 		}
 		parameters = tuple
 	}
@@ -1581,23 +1581,23 @@ top:
 			return NewResult(nil).WithErrors(nil, "expected "+strconv.FormatInt(int64(count), 10)+" parameter"+s)
 		}
 
-		arguments, ok := argsRes.Value.(ResultLambdaArguments)
+		arguments, ok := argsRes.Value.(LambdaArguments)
 		if !ok {
-			panic("unable to cast argsRes to ResultLambdaArguments")
+			panic("unable to cast argsRes to LambdaArguments")
 		}
 
 		for i, argName := range arguments {
 			if isNameLambda(string(argName)) {
-				a.lambdaLambdas[lambdaLambdaName(lambdaName, string(argName), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(ResultString) // Unsafe
+				a.lambdaLambdas[lambdaLambdaName(lambdaName, string(argName), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(String) // Unsafe
 			} else {
-				a.lambdaVars[lambdaVarName(lambdaName, argName.String(), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(ResultNumber) // Unsafe
+				a.lambdaVars[lambdaVarName(lambdaName, argName.String(), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(Number) // Unsafe
 			}
 		}
 		result := val.Accept(a).(*Result)
 		a.lambdaCallStackCounter[lambdaName]--
 
 		switch value := result.Value.(type) {
-		case ResultTuple:
+		case Tuple:
 			if len(value) == 1 {
 				v := newNumber(0)
 				v.Set(value[0].Decimal)
@@ -1612,7 +1612,7 @@ top:
 		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
 
 		switch value := result.Value.(type) {
-		case ResultTuple:
+		case Tuple:
 			if len(value) == 1 {
 				v := newNumber(0)
 				v.Set(value[0].Decimal)
@@ -1630,7 +1630,7 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	lambda := a.lambdaCallStack.TracePeek()
 	if lambda != nil {
 		if value, ok := lambda.arguments[name]; ok {
-			return NewResult(value.(ResultNumber))
+			return NewResult(value.(Number))
 		}
 	}
 

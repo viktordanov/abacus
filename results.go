@@ -29,7 +29,7 @@ func (r *Result) WithErrors(previous *Result, ee ...string) *Result {
 	return r
 }
 
-func decimalsToStringList(dd []ResultNumber) string {
+func decimalsToStringList(dd []Number) string {
 	var b strings.Builder
 	count := len(dd)
 	if count > 1 {
@@ -48,7 +48,7 @@ func decimalsToStringList(dd []ResultNumber) string {
 	return b.String()
 }
 
-func stringsToStringList(ss []ResultString) string {
+func stringsToStringList(ss []String) string {
 	var b strings.Builder
 	count := len(ss)
 	if count > 1 {
@@ -67,7 +67,7 @@ func stringsToStringList(ss []ResultString) string {
 	return b.String()
 }
 
-func mixedToStringList(dd ResultMixedTuple) string {
+func mixedToStringList(dd MixedTuple) string {
 	var b strings.Builder
 	count := len(dd)
 	if count > 1 {
@@ -75,12 +75,12 @@ func mixedToStringList(dd ResultMixedTuple) string {
 	}
 	for i, d := range dd {
 		switch val := d.(type) {
-		case ResultString:
+		case String:
 			b.WriteString(string(val))
 			if i+1 != count {
 				b.WriteString(", ")
 			}
-		case ResultNumber:
+		case Number:
 			b.WriteString(val.Text('g'))
 			if i+1 != count {
 				b.WriteString(", ")
@@ -102,75 +102,75 @@ func addColor(str string, color Color) string {
 	return b.String()
 }
 
-type ResultAssignment []ResultNumber
+type Assignment []Number
 
-func (r ResultAssignment) String() string {
+func (r Assignment) String() string {
 	return decimalsToStringList(r)
 }
 
-func (r ResultAssignment) Color() string {
+func (r Assignment) Color() string {
 	return addColor(r.String(), Magenta)
 }
 
-type ResultLambdaAssignment string
+type LambdaAssignment string
 
-func (r ResultLambdaAssignment) String() string {
+func (r LambdaAssignment) String() string {
 	return string(r)
 }
-func (r ResultLambdaAssignment) Color() string {
+func (r LambdaAssignment) Color() string {
 	return addColor(r.String(), Magenta)
 }
 
-type ResultTuple []ResultNumber
+type Tuple []Number
 
-func (r ResultTuple) String() string {
+func (r Tuple) String() string {
 	return decimalsToStringList(r)
 }
 
-func (r ResultTuple) Color() string {
+func (r Tuple) Color() string {
 	return addColor(r.String(), Green)
 }
 
-type ResultMixedTuple []interface{}
+type MixedTuple []interface{}
 
-func (r ResultMixedTuple) String() string {
+func (r MixedTuple) String() string {
 	return mixedToStringList(r)
 }
 
-func (r ResultMixedTuple) Color() string {
+func (r MixedTuple) Color() string {
 	return addColor(r.String(), Green)
 }
 
-type ResultVariablesTuple []ResultString
+type VariablesTuple []String
 
-func (r ResultVariablesTuple) String() string {
+func (r VariablesTuple) String() string {
 	return stringsToStringList(r)
 }
 
-func (r ResultVariablesTuple) Color() string {
+func (r VariablesTuple) Color() string {
 	return addColor(r.String(), Magenta)
 }
 
-type ResultLambdaArguments []ResultString
+type LambdaArguments []String
 
-func (r ResultLambdaArguments) String() string {
+func (r LambdaArguments) String() string {
 	return stringsToStringList(r)
 }
 
 // Color variables and Lambdas differently
-func (r ResultLambdaArguments) Color() string {
+func (r LambdaArguments) Color() string {
 	return addColor(r.String(), Magenta)
 }
 
-type ResultNumber struct {
+type Number struct {
 	*apd.Decimal
 }
 
-func (r ResultNumber) String() string {
+func (r Number) String() string {
 	return r.Text('g')
 }
 
-func (r ResultNumber) Color() string {
+func (r Number) Color() string {
 	return addColor(r.String(), Green)
 }
 
@@ -183,12 +183,12 @@ func (r ResultBool) Color() string {
 	return addColor(r.String(), Green)
 }
 
-type ResultString string
+type String string
 
-func (r ResultString) String() string {
+func (r String) String() string {
 	return string(r)
 }
-func (r ResultString) Color() string {
+func (r String) Color() string {
 	return addColor(r.String(), Green)
 }
 
@@ -196,11 +196,11 @@ func (r ResultString) Color() string {
 // If Value is not a tuple type 1 is returned
 func (r *Result) Length() int {
 	switch val := r.Value.(type) {
-	case ResultVariablesTuple:
+	case VariablesTuple:
 		return len(val)
-	case ResultLambdaArguments:
+	case LambdaArguments:
 		return len(val)
-	case ResultTuple:
+	case Tuple:
 		return len(val)
 	}
 	return 1
