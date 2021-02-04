@@ -1325,6 +1325,7 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 		nested:    false,
 	}
 
+getDeclaration:
 	declaration, found := a.lambdaDeclarations[lambda.name] // rename to declarations and only save dec there
 
 	if found {
@@ -1332,7 +1333,13 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 	}
 
 	if !found {
-		stack.TracePop()
+		parent := stack.TracePeek()
+		if parent != nil {
+			if value, ok := parent.arguments[lambda.name]; ok {
+				lambda.name = value.(ResultString).String()
+				goto getDeclaration
+			}
+		}
 		return NewResult(newNumber(0))
 	}
 
