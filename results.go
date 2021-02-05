@@ -163,7 +163,7 @@ func (r LambdaArguments) Color() string {
 }
 
 type Number struct {
-	*apd.Decimal
+	 *apd.Decimal
 }
 
 func (r Number) String() string {

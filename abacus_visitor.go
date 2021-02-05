@@ -748,12 +748,16 @@ func (a *AbacusVisitor) VisitSignedExpr(c *parser.SignedExprContext) interface{}
 		panic("unable to cast val to Number")
 	}
 
+
+	res := newNumber(0)
+
+	res.Set(val.Decimal)
 	sign := c.Sign().Accept(a).(rune)
 	if sign == '-' {
-		val.Negative = !val.Negative
+		res.Negative = !res.Negative
 	}
 
-	return NewResult(val)
+	return NewResult(res)
 }
 
 func (a *AbacusVisitor) VisitParentheses(c *parser.ParenthesesContext) interface{} {
