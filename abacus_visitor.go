@@ -6,6 +6,7 @@ import (
 	"github.com/viktordanov/abacus/parser"
 	"math"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -90,10 +91,11 @@ type RecursionParameters struct {
 	MaxRecurrences uint
 	LastValue      Number
 	StopWhen       parser.IBoolExpressionContext
+	Memoize        bool
 }
 
 func NewRecursionParameters() *RecursionParameters {
-	return &RecursionParameters{MaxRecurrences: 0, LastValue: newNumber(0), StopWhen: nil}
+	return &RecursionParameters{MaxRecurrences: 0, LastValue: newNumber(0), StopWhen: nil, Memoize: false}
 }
 
 type CalledLambda struct {
@@ -105,31 +107,47 @@ type CalledLambda struct {
 	name      string
 }
 
+func (l *CalledLambda) Signature() string {
+	var b strings.Builder
+	b.WriteString(l.name)
+	b.WriteRune('_')
+	for _, i := range l.arguments {
+		switch val := i.(type) {
+		case Number:
+			b.WriteString(val.String())
+		case String:
+			b.WriteString(val.String())
+		}
+		b.WriteRune('_')
+	}
+	return b.String()
+}
+
 type LambdaCallStack struct {
 	root      *CalledLambda
 	trace     []*CalledLambda
 	invokes   map[string]uint
 	recursion map[string]*RecursionParameters
-	memoized  map[string]Number
+	memoized  map[string]*Result
 }
 
-func (s *LambdaCallStack) TracePeek() *CalledLambda {
+func (s *LambdaCallStack) Peek() *CalledLambda {
 	if len(s.trace) == 0 {
 		return nil
 	}
 	return s.trace[len(s.trace)-1]
 }
 
-func (s *LambdaCallStack) TracePop() *CalledLambda {
+func (s *LambdaCallStack) Pop() *CalledLambda {
 	if len(s.trace) == 0 {
 		return nil
 	}
-	el := s.TracePeek()
+	el := s.Peek()
 	s.trace = s.trace[:len(s.trace)-1]
 	return el
 }
 
-func (s *LambdaCallStack) TracePush(l *CalledLambda) {
+func (s *LambdaCallStack) Push(l *CalledLambda) {
 	s.trace = append(s.trace, l)
 }
 
@@ -156,7 +174,7 @@ func NewAbacusVisitor() *AbacusVisitor {
 		ParseTreeVisitor:   &parser.BaseAbacusVisitor{},
 		variables:          make(map[string]Number),
 		lambdaDeclarations: make(map[string]*LambdaDeclaration),
-		lambdaCallStack:    &LambdaCallStack{root: nil, invokes: map[string]uint{}, trace: []*CalledLambda{}, recursion: map[string]*RecursionParameters{}},
+		lambdaCallStack:    &LambdaCallStack{root: nil, invokes: map[string]uint{}, trace: []*CalledLambda{}, recursion: map[string]*RecursionParameters{}, memoized: map[string]*Result{}},
 		decimalCtx:         apd.BaseContext.WithPrecision(arguments.Precision),
 	}
 }
@@ -168,6 +186,7 @@ func (a *AbacusVisitor) Visit(tree antlr.ParseTree) interface{} {
 		a.lambdaCallStack.trace = []*CalledLambda{}
 		a.lambdaCallStack.invokes = map[string]uint{}
 		a.lambdaCallStack.recursion = map[string]*RecursionParameters{}
+		a.lambdaCallStack.memoized = map[string]*Result{}
 		return val.Accept(a)
 	}
 	return nil
@@ -317,6 +336,7 @@ func (a *AbacusVisitor) convertVariablesTupleResult(result *Result) {
 		result.Value = VariablesTuple{val}
 	}
 }
+
 func (a *AbacusVisitor) convertLambdaArgumentsResult(result *Result) {
 	switch val := result.Value.(type) {
 	case String:
@@ -330,6 +350,7 @@ func (a *AbacusVisitor) convertTupleResult(result *Result) {
 		result.Value = Tuple{val}
 	}
 }
+
 func (a *AbacusVisitor) convertMixedTupleResult(result *Result) {
 	switch val := result.Value.(type) {
 	case Number:
@@ -611,9 +632,9 @@ func (a *AbacusVisitor) VisitParenthesesBoolean(c *parser.ParenthesesBooleanCont
 func (a *AbacusVisitor) VisitBoolAtom(c *parser.BoolAtomContext) interface{} {
 	val := c.GetText()
 	if val == "true" {
-		return Bool(true)
+		return NewResult(Bool(true))
 	}
-	return Bool(false)
+	return NewResult(Bool(false))
 }
 
 func (a *AbacusVisitor) VisitBooleanAtom(c *parser.BooleanAtomContext) interface{} {
@@ -1320,7 +1341,6 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 	recursionParameters := NewRecursionParameters()
 
 	for i := 0; i < len(c.AllParameter()); i++ {
-
 		valRes := c.Parameter(i).Accept(a)
 		switch val := valRes.(type) {
 		case *Result:
@@ -1339,6 +1359,11 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 			case parser.IBoolExpressionContext:
 				if val.Name == "stop" {
 					recursionParameters.StopWhen = parameterValue
+				} else if val.Name == "mem" {
+					res := parameterValue.Accept(a).(*Result)
+					if !hasErrors(res) {
+						recursionParameters.Memoize = bool(res.Value.(Bool))
+					}
 				}
 			}
 		}
@@ -1357,18 +1382,41 @@ func (a *AbacusVisitor) VisitLambdaExpr(c *parser.LambdaExprContext) interface{}
 	}
 
 getDeclaration:
-	declaration, found := a.lambdaDeclarations[lambda.name] // rename to declarations and only save dec there
+	declaration, found := a.lambdaDeclarations[lambda.name]
 
 	if found {
 		lambda.ctx = declaration.ctx
 	}
 
-	if !found {
-		parent := stack.TracePeek()
-		if parent != nil {
-			if value, ok := parent.arguments[lambda.name]; ok {
-				lambda.name = value.(String).String()
-				goto getDeclaration
+	// Handle local "composed" lambdas, e.g.    E = x,Fn -> Fn(x)  // Fn is local
+	parent := stack.Peek()
+	isLocal := false
+
+	if parent != nil {
+		_, isLocal = parent.arguments[lambda.name]
+	}
+	if isLocal {
+		var parent *CalledLambda
+		for {
+			if parent == nil {
+				parent = stack.Peek()
+			} else {
+				parent = parent.parent
+			}
+			if parent != nil {
+				if value, ok := parent.arguments[lambda.name]; ok {
+					lambda.name = value.(String).String()
+
+					isLocalToGrandparent := false
+					if parent.parent != nil {
+						_, isLocalToGrandparent = parent.parent.arguments[lambda.name]
+					}
+					if _, ok := a.lambdaDeclarations[lambda.name]; ok && !isLocalToGrandparent {
+						goto getDeclaration
+					}
+				}
+			} else {
+				break
 			}
 		}
 		return NewResult(newNumber(0))
@@ -1409,9 +1457,6 @@ getDeclaration:
 	if _, ok := stack.recursion[lambda.name]; !ok {
 		if c.RecursionParameters() != nil {
 			stack.recursion[lambda.name] = c.RecursionParameters().Accept(a).(*RecursionParameters)
-			if stack.recursion[lambda.name].StopWhen != nil {
-				stack.recursion[lambda.name].StopWhen.SetParent(lambda.ctx)
-			}
 		} else {
 			stack.recursion[lambda.name] = NewRecursionParameters()
 		}
@@ -1421,20 +1466,29 @@ getDeclaration:
 	if stack.root == nil {
 		stack.root = lambda
 	}
-	parent := stack.TracePeek()
+	parent = stack.Peek()
 	if parent != nil {
 		lambda.parent = parent
 		parent.children = append(parent.children, lambda)
 	}
 
 	recurring := stack.IsRecurring(lambda.name)
-	stack.TracePush(lambda)
+	stack.Push(lambda)
 
 	// Count times lambda has been invoked
 	if _, ok := stack.invokes[lambda.name]; !ok {
 		stack.invokes[lambda.name] = 1
 	} else {
 		stack.invokes[lambda.name]++
+	}
+
+	// Check if memoization is enabled and if a value exists to prevent branching
+	if stack.recursion[lambda.name].Memoize {
+		cachedResult, ok := stack.memoized[lambda.Signature()]
+		if ok {
+			stack.Pop()
+			return cachedResult
+		}
 	}
 
 	// Calculate and the stop condition if present
@@ -1454,7 +1508,7 @@ getDeclaration:
 	if shouldStop {
 		v := newNumber(0)
 		v.Set(stack.recursion[lambda.name].LastValue.Decimal)
-		stack.TracePop()
+		stack.Pop()
 		return NewResult(v)
 	}
 
@@ -1463,20 +1517,20 @@ getDeclaration:
 		recParameters := stack.recursion[lambda.name]
 		invokes := stack.invokes[lambda.name]
 
-		if invokes > 1 && recParameters.MaxRecurrences == 0 {
+		if recParameters.MaxRecurrences == 0 {
 			return NewResult(nil).WithErrors(nil, "recursion is disabled")
 		}
 
 		if shouldStop {
 			v := newNumber(0)
 			v.Set(recParameters.LastValue.Decimal)
-			stack.TracePop()
+			stack.Pop()
 			return NewResult(v)
 		}
 		if invokes > recParameters.MaxRecurrences {
 			v := newNumber(0)
 			v.Set(recParameters.LastValue.Decimal)
-			stack.TracePop()
+			stack.Pop()
 			return NewResult(v)
 		}
 	}
@@ -1484,181 +1538,31 @@ getDeclaration:
 	// Evaluate lambda
 	declaredLambda := lambda.ctx.Lambda()
 	result := declaredLambda.Accept(a).(*Result)
-	stack.TracePop()
+	stack.Pop()
 
 	switch value := result.Value.(type) {
 	case Tuple:
 		if len(value) == 1 {
 			v := newNumber(0)
 			v.Set(value[0].Decimal)
-			return NewResult(v)
+			result = NewResult(v)
+			if stack.recursion[lambda.name].Memoize {
+				stack.memoized[lambda.Signature()] = result
+			}
+			return result
 		}
+	}
+
+	if stack.recursion[lambda.name].Memoize {
+		stack.memoized[lambda.Signature()] = result
 	}
 	return result
 }
 
-/*
-lambdaName := c.LAMBDA_VARIABLE().GetText()
-
-
-
-top:
-	lambda, found := a.lambdaDeclarations[lambdaName]
-
-	parameters := MixedTuple{}
-	if c.MixedTuple() != nil {
-		valuesRes := c.MixedTuple().Accept(a).(*Result)
-		if hasErrors(valuesRes) {
-			return valuesRes
-		}
-		a.convertMixedTupleResult(valuesRes)
-		tuple, ok := valuesRes.Value.(MixedTuple)
-		if !ok {
-			panic("unable to cast valuesRes to MixedTuple")
-		}
-		parameters = tuple
-	}
-
-	// Handle recursion
-	inLambda, nested := a.checkParentCtxForLambda(c.GetParent())
-
-	recursionParameters := NewRecursionParameters()
-	if c.RecursionParameters() != nil {
-		recursionParameters = c.RecursionParameters().Accept(a).(*RecursionParameters)
-	}
-	if recursionParameters.StopWhen != nil {
-		recursionParameters.StopWhen.SetParent(lambda.ctx)
-	}
-
-	if c.RecursionParameters() != nil {
-		lambda.parameters = recursionParameters
-	} else if !inLambda {
-		lambda.parameters = recursionParameters
-	}
-	if _, ok := a.lambdaCallStackCounter[lambdaName]; !ok {
-		a.lambdaCallStackCounter[lambdaName] = 1
-	} else {
-		a.lambdaCallStackCounter[lambdaName]++
-	}
-	if inLambda {
-		// Recurrs
-		if lambdaName == nested {
-			if lambda.parameters.MaxRecurrences == 0 {
-				return NewResult(nil).WithErrors(nil, "recursion is disabled")
-			}
-			recurrences, ok := uint(0), false
-
-			if recurrences, ok = a.lambdaRecursion[lambdaName]; !ok {
-				recurrences = 1
-				a.lambdaRecursion[lambdaName] = 1
-			}
-
-			shouldStop := false
-			if lambda.parameters.StopWhen != nil {
-				conditionRes := lambda.parameters.StopWhen.Accept(a).(*Result)
-				if hasErrors(conditionRes) {
-					return conditionRes
-				}
-				condition, ok := conditionRes.Value.(Bool)
-				if !ok {
-					panic("unable to cast conditionRes to Bool")
-				}
-				shouldStop = bool(condition)
-			}
-			if shouldStop {
-				v := newNumber(0)
-				v.Set(lambda.parameters.LastValue.Decimal)
-				return NewResult(v)
-			}
-			if recurrences >= lambda.parameters.MaxRecurrences {
-				v := newNumber(0)
-				v.Set(lambda.parameters.LastValue.Decimal)
-				return NewResult(v)
-			}
-			a.lambdaRecursion[lambdaName]++
-		}
-
-		// If parent lambda has the name of this lambda in its args list
-
-		// If parent has entry of current lambda - Parent = x,Fn -> Fn(x)  // lambdaName - Fn, nested - Parent
-		if actualLambdaName, ok := a.lambdaLambdas[lambdaLambdaName(nested, lambdaName, a.lambdaCallStackCounter[lambdaName])]; ok {
-			lambdaName = actualLambdaName.String()
-			a.lambdaCallStackCounter[lambdaName]--
-			goto top
-		}
-
-	}
-
-	if !found {
-		return NewResult(newNumber(0))
-	}
-
-	//log.Printf("[%s] %v %v\n", lambdaName, inLambda, parameters)
-
-	switch val := lambda.ctx.LambdaDeclaration().(type) {
-	case *parser.VariablesLambdaContext:
-		argsRes := val.LambdaArguments().Accept(a).(*Result)
-		if hasErrors(argsRes) {
-			return argsRes
-		}
-		a.convertLambdaArgumentsResult(argsRes)
-
-		count := argsRes.Length()
-		s := ""
-		if count > 1 {
-			s = "s"
-		}
-		if len(parameters) < count {
-			return NewResult(nil).WithErrors(nil, "expected "+strconv.FormatInt(int64(count), 10)+" parameter"+s)
-		}
-
-		arguments, ok := argsRes.Value.(LambdaArguments)
-		if !ok {
-			panic("unable to cast argsRes to LambdaArguments")
-		}
-
-		for i, argName := range arguments {
-			if isNameLambda(string(argName)) {
-				a.lambdaLambdas[lambdaLambdaName(lambdaName, string(argName), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(String) // Unsafe
-			} else {
-				a.lambdaVars[lambdaVarName(lambdaName, argName.String(), a.lambdaCallStackCounter[lambdaName])] = parameters[i].(Number) // Unsafe
-			}
-		}
-		result := val.Accept(a).(*Result)
-		a.lambdaCallStackCounter[lambdaName]--
-
-		switch value := result.Value.(type) {
-		case Tuple:
-			if len(value) == 1 {
-				v := newNumber(0)
-				v.Set(value[0].Decimal)
-				return NewResult(v)
-			}
-		}
-		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
-		return result
-	case *parser.NullArityLambdaContext:
-		result := val.Accept(a).(*Result)
-		a.lambdaCallStackCounter[lambdaName]--
-		//log.Printf("[%s] %+v %+v\n", lambdaName, r, parameters)
-
-		switch value := result.Value.(type) {
-		case Tuple:
-			if len(value) == 1 {
-				v := newNumber(0)
-				v.Set(value[0].Decimal)
-				NewResult(v)
-			}
-		}
-		return result
-	}
-	return NewResult(newNumber(0))
-*/
-
 func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	name := c.VARIABLE().GetText()
 
-	lambda := a.lambdaCallStack.TracePeek()
+	lambda := a.lambdaCallStack.Peek()
 	if lambda != nil {
 		if value, ok := lambda.arguments[name]; ok {
 			return NewResult(value.(Number))
