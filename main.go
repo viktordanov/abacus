@@ -109,11 +109,6 @@ func run() error {
 		}
 	}
 
-	if len(arguments.Expression) != 0 {
-		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
-		return nil
-	}
-
 	if len(arguments.ImportDefinitions) != 0 {
 		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
 		if err != nil {
@@ -121,6 +116,11 @@ func run() error {
 		}
 
 		evaluateExpression(string(dat), abacusVisitor)
+	}
+
+	if len(arguments.Expression) != 0 {
+		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
+		return nil
 	}
 
 	updateCompletions(line, abacusVisitor)
