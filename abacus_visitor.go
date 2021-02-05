@@ -1429,6 +1429,8 @@ getDeclaration:
 				break
 			}
 		}
+	}
+	if !found {
 		return NewResult(newNumber(0))
 	}
 
