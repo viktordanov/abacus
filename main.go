@@ -86,13 +86,6 @@ func run() error {
 	f.Close()
 
 	printAnswer := func(res *Result) {
-		switch res.Value.(type) {
-		case Assignment:
-			updateCompletions(line, abacusVisitor)
-		case LambdaAssignment:
-			updateCompletions(line, abacusVisitor)
-		}
-
 		if len(res.Errors) != 0 {
 			for _, e := range res.Errors {
 				fmt.Print(Red)
@@ -100,6 +93,13 @@ func run() error {
 				fmt.Println(Reset)
 			}
 			return
+		}
+
+		switch res.Value.(type) {
+		case Assignment:
+			updateCompletions(line, abacusVisitor)
+		case LambdaAssignment:
+			updateCompletions(line, abacusVisitor)
 		}
 
 		if arguments.IgnoreColor {
@@ -158,7 +158,19 @@ func run() error {
 func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
 	result := NewResult(nil).WithErrors(nil, "expression did not yield a result")
 	ok := false
-	for _, e := range strings.Split(expr, ";") {
+
+	expressions := strings.Split(expr, ";")
+	for i, expression := range expressions {
+		var b strings.Builder
+		for _, char := range expression {
+			if char != '\n' {
+				b.WriteRune(char)
+			}
+		}
+		expressions[i] = b.String()
+	}
+
+	for _, e := range expressions {
 		if len(e) == 0 {
 			continue
 		}
