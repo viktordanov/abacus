@@ -89,13 +89,13 @@ type Parameter struct {
 
 type RecursionParameters struct {
 	MaxRecurrences uint
-	LastValue      Number
+	LastValue      parser.IExpressionContext
 	StopWhen       parser.IBoolExpressionContext
 	Memoize        bool
 }
 
 func NewRecursionParameters() *RecursionParameters {
-	return &RecursionParameters{MaxRecurrences: 0, LastValue: newNumber(0), StopWhen: nil, Memoize: false}
+	return &RecursionParameters{MaxRecurrences: 0, LastValue: nil, StopWhen: nil, Memoize: false}
 }
 
 type CalledLambda struct {
@@ -748,7 +748,6 @@ func (a *AbacusVisitor) VisitSignedExpr(c *parser.SignedExprContext) interface{}
 		panic("unable to cast val to Number")
 	}
 
-
 	res := newNumber(0)
 
 	res.Set(val.Decimal)
@@ -1319,6 +1318,13 @@ func (a *AbacusVisitor) VisitNullArityLambda(c *parser.NullArityLambdaContext) i
 func (a *AbacusVisitor) VisitParameter(c *parser.ParameterContext) interface{} {
 	paramName := c.VARIABLE().GetText()
 
+	if paramName == "last" {
+		return Parameter{
+			Name:  paramName,
+			Value: c.Expression(),
+		}
+	}
+
 	if c.Expression() != nil {
 		expRes := c.Expression().Accept(a).(*Result)
 		if hasErrors(expRes) {
@@ -1355,10 +1361,10 @@ func (a *AbacusVisitor) VisitRecursionParameters(c *parser.RecursionParametersCo
 				if val.Name == "rec" {
 					intValue, _ := parameterValue.Abs(parameterValue.Decimal).Int64()
 					recursionParameters.MaxRecurrences = uint(intValue)
-				} else if val.Name == "last" {
-					v := newNumber(0)
-					v.Set(parameterValue.Decimal)
-					recursionParameters.LastValue = v
+				}
+			case parser.IExpressionContext:
+				if val.Name == "last" {
+					recursionParameters.LastValue = parameterValue
 				}
 			case parser.IBoolExpressionContext:
 				if val.Name == "stop" {
@@ -1511,7 +1517,21 @@ getDeclaration:
 
 	if shouldStop {
 		v := newNumber(0)
-		v.Set(stack.recursion[lambda.name].LastValue.Decimal)
+		if stack.recursion[lambda.name].LastValue == nil {
+			stack.Pop()
+			return NewResult(v)
+		}
+		// Eval last value
+		lastValRes := stack.recursion[lambda.name].LastValue.Accept(a).(*Result)
+		if hasErrors(lastValRes) {
+			return lastValRes
+		}
+		lastVal, ok := lastValRes.Value.(Number)
+		if !ok {
+			panic("unable to cast lastValRes to Number")
+		}
+
+		v.Set(lastVal.Decimal)
 		stack.Pop()
 		return NewResult(v)
 	}
@@ -1527,13 +1547,41 @@ getDeclaration:
 
 		if shouldStop {
 			v := newNumber(0)
-			v.Set(recParameters.LastValue.Decimal)
+			if stack.recursion[lambda.name].LastValue == nil {
+				stack.Pop()
+				return NewResult(v)
+			}
+			// Eval last value
+			lastValRes := stack.recursion[lambda.name].LastValue.Accept(a).(*Result)
+			if hasErrors(lastValRes) {
+				return lastValRes
+			}
+			lastVal, ok := lastValRes.Value.(Number)
+			if !ok {
+				panic("unable to cast lastValRes to Number")
+			}
+
+			v.Set(lastVal.Decimal)
 			stack.Pop()
 			return NewResult(v)
 		}
 		if invokes > recParameters.MaxRecurrences {
 			v := newNumber(0)
-			v.Set(recParameters.LastValue.Decimal)
+			if stack.recursion[lambda.name].LastValue == nil {
+				stack.Pop()
+				return NewResult(v)
+			}
+			// Eval last value
+			lastValRes := stack.recursion[lambda.name].LastValue.Accept(a).(*Result)
+			if hasErrors(lastValRes) {
+				return lastValRes
+			}
+			lastVal, ok := lastValRes.Value.(Number)
+			if !ok {
+				panic("unable to cast lastValRes to Number")
+			}
+
+			v.Set(lastVal.Decimal)
 			stack.Pop()
 			return NewResult(v)
 		}
