@@ -1461,6 +1461,16 @@ getDeclaration:
 		// Create argName -> value map
 		lambda.arguments = map[string]interface{}{}
 		for i, argument := range declaration.arguments {
+			// Check type of received parameter and check against expected argument
+			if isLambdaName(argument.String()) {
+				if _, ok := tuple[i].(String); !ok {
+					return NewResult(nil).WithErrors(nil, "["+lambda.name+"] expected lambda for parameter "+strconv.Itoa(i+1)+", got number")
+				}
+			} else {
+				if _, ok := tuple[i].(Number); !ok {
+					return NewResult(nil).WithErrors(nil, "["+lambda.name+"] expected number for parameter "+strconv.Itoa(i+1)+", got lambda")
+				}
+			}
 			lambda.arguments[argument.String()] = tuple[i]
 		}
 	}
@@ -1646,4 +1656,8 @@ func (a *AbacusVisitor) checkParentCtxForLambda(c antlr.Tree) (bool, string) {
 
 func hasErrors(r *Result) bool {
 	return len(r.Errors) != 0
+}
+
+func isLambdaName(name string) bool {
+	return name[0] >= 'A' && name[0] <= 'Z'
 }
