@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+// TODO: Rewrite tests for new return system
+
 func newBigFloat(val float64) *big.Float {
 	return big.NewFloat(val)
 }
@@ -44,9 +46,9 @@ func Test_evaluateExpression(t *testing.T) {
 	}
 	variableTests := testArgs{
 		{expr: "d", want: newBigFloat(0), visitor: visitor},
-		{expr: "d=1", want: variableAssignment{newBigFloat(1)}, visitor: visitor},
+		{expr: "d=1", want: Assignment{[]*big.Float{New(1)}}, visitor: visitor},
 		{expr: "d", want: newBigFloat(1), visitor: visitor},
-		{expr: "dd=d", want: variableAssignment{newBigFloat(1)}, visitor: visitor},
+		{expr: "dd=d", want: Assignment{[]*big.Float{New(1)}}, visitor: visitor},
 		{expr: "dd", want: newBigFloat(1), visitor: visitor},
 	}
 	comparisonTests := testArgs{
@@ -88,14 +90,17 @@ func runTestSuite(t *testing.T, name string, tests testArgs) {
 			t.Run("", func(t *testing.T) {
 				ans := evaluateExpression(tt.expr, tt.visitor)
 				switch val := ans.(type) {
-				case variableAssignment:
-					expected, ok := tt.want.(variableAssignment)
+				case Assignment:
+					expected, ok := tt.want.(Assignment)
 					if !ok {
 						t.Errorf("VarAssign %v, unexpected type", ans)
 					}
-					if !compareBigFloat(val.newValue, expected.newValue) {
-						t.Errorf("VarAssign %v, want %v", val.newValue, expected.newValue)
+					for i := 0; i < len(val.Values); i++ {
+						if !compareBigFloat(val.Values[i], expected.Values[i]) {
+							t.Errorf("VarAssign %v, want %v", val.Values[i], expected.Values[i])
+						}
 					}
+
 				case *big.Float:
 					expected, ok := tt.want.(*big.Float)
 					if !ok {

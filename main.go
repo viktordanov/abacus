@@ -5,76 +5,72 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
-	"github.com/alexflint/go-arg"
+	arg "github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
-
-	"math/big"
 )
 
 var (
-	precision   uint
+	arguments   args
+	precision   uint32
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
-		"sqrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "round(", "min(", "max(", "pi", "e", "phi",
+		"sqrt(", "cbrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "abs(", "round(", "min(", "max(", "avg(", "from(", "until(", "reverse(", "nth(", "pi", "e", "phi",
 	}
 )
 
-type variableAssignment struct {
-	newValue *big.Float
-}
-
 type args struct {
-	IgnoreColor bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	Precision   uint   `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	Expression  string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	IgnoreColor       bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	Precision         uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	Expression        string `arg:"-e,--eval" help:"evaluate expression and exit"`
+	ImportDefinitions string `arg:"-i,--import" help:"import statements from file and continue"`
 }
 
 func (args) Version() string {
-	return "v1.0.0\n"
+	return "v1.2\n"
 }
 func (args) Description() string {
-	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
-}
-
-func green(arg string) {
-	fmt.Println(string("\033[32m") + arg + string("\033[0m"))
-}
-func magenta(arg string) {
-	fmt.Println(string("\033[35m") + arg + string("\033[0m"))
-}
-func white(arg string) {
-	fmt.Println(string("\033[37m") + arg + string("\033[0m"))
+	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
 }
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		_, err = fmt.Fprintf(os.Stderr, "%s\n", err)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 		os.Exit(1)
 	}
 }
 
 func run() error {
-	var arguments args
 	arg.MustParse(&arguments)
 	precision = arguments.Precision
 
-	visitor := NewAbacusVisitor()
+	abacusVisitor := NewAbacusVisitor()
 	line := liner.NewLiner()
 
 	defer line.Close()
 	line.SetCtrlCAborts(true)
 
+	if _, err := os.Stat(historyFile); os.IsNotExist(err) {
+		_, err = os.Create(historyFile)
+		if err != nil {
+			return err
+		}
+	}
+
 	f, err := os.Open(historyFile)
+	defer f.Close()
 	if err != nil {
 		return err
 	}
@@ -83,49 +79,54 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	f.Close()
 
-	printAnswer := func(ans interface{}) {
-		switch val := ans.(type) {
-		case variableAssignment:
-			updateCompletions(line, visitor)
-			if !arguments.IgnoreColor {
-				green(val.newValue.Text('g', int(precision)))
-			} else {
-				white(val.newValue.Text('g', int(precision)))
+	printAnswer := func(res *Result) {
+		if len(res.Errors) != 0 {
+			for _, e := range res.Errors {
+				fmt.Print(Red)
+				fmt.Print(e.Error())
+				fmt.Println(Reset)
 			}
-		case *big.Float:
-			if !arguments.IgnoreColor {
-				green(val.Text('g', int(precision)))
-			} else {
-				white(val.Text('g', int(precision)))
-			}
-		case string:
-			if !arguments.IgnoreColor {
-				green(val)
-			} else {
-				white(val)
-			}
-		case bool:
-			if !arguments.IgnoreColor {
-				magenta(strconv.FormatBool(val))
-			} else {
-				white(strconv.FormatBool(val))
-			}
+			return
+		}
+
+		switch res.Value.(type) {
+		case Assignment:
+			updateCompletions(line, abacusVisitor)
+		case LambdaAssignment:
+			updateCompletions(line, abacusVisitor)
+		}
+
+		if arguments.IgnoreColor {
+			fmt.Println(res.Value.String())
+		} else {
+			fmt.Println(res.Value.Color())
 		}
 	}
 
+	if len(arguments.ImportDefinitions) != 0 {
+		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
+		if err != nil {
+			return err
+		}
+
+		evaluateExpression(string(dat), abacusVisitor)
+	}
+
 	if len(arguments.Expression) != 0 {
-		printAnswer(evaluateExpression(arguments.Expression, visitor))
+		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
 		return nil
 	}
-	updateCompletions(line, visitor)
+
+	updateCompletions(line, abacusVisitor)
 
 	ctx := context.Background()
 	defer goodbye.Exit(ctx, -1)
 	goodbye.Notify(ctx)
 	goodbye.Register(func(ctx context.Context, sig os.Signal) {
-		writeHistoryFile(line)
+		_ = writeHistoryFile(line)
+		_ = line.Close()
+		_ = f.Close()
 	})
 
 	for {
@@ -144,22 +145,45 @@ func run() error {
 
 		if input != "" {
 			line.AppendHistory(input)
-			printAnswer(evaluateExpression(input, visitor))
+			printAnswer(evaluateExpression(input, abacusVisitor))
 			precision = savedPrecision
 		}
 	}
 
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) (ans interface{}) {
-	is := antlr.NewInputStream(expr)
-	lexer := parser.NewAbacusLexer(is)
-	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
+	result := NewResult(nil).WithErrors(nil, "expression did not yield a result")
+	ok := false
 
-	p := parser.NewAbacusParser(stream)
-	tree := p.Root()
-	ans = visitor.Visit(tree)
-	return
+	expressions := strings.Split(expr, ";")
+	for i, expression := range expressions {
+		var b strings.Builder
+		for _, char := range expression {
+			if char != '\n' {
+				b.WriteRune(char)
+			}
+		}
+		expressions[i] = b.String()
+	}
+
+	for _, e := range expressions {
+		if len(e) == 0 {
+			continue
+		}
+		is := antlr.NewInputStream(e)
+		lexer := parser.NewAbacusLexer(is)
+		stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+
+		p := parser.NewAbacusParser(stream)
+		tree := p.Root()
+		t := visitor.Visit(tree)
+		result, ok = t.(*Result)
+		if !ok {
+			return NewResult(nil).WithErrors(nil, "expression did not yield a result")
+		}
+	}
+	return result
 }
 
 func writeHistoryFile(line *liner.State) error {
@@ -175,8 +199,12 @@ func writeHistoryFile(line *liner.State) error {
 func updateCompletions(line *liner.State, a *AbacusVisitor) {
 	completions := make([]string, 0)
 	completions = append(completions, funcs...)
-	for k := range a.vars {
+	for k := range a.variables {
 		completions = append(completions, k)
+	}
+
+	for k := range a.lambdaDeclarations {
+		completions = append(completions, k+"(")
 	}
 
 	line.SetCompleter(func(line string) (c []string) {
@@ -199,10 +227,16 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 			if idx == -1 {
 				idx = 0
 			}
-			if strings.HasPrefix(n, strings.ToLower(line[idx:])) {
+			if strings.HasPrefix(n, line[idx:]) {
 				c = append(c, line[0:idx]+n)
 			}
 		}
 		return
 	})
+}
+
+func handleErr(err error) {
+	if err != nil {
+		panic("Abacus crashed: " + err.Error())
+	}
 }

@@ -12,15 +12,19 @@ func (v *BaseAbacusVisitor) VisitRoot(ctx *RootContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitDeclaration(ctx *DeclarationContext) interface{} {
+func (v *BaseAbacusVisitor) VisitVariableDeclaration(ctx *VariableDeclarationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitEqualComparison(ctx *EqualComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitLambdaDeclaration(ctx *LambdaDeclarationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitLessComparison(ctx *LessComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitNot(ctx *NotContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -32,7 +36,43 @@ func (v *BaseAbacusVisitor) VisitLessOrEqualComparison(ctx *LessOrEqualCompariso
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{} {
+func (v *BaseAbacusVisitor) VisitBooleanAtom(ctx *BooleanAtomContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLessComparison(ctx *LessComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitParenthesesBoolean(ctx *ParenthesesBooleanContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitAndOrXor(ctx *AndOrXorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitEqualComparison(ctx *EqualComparisonContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitBoolAtom(ctx *BoolAtomContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitVariablesLambda(ctx *VariablesLambdaContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitNullArityLambda(ctx *NullArityLambdaContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitSignedExpr(ctx *SignedExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMod(ctx *ModContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -41,6 +81,14 @@ func (v *BaseAbacusVisitor) VisitMulDiv(ctx *MulDivContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitAddSub(ctx *AddSubContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitPercent(ctx *PercentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLambdaExpr(ctx *LambdaExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -53,6 +101,30 @@ func (v *BaseAbacusVisitor) VisitAtomExpr(ctx *AtomExprContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitParentheses(ctx *ParenthesesContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitParameter(ctx *ParameterContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitRecursionParameters(ctx *RecursionParametersContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitMixedTuple(ctx *MixedTupleContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitTuple(ctx *TupleContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitLambdaArguments(ctx *LambdaArgumentsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitVariablesTuple(ctx *VariablesTupleContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -81,6 +153,10 @@ func (v *BaseAbacusVisitor) VisitMinusSign(ctx *MinusSignContext) interface{} {
 }
 
 func (v *BaseAbacusVisitor) VisitSqrtFunction(ctx *SqrtFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitCbrtFunction(ctx *CbrtFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -128,6 +204,10 @@ func (v *BaseAbacusVisitor) VisitRoundDefFunction(ctx *RoundDefFunctionContext) 
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitAbsFunction(ctx *AbsFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitRound2Function(ctx *Round2FunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -141,5 +221,25 @@ func (v *BaseAbacusVisitor) VisitMinFunction(ctx *MinFunctionContext) interface{
 }
 
 func (v *BaseAbacusVisitor) VisitMaxFunction(ctx *MaxFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitAvgFunction(ctx *AvgFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitUntilFunction(ctx *UntilFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitFromFunction(ctx *FromFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitReverseFunction(ctx *ReverseFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAbacusVisitor) VisitNthFunction(ctx *NthFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

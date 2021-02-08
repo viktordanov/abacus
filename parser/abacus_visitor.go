@@ -11,14 +11,17 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#root.
 	VisitRoot(ctx *RootContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#declaration.
-	VisitDeclaration(ctx *DeclarationContext) interface{}
+	// Visit a parse tree produced by AbacusParser#VariableDeclaration.
+	VisitVariableDeclaration(ctx *VariableDeclarationContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#EqualComparison.
-	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#LambdaDeclaration.
+	VisitLambdaDeclaration(ctx *LambdaDeclarationContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#LessComparison.
-	VisitLessComparison(ctx *LessComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#Not.
+	VisitNot(ctx *NotContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
+	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#GreaterComparison.
 	VisitGreaterComparison(ctx *GreaterComparisonContext) interface{}
@@ -26,14 +29,47 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#LessOrEqualComparison.
 	VisitLessOrEqualComparison(ctx *LessOrEqualComparisonContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#GreaterOrEqualComparison.
-	VisitGreaterOrEqualComparison(ctx *GreaterOrEqualComparisonContext) interface{}
+	// Visit a parse tree produced by AbacusParser#BooleanAtom.
+	VisitBooleanAtom(ctx *BooleanAtomContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LessComparison.
+	VisitLessComparison(ctx *LessComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#ParenthesesBoolean.
+	VisitParenthesesBoolean(ctx *ParenthesesBooleanContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#AndOrXor.
+	VisitAndOrXor(ctx *AndOrXorContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#EqualComparison.
+	VisitEqualComparison(ctx *EqualComparisonContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#boolAtom.
+	VisitBoolAtom(ctx *BoolAtomContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#VariablesLambda.
+	VisitVariablesLambda(ctx *VariablesLambdaContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#NullArityLambda.
+	VisitNullArityLambda(ctx *NullArityLambdaContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#SignedExpr.
+	VisitSignedExpr(ctx *SignedExprContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Mod.
+	VisitMod(ctx *ModContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#MulDiv.
 	VisitMulDiv(ctx *MulDivContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#AddSub.
 	VisitAddSub(ctx *AddSubContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#Percent.
+	VisitPercent(ctx *PercentContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#LambdaExpr.
+	VisitLambdaExpr(ctx *LambdaExprContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#Pow.
 	VisitPow(ctx *PowContext) interface{}
@@ -43,6 +79,24 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#Parentheses.
 	VisitParentheses(ctx *ParenthesesContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#parameter.
+	VisitParameter(ctx *ParameterContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#recursionParameters.
+	VisitRecursionParameters(ctx *RecursionParametersContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#mixedTuple.
+	VisitMixedTuple(ctx *MixedTupleContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#tuple.
+	VisitTuple(ctx *TupleContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#lambdaArguments.
+	VisitLambdaArguments(ctx *LambdaArgumentsContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#variablesTuple.
+	VisitVariablesTuple(ctx *VariablesTupleContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#FuncExpr.
 	VisitFuncExpr(ctx *FuncExprContext) interface{}
@@ -64,6 +118,9 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#SqrtFunction.
 	VisitSqrtFunction(ctx *SqrtFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#CbrtFunction.
+	VisitCbrtFunction(ctx *CbrtFunctionContext) interface{}
 
 	// Visit a parse tree produced by AbacusParser#LnFunction.
 	VisitLnFunction(ctx *LnFunctionContext) interface{}
@@ -98,6 +155,9 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#RoundDefFunction.
 	VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{}
 
+	// Visit a parse tree produced by AbacusParser#AbsFunction.
+	VisitAbsFunction(ctx *AbsFunctionContext) interface{}
+
 	// Visit a parse tree produced by AbacusParser#Round2Function.
 	VisitRound2Function(ctx *Round2FunctionContext) interface{}
 
@@ -109,4 +169,19 @@ type AbacusVisitor interface {
 
 	// Visit a parse tree produced by AbacusParser#MaxFunction.
 	VisitMaxFunction(ctx *MaxFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#AvgFunction.
+	VisitAvgFunction(ctx *AvgFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#UntilFunction.
+	VisitUntilFunction(ctx *UntilFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#FromFunction.
+	VisitFromFunction(ctx *FromFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#ReverseFunction.
+	VisitReverseFunction(ctx *ReverseFunctionContext) interface{}
+
+	// Visit a parse tree produced by AbacusParser#NthFunction.
+	VisitNthFunction(ctx *NthFunctionContext) interface{}
 }
