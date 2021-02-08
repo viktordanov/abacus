@@ -26,9 +26,7 @@ Options:
 ## Install
 
 ```
-git clone git@github.com:viktordanov/abacus.git
-git checkout feature/tuples-and-lambda-expressions
-go install
+go get -u github.com/viktordanov/abacus
 ```
 
 ## Lambda expression support (experimental)
