@@ -75,6 +75,7 @@ func run() error {
 	}
 
 	f, err := os.Open(historyFile)
+	defer f.Close()
 	if err != nil {
 		return err
 	}
@@ -83,7 +84,6 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	f.Close()
 
 	printAnswer := func(res *Result) {
 		if len(res.Errors) != 0 {
@@ -130,6 +130,8 @@ func run() error {
 	goodbye.Notify(ctx)
 	goodbye.Register(func(ctx context.Context, sig os.Signal) {
 		writeHistoryFile(line)
+		line.Close()
+		f.Close()
 	})
 
 	for {
