@@ -9,15 +9,17 @@ Abacus is a simple interactive calculator CLI with support for variables, lambda
 ```
 λ abacus -h         
 
-v1.2a
+v1.2
 
-Usage: abacus [--no-color] [--precision PRECISION] [--eval EVAL]
+Usage: abacus [--no-color] [--precision PRECISION] [--eval EVAL] [--import IMPORT]
 
 Options:
   --no-color, -n         disable color in output [default: false]
   --precision PRECISION, -p PRECISION
                          precision for calculations [default: 64]
-  --eval EVAL, -e EVAL   evaluate expression and quit
+  --eval EVAL, -e EVAL   evaluate expression and exit
+  --import IMPORT, -i IMPORT
+                         import statements from file and continue
   --help, -h             display this help and exit
   --version              display version and exit
 
