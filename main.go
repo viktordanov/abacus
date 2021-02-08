@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime/pprof"
 	"strings"
 
 	arg "github.com/alexflint/go-arg"
@@ -40,22 +39,15 @@ func (args) Version() string {
 	return "v1.2\n"
 }
 func (args) Description() string {
-	return "abacus - a simple interactive calculator CLI with support for variables, comparison checks, and math functions\n"
+	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
 }
 
 func main() {
-	f, err := os.Create("cpu.prof")
-	if err != nil {
-		log.Fatal("could not create CPU profile: ", err)
-	}
-	defer f.Close() // error handling omitted for example
-	if err := pprof.StartCPUProfile(f); err != nil {
-		log.Fatal("could not start CPU profile: ", err)
-	}
-	defer pprof.StopCPUProfile()
-
 	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		_, err = fmt.Fprintf(os.Stderr, "%s\n", err)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 		os.Exit(1)
 	}
 }
@@ -71,7 +63,10 @@ func run() error {
 	line.SetCtrlCAborts(true)
 
 	if _, err := os.Stat(historyFile); os.IsNotExist(err) {
-		os.Create(historyFile)
+		_, err = os.Create(historyFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	f, err := os.Open(historyFile)
@@ -112,7 +107,7 @@ func run() error {
 	if len(arguments.ImportDefinitions) != 0 {
 		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		evaluateExpression(string(dat), abacusVisitor)
@@ -129,9 +124,9 @@ func run() error {
 	defer goodbye.Exit(ctx, -1)
 	goodbye.Notify(ctx)
 	goodbye.Register(func(ctx context.Context, sig os.Signal) {
-		writeHistoryFile(line)
-		line.Close()
-		f.Close()
+		_ = writeHistoryFile(line)
+		_ = line.Close()
+		_ = f.Close()
 	})
 
 	for {
@@ -238,4 +233,10 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 		}
 		return
 	})
+}
+
+func handleErr(err error) {
+	if err != nil {
+		panic("Abacus crashed: " + err.Error())
+	}
 }
