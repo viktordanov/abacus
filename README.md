@@ -185,6 +185,22 @@ speed up execution by caching computations.
 
 ## Features
 - `History of expressions` and `Tab completion` of all math functions and defined variables
+- `Importing from file (-i --import)` lets you keep variable and lambda definitions in a file and import it on load
+  ```
+  --import IMPORT, -i IMPORT
+  import statements from file and continue
+  
+  > abacus -i definitions.a
+  > DefinedLambda(5) ...
+  ```
+- `Evaluate and exit (-e --eval)` lets you evaluate an expression and exit without entering REPL mode;
+  Imports by `-i --import` are performed before `-e --eval` so they can be combined
+  ```
+  --eval EVAL, -e EVAL   evaluate expression and exit
+  
+  > abacus -e "5+5"
+  10
+  ```
 - All common operations
   ```
   > 1+1
