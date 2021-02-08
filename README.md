@@ -120,7 +120,7 @@ Either `=` or `:` may be used between the parameter name and the value.
 > Factorial(10)[rec:10, last=1]
 3628800 
 > Factorial(10)[rec:10, last:1, stop: x == 5]
-151200                                    
+30240  // 10 × 9 × 8 × 7 × 6                                    
 ```
 #### What exactly is happening?
 If we define a new lambda `Count = x -> x,Count(x-1)` which returns a tuple we can observe how the value of x changes.
