@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	arg "github.com/alexflint/go-arg"
+	"github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
