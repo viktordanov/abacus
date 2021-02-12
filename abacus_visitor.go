@@ -202,6 +202,14 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 	if c.BoolExpression() != nil {
 		return c.BoolExpression().Accept(a)
 	}
+	if c.LAMBDA_VARIABLE() != nil {
+		if declaration, ok := a.lambdaDeclarations[c.LAMBDA_VARIABLE().GetText()]; ok {
+			return NewResult(LambdaAssignment(declaration.ctx.GetText()))
+
+		}
+		return NewResult(nil).WithErrors(nil, "undefined lambda "+c.LAMBDA_VARIABLE().GetText())
+
+	}
 	return NewResult(nil).WithErrors(nil, "syntax error")
 }
 

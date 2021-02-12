@@ -7,6 +7,7 @@ root
     : declaration EOF
     | boolExpression EOF
     | tuple  EOF
+    | LAMBDA_VARIABLE EOF
     ;
 
 declaration
