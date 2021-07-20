@@ -1,4 +1,4 @@
-<h1 align="center">abacus</h1>
+<h1 align="center">🧮 Abacus</h1>
 <p align="center">
 Abacus is a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions
 </p>
