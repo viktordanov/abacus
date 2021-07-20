@@ -20,4 +20,5 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "abacus,abacus.exe"
+          commit: main
           token: ${{ secrets.GITHUB_TOKEN }}
