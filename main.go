@@ -4,11 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/alexflint/go-arg"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/peterh/liner"
-	"github.com/thecodeteam/goodbye"
-	"github.com/viktordanov/abacus/parser"
 	"io"
 	"io/ioutil"
 	"log"
@@ -16,6 +11,12 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/alexflint/go-arg"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/peterh/liner"
+	"github.com/thecodeteam/goodbye"
+	"github.com/viktordanov/abacus/parser"
 )
 
 var (
@@ -56,7 +57,7 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.2.2\n"
+	return "v1.2.2a\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
