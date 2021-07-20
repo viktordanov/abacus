@@ -4,18 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
-	"strings"
-
 	"github.com/alexflint/go-arg"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 var (
@@ -28,17 +28,35 @@ var (
 	}
 )
 
+type StringSliceArg []string
+
+func (s *StringSliceArg) UnmarshalText(text []byte) error {
+	raw := string(text)
+	raw = strings.ReplaceAll(raw, " ", "")
+
+	*s = strings.Split(raw, ",")
+	variableNameMatching := regexp.MustCompile(`^[a-z]\w*$`).MatchString
+	for _, variableName := range *s {
+		if !variableNameMatching(variableName) {
+			return errors.New("variable names must begin with a latin lowercase letter and consist of a-zA-Z0-9")
+		}
+	}
+	return nil
+}
+
 type args struct {
-	IgnoreColor       bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
-	AllowCopy         bool   `arg:"--allow-copy" help:"Ctrl-C will copy current expression (if present) or last answer instead of aborting" default:"false"`
-	Strict            bool   `arg:"--strict" help:"prohibit use of undefined lambdas and variables" default:"false"`
-	Precision         uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
-	Expression        string `arg:"-e,--eval" help:"evaluate expression and exit"`
-	ImportDefinitions string `arg:"-i,--import" help:"import statements from file and continue"`
+	IgnoreColor           bool           `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	AllowCopy             bool           `arg:"--allow-copy" help:"Ctrl-C will copy current expression (if present) or last answer instead of aborting" default:"false"`
+	Strict                bool           `arg:"--strict" help:"prohibit use of undefined lambdas and variables" default:"false"`
+	Precision             uint32         `arg:"-p,--precision" help:"precision for calculations" default:"64"`
+	EvalExpressionAndExit string         `arg:"-e,--eval" help:"evaluate expression and exit"`
+	ImportDefinitions     string         `arg:"-i,--import" help:"import statements from file and continue"`
+	CustomPromptSymbol    string         `arg:"--prompt-symbol" help:"custom prompt symbol" default:"> " `
+	LastAnswerVariables   StringSliceArg `arg:"--answer-vars" help:"custom last answer variable names" default:"ans,answer"`
 }
 
 func (args) Version() string {
-	return "v1.2.1\n"
+	return "v1.2.2\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
@@ -82,7 +100,7 @@ func run() error {
 		return err
 	}
 
-	printAnswer := func(res *Result) {
+	handleAndPrintAnswer := func(res *Result) {
 		if len(res.Errors) != 0 {
 			for _, e := range res.Errors {
 				fmt.Print(Red)
@@ -92,10 +110,15 @@ func run() error {
 			return
 		}
 
-		switch res.Value.(type) {
+		switch rawValue := res.Value.(type) {
 		case Assignment:
 			updateCompletions(line, abacusVisitor)
 		case LambdaAssignment:
+			updateCompletions(line, abacusVisitor)
+		case Number:
+			for _, variableName := range arguments.LastAnswerVariables {
+				abacusVisitor.variables[variableName] = rawValue
+			}
 			updateCompletions(line, abacusVisitor)
 		}
 
@@ -115,13 +138,14 @@ func run() error {
 		evaluateExpression(string(dat), abacusVisitor)
 	}
 
-	if len(arguments.Expression) != 0 {
-		printAnswer(evaluateExpression(arguments.Expression, abacusVisitor))
+	if len(arguments.EvalExpressionAndExit) != 0 {
+		handleAndPrintAnswer(evaluateExpression(arguments.EvalExpressionAndExit, abacusVisitor))
 		return nil
 	}
 
 	updateCompletions(line, abacusVisitor)
 
+	// Ensure files and REPL are closed in the event of an unexpected exit
 	ctx := context.Background()
 	defer goodbye.Exit(ctx, -1)
 	goodbye.Notify(ctx)
@@ -131,9 +155,10 @@ func run() error {
 		_ = f.Close()
 	})
 
+	// REPL loop
 	for {
 		savedPrecision := precision
-		input, err := line.Prompt("> ")
+		input, err := line.Prompt(arguments.CustomPromptSymbol)
 		if err != nil {
 			if errors.Is(err, liner.ErrPromptAborted) || errors.Is(err, io.EOF) {
 				return writeHistoryFile(line)
@@ -147,7 +172,7 @@ func run() error {
 
 		if input != "" {
 			line.AppendHistory(input)
-			printAnswer(evaluateExpression(input, abacusVisitor))
+			handleAndPrintAnswer(evaluateExpression(input, abacusVisitor))
 			precision = savedPrecision
 		}
 	}
