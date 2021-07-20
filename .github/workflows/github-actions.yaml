@@ -23,5 +23,5 @@ jobs:
         with:
           artifacts: "abacus,abacus.exe"
           commit: main
-          tag: abacus ${{ env.VERSION_TAG }} 
+          tag: ${{ env.VERSION_TAG }} 
           token: ${{ secrets.GITHUB_TOKEN }}
