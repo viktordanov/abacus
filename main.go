@@ -30,13 +30,15 @@ var (
 
 type args struct {
 	IgnoreColor       bool   `arg:"-n,--no-color" help:"disable color in output" default:"false"`
+	AllowCopy         bool   `arg:"--allow-copy" help:"Ctrl-C will copy current expression (if present) or last answer instead of aborting" default:"false"`
+	Strict            bool   `arg:"--strict" help:"prohibit use of undefined lambdas and variables" default:"false"`
 	Precision         uint32 `arg:"-p,--precision" help:"precision for calculations" default:"64"`
 	Expression        string `arg:"-e,--eval" help:"evaluate expression and exit"`
 	ImportDefinitions string `arg:"-i,--import" help:"import statements from file and continue"`
 }
 
 func (args) Version() string {
-	return "v1.2\n"
+	return "v1.2.1\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
@@ -60,7 +62,7 @@ func run() error {
 	line := liner.NewLiner()
 
 	defer line.Close()
-	line.SetCtrlCAborts(true)
+	line.SetCtrlCAborts(!arguments.AllowCopy)
 
 	if _, err := os.Stat(historyFile); os.IsNotExist(err) {
 		_, err = os.Create(historyFile)

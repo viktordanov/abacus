@@ -1439,6 +1439,9 @@ getDeclaration:
 		}
 	}
 	if !found {
+		if arguments.Strict {
+			return NewResult(nil).WithErrors(nil, "undefined lambda "+lambda.name)
+		}
 		return NewResult(newNumber(0))
 	}
 
@@ -1645,6 +1648,9 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 		return NewResult(value)
 	}
 
+	if arguments.Strict {
+		return NewResult(nil).WithErrors(nil, "undefined global variable "+name)
+	}
 	return NewResult(newNumber(0))
 }
 

@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/alexflint/go-arg v1.3.0
 	github.com/antlr/antlr4 v0.0.0-20210114010855-d34d2e1c271a
+	github.com/atotto/clipboard v0.1.2 // indirect
 	github.com/cockroachdb/apd v1.1.0
 	github.com/lib/pq v1.9.0 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
