@@ -9,17 +9,25 @@ Abacus is a simple interactive calculator CLI with support for variables, lambda
 ```
 λ abacus -h         
 
-v1.2
+abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions
 
-Usage: abacus [--no-color] [--precision PRECISION] [--eval EVAL] [--import IMPORT]
+v1.2.2
+
+Usage: abacus [--no-color] [--allow-copy] [--strict] [--precision PRECISION] [--eval EVAL] [--import IMPORT] [--prompt-symbol PROMPT-SYMBOL] [--answer-vars ANSWER-VARS]
 
 Options:
   --no-color, -n         disable color in output [default: false]
+  --allow-copy           Ctrl-C will copy current expression (if present) or last answer instead of aborting [default: false]
+  --strict               prohibit use of undefined lambdas and variables [default: false]
   --precision PRECISION, -p PRECISION
                          precision for calculations [default: 64]
   --eval EVAL, -e EVAL   evaluate expression and exit
   --import IMPORT, -i IMPORT
                          import statements from file and continue
+  --prompt-symbol PROMPT-SYMBOL
+                         custom prompt symbol [default: > ]
+  --answer-vars ANSWER-VARS
+                         custom last answer variable names [default: ans,answer]
   --help, -h             display this help and exit
   --version              display version and exit
 
@@ -31,7 +39,134 @@ Options:
 go get -u github.com/viktordanov/abacus
 ```
 
-## Lambda expression support (experimental)
+
+## Features
+- `History of expressions` and `Tab completion` of all math functions and defined variables
+- `Importing from file (-i --import)` lets you keep variable and lambda definitions in a file and import it on load
+  ```
+  --import IMPORT, -i IMPORT
+  import statements from file and continue
+  
+  > abacus -i definitions.a
+  > DefinedLambda(5) ...
+  ```
+- `Custom prompt symbol (--prompt-symbol)` lets you use a custom string as a prompt prefix
+  ```
+   --prompt-symbol PROMPT-SYMBOL
+   custom prompt symbol [default: > ]
+  
+  $ abacus --prompt-symbol "🌱 "
+  🌱 2+2
+  4
+  🌱 ...
+  ```
+- `Evaluate and exit (-e --eval)` lets you evaluate an expression and exit without entering REPL mode;
+  Imports by `-i --import` are performed before `-e --eval` so they can be combined
+  ```
+  --eval EVAL, -e EVAL   evaluate expression and exit
+  
+  > abacus -e "5+5"
+  10
+  ```
+- All common operations
+  ```
+  > 1+1
+  2
+  > 1-20
+  -19
+  > 5^0 / 20
+  0.05
+  > 2**(2+5)
+  128
+  > 10%
+  0.10
+  > 10 %% 3    # modulo operator
+  1
+  ```
+- Variables
+   ``` 
+   > d = 12.5
+   12.5
+   > d * 5 + 5
+   67.5
+   > a * 5 + 5
+   5
+   ```
+  **Note:** Undefined variables are equal to 0
+  
+- Last answers are saved in the variables `ans` and `answer` by default
+  ```
+  > 4**5
+  1024
+  > ans
+  1024
+  ```
+- Comparisons `<, ==, >, <=, >=`
+  ```
+  > pi > phi
+  true
+  > 10 <=10
+  true
+  > 2 == 0
+  false
+  ```
+- E, Pi, Phi
+   ``` 
+   > e
+   2.7182818284590450907955982984276
+   > pi
+   3.1415926535897931159979634685442
+   > phi
+   1.6180339887498949025257388711907
+   ```
+- Single arity functions:
+  - sqrt, cbrt, ln, log, log2, log10, floor, ceil, exp, sin, cos, tan, abs, round
+- Two arity functions (accept 2-tuples):
+    - round (number, digits of precision)
+   ```
+   > round(1.123456789,4)
+  1.123
+   ```
+    - log (number, base)
+   ```
+   > log(16,4)
+  2
+- N-arity functions (accept n-tuples):
+    - min, max, avg, from, until, reverse, nth
+   ```
+  > d, f = 10, 20
+  (10, 20)
+  > min(d, 4, -1, f, 0, 2)
+  -1
+  > max(d, 4, -1, f, 0, 2)
+  20
+  > avg(d, 4, -1, f, 0, 2)
+  5.8333..
+  
+  > Map__ = value,Fn -> Fn(value), Map__(value+1, Fn)
+  > List = start, len, Fn -> until(Map__(start, Fn)[rec: len], len)
+  > I = x -> x
+  > List(1, 5, I)
+  (1, 2, 3, 4, 5)
+   
+  > from(List(1, 5, I), 2)
+  (3, 4, 5)
+  > until(List(1, 5, I), 2)
+  (1, 2)
+  > nth(List(1, 5, I), 2)
+  3
+  > reverse(List(1, 5, I))
+  (5, 4, 3, 2, 1)
+   ```
+
+Note: `from(List(1, 5, I), 2)` is equivalent to `from(1,2,3,4,5,2)`
+## Reserved names
+ 
+ * `quit` – If a query includes quit, the program will terminate and the query will not be saved to the history file
+ * `ans` and `answer` – variables always contain the last computed *numeric* value (*can be overriden with the `--answer-vars` argument*)
+ * The constants `e`, `pi`, and `phi`
+
+## Lambda expression support 
 ### Defining lambdas 
 ```
 <LambdaName> = <arguments> -> <expression>   // or
@@ -182,110 +317,6 @@ speed up execution by caching computations.
 
 // Try it for yourself
 ```
-
-## Features
-- `History of expressions` and `Tab completion` of all math functions and defined variables
-- `Importing from file (-i --import)` lets you keep variable and lambda definitions in a file and import it on load
-  ```
-  --import IMPORT, -i IMPORT
-  import statements from file and continue
-  
-  > abacus -i definitions.a
-  > DefinedLambda(5) ...
-  ```
-- `Evaluate and exit (-e --eval)` lets you evaluate an expression and exit without entering REPL mode;
-  Imports by `-i --import` are performed before `-e --eval` so they can be combined
-  ```
-  --eval EVAL, -e EVAL   evaluate expression and exit
-  
-  > abacus -e "5+5"
-  10
-  ```
-- All common operations
-  ```
-  > 1+1
-  2
-  > 1-20
-  -19
-  > 5^0 / 20
-  0.05
-  > 2**(2+5)
-  128
-  ```
-- Variables
-   ``` 
-   > d = 12.5
-   12.5
-   > d * 5 + 5
-   67.5
-   > a * 5 + 5
-   5
-   ```
-  **Note:** Undefined variables are equal to 0
-- Comparisons `<, ==, >, <=, >=`
-  ```
-  > pi > phi
-  true
-  > 10 <=10
-  true
-  > 2 == 0
-  false
-  ```
-- E, Pi, Phi
-   ``` 
-   > e
-   2.7182818284590450907955982984276
-   > pi
-   3.1415926535897931159979634685442
-   > phi
-   1.6180339887498949025257388711907
-   ```
-- Single arity functions:
-  - sqrt, cbrt, ln, log, log2, log10, floor, ceil, exp, sin, cos, tan, abs, round
-- Two arity functions (accept 2-tuples):
-    - round (number, digits of precision)
-   ```
-   > round(1.123456789,4)
-  1.123
-   ```
-    - log (number, base)
-   ```
-   > log(16,4)
-  2
-- N-arity functions (accept n-tuples):
-    - min, max, avg, from, until, reverse, nth
-   ```
-  > d, f = 10, 20
-  (10, 20)
-  > min(d, 4, -1, f, 0, 2)
-  -1
-  > max(d, 4, -1, f, 0, 2)
-  20
-  > avg(d, 4, -1, f, 0, 2)
-  5.8333..
-  
-  > Map__ = value,Fn -> Fn(value), Map__(value+1, Fn)
-  > List = start, len, Fn -> until(Map__(start, Fn)[rec: len], len)
-  > I = x -> x
-  > List(1, 5, I)
-  (1, 2, 3, 4, 5)
-   
-  > from(List(1, 5, I), 2)
-  (3, 4, 5)
-  > until(List(1, 5, I), 2)
-  (1, 2)
-  > nth(List(1, 5, I), 2)
-  3
-  > reverse(List(1, 5, I))
-  (5, 4, 3, 2, 1)
-   ```
-
-Note: `from(List(1, 5, I), 2)` is equivalent to `from(1,2,3,4,5,2)`
-## Reserved names
- 
- * `quit` – If a query includes quit, the program will terminate and the query will not be saved to the history file
- * The constants `e`, `pi`, and `phi`
-
 # TODO
 
 - [x] Add full feature list
