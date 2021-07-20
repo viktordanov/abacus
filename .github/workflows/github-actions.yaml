@@ -21,4 +21,5 @@ jobs:
         with:
           artifacts: "abacus,abacus.exe"
           commit: main
+          tag: main
           token: ${{ secrets.GITHUB_TOKEN }}
