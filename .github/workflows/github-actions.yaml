@@ -13,15 +13,16 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - uses: actions/setup-go@v2
-      - name: Building for Linux
-        run: GOOS=linux GOARCH=amd64 go build -o abacus
-      - name: Building for Windows
-        run: GOOS=windows GOARCH=amd64 go build -o abacus.exe
+      - name: Build step
+        run: | 
+          GOOS=windows GOARCH=amd64 go build -o abacus-windows-amd64.exe
+          GOOS=linux   GOARCH=amd64 go build -o abacus-linux-amd64
+          GOOS=darwin  GOARCH=amd64 go build -o abacus-macos-amd64
       - name: Set version tag
-        run: echo "VERSION_TAG=$(./abacus --version)" >> $GITHUB_ENV
+        run: echo "VERSION_TAG=$(./abacus-linux-amd64 --version)" >> $GITHUB_ENV
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "abacus,abacus.exe"
+          artifacts: "abacus-*"
           commit: main
           tag: ${{ env.VERSION_TAG }} 
           name: abacus ${{ env.VERSION_TAG }} 
