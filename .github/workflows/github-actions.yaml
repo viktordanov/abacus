@@ -18,10 +18,10 @@ jobs:
       - name: Building for Windows
         run: GOOS=windows GOARCH=amd64 go build -o abacus.exe
       - name: Set version tag
-        run: export VERSION_TAG=$(./abacus --version)
+        run: echo "VERSION_TAG=$(./abacus --version)" >> $GITHUB_ENV
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "abacus,abacus.exe"
           commit: main
-          tag: ${{ env.VERSION_TAG }} 
+          tag: abacus ${{ env.VERSION_TAG }} 
           token: ${{ secrets.GITHUB_TOKEN }}
