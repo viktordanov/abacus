@@ -11,7 +11,7 @@ Abacus is a simple interactive calculator CLI with support for variables, lambda
 
 abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions
 
-v1.2.2
+v1.2.3
 
 Usage: abacus [--no-color] [--allow-copy] [--strict] [--precision PRECISION] [--eval EVAL] [--import IMPORT] [--prompt-symbol PROMPT-SYMBOL] [--answer-vars ANSWER-VARS]
 
