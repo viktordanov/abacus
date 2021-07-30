@@ -977,6 +977,22 @@ func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface
 	return NewResult(v)
 }
 
+func (a *AbacusVisitor) VisitSignFunction(c *parser.SignFunctionContext) interface{} {
+	valRes := c.Expression().Accept(a).(*Result)
+	if hasErrors(valRes) {
+		return valRes
+	}
+
+	val, ok := valRes.Value.(Number)
+	if !ok {
+		panic("unable to cast val to Number")
+	}
+
+	v := newNumber(0)
+	v = newNumber(float64(val.Decimal.Cmp(v.Decimal)))
+	return NewResult(v)
+}
+
 func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface{} {
 	valRes := c.Expression().Accept(a).(*Result)
 	if hasErrors(valRes) {
