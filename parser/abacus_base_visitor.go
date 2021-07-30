@@ -204,6 +204,10 @@ func (v *BaseAbacusVisitor) VisitRoundDefFunction(ctx *RoundDefFunctionContext) 
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAbacusVisitor) VisitSignFunction(ctx *SignFunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAbacusVisitor) VisitAbsFunction(ctx *AbsFunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

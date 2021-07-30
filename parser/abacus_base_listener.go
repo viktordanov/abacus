@@ -315,6 +315,12 @@ func (s *BaseAbacusListener) EnterRoundDefFunction(ctx *RoundDefFunctionContext)
 // ExitRoundDefFunction is called when production RoundDefFunction is exited.
 func (s *BaseAbacusListener) ExitRoundDefFunction(ctx *RoundDefFunctionContext) {}
 
+// EnterSignFunction is called when production SignFunction is entered.
+func (s *BaseAbacusListener) EnterSignFunction(ctx *SignFunctionContext) {}
+
+// ExitSignFunction is called when production SignFunction is exited.
+func (s *BaseAbacusListener) ExitSignFunction(ctx *SignFunctionContext) {}
+
 // EnterAbsFunction is called when production AbsFunction is entered.
 func (s *BaseAbacusListener) EnterAbsFunction(ctx *AbsFunctionContext) {}
 

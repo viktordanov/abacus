@@ -122,6 +122,7 @@ function
     | 'cos' LPAREN expression RPAREN                        # CosFunction
     | 'tan' LPAREN expression RPAREN                        # TanFunction
     | 'round' LPAREN expression RPAREN                      # RoundDefFunction
+    | 'sign' LPAREN expression RPAREN                       # SignFunction
     | 'abs' LPAREN expression RPAREN                        # AbsFunction
     | 'round' LPAREN expression ',' expression RPAREN       # Round2Function
     | 'log' LPAREN expression ',' expression RPAREN         # LogFunction
