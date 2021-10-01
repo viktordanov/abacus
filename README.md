@@ -36,7 +36,7 @@ Options:
 ## Install
 
 ```
-go get -u github.com/viktordanov/abacus
+go install github.com/viktordanov/abacus@latest
 ```
 
 
