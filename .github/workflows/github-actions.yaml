@@ -6,15 +6,23 @@ on:
     tags:
       - '*'
 jobs:
-  build-and-release:
+  test:
     runs-on: ubuntu-latest
     steps:
+      - run: echo "Testing Abacus"
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - name: Run tests
+        run: go test -v -covermode=atomic -race ./...
+  build-and-release:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    steps:
       - run: echo "Building Abacus"
-      - name: Check out repository code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
       - name: Build step
-        run: | 
+        run: |
           GOOS=windows GOARCH=amd64 go build -o abacus-windows-amd64.exe
           GOOS=linux   GOARCH=amd64 go build -o abacus-linux-amd64
           GOOS=darwin  GOARCH=amd64 go build -o abacus-macos-amd64
@@ -24,6 +32,6 @@ jobs:
         with:
           artifacts: "abacus-*"
           commit: main
-          tag: ${{ env.VERSION_TAG }} 
-          name: abacus ${{ env.VERSION_TAG }} 
+          tag: ${{ env.VERSION_TAG }}
+          name: abacus ${{ env.VERSION_TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
