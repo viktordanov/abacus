@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/cockroachdb/apd"
-	"github.com/viktordanov/abacus/parser"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/cockroachdb/apd"
+	"github.com/viktordanov/abacus/parser"
 )
 
 var (
@@ -17,9 +18,9 @@ var (
 	E          Number
 )
 
-func init() {
+func initConsts(precision uint32) {
 	logCache = make(map[string]Number)
-	decimalCtx = apd.BaseContext.WithPrecision(arguments.Precision)
+	decimalCtx = apd.BaseContext.WithPrecision(precision)
 	cachedLog(Number{apd.New(2, 0)})
 	cachedLog(Number{apd.New(10, 0)})
 
@@ -169,13 +170,14 @@ type AbacusVisitor struct {
 	decimalCtx         *apd.Context
 }
 
-func NewAbacusVisitor() *AbacusVisitor {
+func NewAbacusVisitor(precision uint32) *AbacusVisitor {
+	initConsts(precision)
 	return &AbacusVisitor{
 		ParseTreeVisitor:   &parser.BaseAbacusVisitor{},
 		variables:          make(map[string]Number),
 		lambdaDeclarations: make(map[string]*LambdaDeclaration),
 		lambdaCallStack:    &LambdaCallStack{root: nil, invokes: map[string]uint{}, trace: []*CalledLambda{}, recursion: map[string]*RecursionParameters{}, memoized: map[string]*Result{}},
-		decimalCtx:         apd.BaseContext.WithPrecision(arguments.Precision),
+		decimalCtx:         apd.BaseContext.WithPrecision(precision),
 	}
 }
 
