@@ -21,7 +21,6 @@ import (
 
 var (
 	arguments   args
-	precision   uint32
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
 	funcs       = []string{
@@ -57,7 +56,7 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.2.3\n"
+	return "v1.2.4\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
@@ -75,9 +74,7 @@ func main() {
 
 func run() error {
 	arg.MustParse(&arguments)
-	precision = arguments.Precision
-
-	abacusVisitor := NewAbacusVisitor()
+	abacusVisitor := NewAbacusVisitor(arguments.Precision)
 	line := liner.NewLiner()
 
 	defer line.Close()
@@ -135,7 +132,6 @@ func run() error {
 		if err != nil {
 			return err
 		}
-
 		evaluateExpression(string(dat), abacusVisitor)
 	}
 
@@ -156,9 +152,9 @@ func run() error {
 		_ = f.Close()
 	})
 
-	// REPL loop
+	// Read Eval Print Loop
 	for {
-		savedPrecision := precision
+		savedPrecision := arguments.Precision
 		input, err := line.Prompt(arguments.CustomPromptSymbol)
 		if err != nil {
 			if errors.Is(err, liner.ErrPromptAborted) || errors.Is(err, io.EOF) {
@@ -174,10 +170,9 @@ func run() error {
 		if input != "" {
 			line.AppendHistory(input)
 			handleAndPrintAnswer(evaluateExpression(input, abacusVisitor))
-			precision = savedPrecision
+			arguments.Precision = savedPrecision
 		}
 	}
-
 }
 
 func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
@@ -244,12 +239,10 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 					continue
 				}
 				idx++
-
 				break
 			}
 			if len(line) == 0 {
 				c = append(c, n)
-
 				continue
 			}
 			if idx == -1 {
@@ -261,10 +254,4 @@ func updateCompletions(line *liner.State, a *AbacusVisitor) {
 		}
 		return
 	})
-}
-
-func handleErr(err error) {
-	if err != nil {
-		panic("Abacus crashed: " + err.Error())
-	}
 }
