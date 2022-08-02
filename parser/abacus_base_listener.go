@@ -1,4 +1,4 @@
-// Code generated from /home/vikimaster2/Projects/Go/abacus/Abacus.g4 by ANTLR 4.9.1. DO NOT EDIT.
+// Code generated from Abacus.g4 by ANTLR 4.10.1. DO NOT EDIT.
 
 package parser // Abacus
 

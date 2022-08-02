@@ -199,6 +199,7 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
 		stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
 		p := parser.NewAbacusParser(stream)
+		p.BuildParseTrees = true
 		tree := p.Root()
 		t := visitor.Visit(tree)
 		result, ok = t.(*Result)
