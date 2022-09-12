@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/viktordanov/abacus/abacus"
 	"io"
 	"io/ioutil"
 	"log"
@@ -74,7 +75,7 @@ func main() {
 
 func run() error {
 	arg.MustParse(&arguments)
-	abacusVisitor := NewAbacusVisitor(arguments.Precision)
+	abacusVisitor := abacus.NewAbacusVisitor(arguments.Precision, arguments.Strict)
 	line := liner.NewLiner()
 
 	defer line.Close()
@@ -98,24 +99,24 @@ func run() error {
 		return err
 	}
 
-	handleAndPrintAnswer := func(res *Result) {
+	handleAndPrintAnswer := func(res *abacus.Result) {
 		if len(res.Errors) != 0 {
 			for _, e := range res.Errors {
-				fmt.Print(Red)
+				fmt.Print(abacus.Red)
 				fmt.Print(e.Error())
-				fmt.Println(Reset)
+				fmt.Println(abacus.Reset)
 			}
 			return
 		}
 
 		switch rawValue := res.Value.(type) {
-		case Assignment:
+		case abacus.Assignment:
 			updateCompletions(line, abacusVisitor)
-		case LambdaAssignment:
+		case abacus.LambdaAssignment:
 			updateCompletions(line, abacusVisitor)
-		case Number:
+		case abacus.Number:
 			for _, variableName := range arguments.LastAnswerVariables {
-				abacusVisitor.variables[variableName] = rawValue
+				abacusVisitor.SetVariable(variableName, rawValue)
 			}
 			updateCompletions(line, abacusVisitor)
 		}
@@ -175,8 +176,8 @@ func run() error {
 	}
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
-	result := NewResult(nil).WithError("expression did not yield a result")
+func evaluateExpression(expr string, visitor *abacus.AbacusVisitor) *abacus.Result {
+	result := abacus.NewResult(nil).WithError("expression did not yield a result")
 	ok := false
 
 	expressions := strings.Split(expr, ";")
@@ -202,9 +203,9 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
 		p.BuildParseTrees = true
 		tree := p.Root()
 		t := visitor.Visit(tree)
-		result, ok = t.(*Result)
+		result, ok = t.(*abacus.Result)
 		if !ok {
-			return NewResult(nil).WithError("expression did not yield a result")
+			return abacus.NewResult(nil).WithError("expression did not yield a result")
 		}
 	}
 	return result
@@ -220,15 +221,15 @@ func writeHistoryFile(line *liner.State) error {
 	return err
 }
 
-func updateCompletions(line *liner.State, a *AbacusVisitor) {
+func updateCompletions(line *liner.State, a *abacus.AbacusVisitor) {
 	completions := make([]string, 0)
 	completions = append(completions, funcs...)
-	for k := range a.variables {
-		completions = append(completions, k)
+	for _, variableName := range a.VariableNames() {
+		completions = append(completions, variableName)
 	}
 
-	for k := range a.lambdaDeclarations {
-		completions = append(completions, k+"(")
+	for _, lambdaName := range a.LambdaNames() {
+		completions = append(completions, lambdaName+"(")
 	}
 
 	line.SetCompleter(func(line string) (c []string) {
