@@ -1,11 +1,11 @@
 package main
 
 import (
-	"math"
+	_ "math"
 	"strconv"
 	"strings"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/cockroachdb/apd"
 	"github.com/viktordanov/abacus/parser"
 )
@@ -781,493 +781,497 @@ func (a *AbacusVisitor) VisitFuncExpr(c *parser.FuncExprContext) interface{} {
 	return c.Function().Accept(a)
 }
 
-func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Sqrt(v.Decimal, val.Decimal)
-	return NewResult(v)
+func (a *AbacusVisitor) VisitFunctionInvocation(c *parser.FunctionInvocationContext) interface{} {
+	return NewResult(String(c.VARIABLE().GetText()))
 }
 
-func (a *AbacusVisitor) VisitCbrtFunction(c *parser.CbrtFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Cbrt(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Ln(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Ln(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Ln(v.Decimal, val.Decimal)
-	a.decimalCtx.Quo(v.Decimal, v.Decimal, cachedLog(newNumber(2)).Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Ln(v.Decimal, val.Decimal)
-	base := cachedLog(newNumber(10))
-	a.decimalCtx.Quo(v.Decimal, v.Decimal, base.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Floor(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Ceil(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	toFloat, _ := val.Float64()
-	v := newNumber(0)
-	v.Decimal, _ = v.Decimal.SetFloat64(math.Sin(toFloat))
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	toFloat, _ := val.Float64()
-	v := newNumber(0)
-	v.Decimal, _ = v.Decimal.SetFloat64(math.Cos(toFloat))
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	toFloat, _ := val.Float64()
-	v := newNumber(0)
-	v.Decimal, _ = v.Decimal.SetFloat64(math.Tan(toFloat))
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Exp(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitSignFunction(c *parser.SignFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	v = newNumber(float64(val.Decimal.Cmp(v.Decimal)))
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Abs(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
-	valRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(valRes) {
-		return valRes
-	}
-
-	val, ok := valRes.Value.(Number)
-	if !ok {
-		panic("unable to cast val to Number")
-	}
-
-	v := newNumber(0)
-	a.decimalCtx.Round(v.Decimal, val.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) interface{} {
-	left := c.Expression(0).Accept(a).(*Result)
-	right := c.Expression(1).Accept(a).(*Result)
-
-	if hasErrors(left) || hasErrors(right) {
-		return left.WithErrors(right)
-	}
-
-	leftVal, ok := left.Value.(Number)
-	if !ok {
-		panic("unable to cast right to Number")
-	}
-	rightVal, ok := right.Value.(Number)
-	if !ok {
-		panic("unable to cast left to Number")
-	}
-
-	intValue, _ := rightVal.Decimal.Int64()
-	exponent := apd.New(10, int32(intValue))
-
-	v := newNumber(0)
-	a.decimalCtx.Mul(v.Decimal, leftVal.Decimal, exponent)
-	a.decimalCtx.Round(v.Decimal, v.Decimal)
-	a.decimalCtx.Quo(v.Decimal, v.Decimal, exponent)
-
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface{} {
-	left := c.Expression(0).Accept(a).(*Result)
-	right := c.Expression(1).Accept(a).(*Result)
-
-	if hasErrors(left) || hasErrors(right) {
-		return left.WithErrors(right)
-	}
-
-	leftVal, ok := left.Value.(Number)
-	if !ok {
-		panic("unable to cast right to Number")
-	}
-	rightVal, ok := right.Value.(Number)
-	if !ok {
-		panic("unable to cast left to Number")
-	}
-
-	v := newNumber(0)
-
-	a.decimalCtx.Ln(v.Decimal, leftVal.Decimal)
-	base := cachedLog(rightVal)
-	a.decimalCtx.Quo(v.Decimal, v.Decimal, base.Decimal)
-	return NewResult(v)
-}
-
-func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	smallest := newNumber(0)
-	smallest.Set(tuple[0].Decimal)
-
-	for i := 1; i < len(tuple); i++ {
-		curr := tuple[i]
-		if curr.Cmp(smallest.Decimal) == -1 {
-			smallest = curr
-		}
-	}
-
-	return NewResult(smallest)
-}
-
-func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	biggest := newNumber(0)
-	biggest.Set(tuple[0].Decimal)
-
-	for i := 1; i < len(tuple); i++ {
-		curr := tuple[i]
-		if curr.Cmp(biggest.Decimal) == 1 {
-			biggest = curr
-		}
-	}
-
-	return NewResult(biggest)
-}
-
-func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	sum := newNumber(0)
-	sum.Set(tuple[0].Decimal)
-
-	for i := 1; i < len(tuple); i++ {
-		curr := tuple[i]
-		a.decimalCtx.Add(sum.Decimal, sum.Decimal, curr.Decimal)
-	}
-	a.decimalCtx.Quo(sum.Decimal, sum.Decimal, apd.New(int64(len(tuple)), 0))
-	return NewResult(sum)
-}
-
-func (a *AbacusVisitor) VisitUntilFunction(c *parser.UntilFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	argRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(argRes) {
-		return argRes
-	}
-
-	arg, ok := argRes.Value.(Number)
-	if !ok {
-		panic("unable to cast argRes to Number")
-	}
-	intValue, _ := arg.Int64()
-
-	newTuple := Tuple{}
-	length := int64(len(tuple))
-
-	if intValue > length {
-		intValue = length
-	}
-	for i := 0; i < int(intValue); i++ {
-		newTuple = append(newTuple, tuple[i])
-	}
-
-	if len(newTuple) == 0 {
-		return NewResult(newNumber(0))
-	}
-	return NewResult(newTuple)
-}
-
-func (a *AbacusVisitor) VisitFromFunction(c *parser.FromFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-	arg := tuple[len(tuple)-1]
-	intValue, _ := arg.Int64()
-
-	newTuple := Tuple{}
-	length := int64(len(tuple))
-
-	if intValue < 0 {
-		intValue = 0
-	}
-	for i := intValue; i < length-1; i++ {
-		newTuple = append(newTuple, tuple[i])
-	}
-
-	if len(newTuple) == 0 {
-		return NewResult(newNumber(0))
-	}
-	return NewResult(newTuple)
-}
-
-func (a *AbacusVisitor) VisitReverseFunction(c *parser.ReverseFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	newTuple := Tuple{}
-	for i := len(tuple) - 1; i >= 0; i-- {
-		newTuple = append(newTuple, tuple[i])
-	}
-	return NewResult(newTuple)
-}
-
-func (a *AbacusVisitor) VisitNthFunction(c *parser.NthFunctionContext) interface{} {
-	tupleRes := c.Tuple().Accept(a).(*Result)
-	if hasErrors(tupleRes) {
-		return tupleRes
-	}
-	a.convertTupleResult(tupleRes)
-
-	tuple, ok := tupleRes.Value.(Tuple)
-	if !ok {
-		panic("unable to cast tupleRes to Tuple")
-	}
-
-	argRes := c.Expression().Accept(a).(*Result)
-	if hasErrors(argRes) {
-		return argRes
-	}
-	arg, ok := argRes.Value.(Number)
-	if !ok {
-		panic("unable to cast argRes to Number")
-	}
-	intValue1, _ := arg.Int64()
-
-	if intValue1 >= int64(len(tuple)) || intValue1 < 0 {
-		return NewResult(newNumber(0))
-	}
-	return NewResult(tuple[intValue1])
-}
+//func (a *AbacusVisitor) VisitSqrtFunction(c *parser.SqrtFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Sqrt(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitCbrtFunction(c *parser.CbrtFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Cbrt(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitLnFunction(c *parser.LnFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Ln(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitLogDefFunction(c *parser.LogDefFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Ln(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitLog2Function(c *parser.Log2FunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Ln(v.Decimal, val.Decimal)
+//	a.decimalCtx.Quo(v.Decimal, v.Decimal, cachedLog(newNumber(2)).Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitLog10Function(c *parser.Log10FunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Ln(v.Decimal, val.Decimal)
+//	base := cachedLog(newNumber(10))
+//	a.decimalCtx.Quo(v.Decimal, v.Decimal, base.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitFloorFunction(c *parser.FloorFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Floor(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitCeilFunction(c *parser.CeilFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Ceil(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitSinFunction(c *parser.SinFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	toFloat, _ := val.Float64()
+//	v := newNumber(0)
+//	v.Decimal, _ = v.Decimal.SetFloat64(math.Sin(toFloat))
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitCosFunction(c *parser.CosFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	toFloat, _ := val.Float64()
+//	v := newNumber(0)
+//	v.Decimal, _ = v.Decimal.SetFloat64(math.Cos(toFloat))
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitTanFunction(c *parser.TanFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	toFloat, _ := val.Float64()
+//	v := newNumber(0)
+//	v.Decimal, _ = v.Decimal.SetFloat64(math.Tan(toFloat))
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitExpFunction(c *parser.ExpFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Exp(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitSignFunction(c *parser.SignFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	v = newNumber(float64(val.Decimal.Cmp(v.Decimal)))
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitAbsFunction(c *parser.AbsFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Abs(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitRoundDefFunction(c *parser.RoundDefFunctionContext) interface{} {
+//	valRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(valRes) {
+//		return valRes
+//	}
+//
+//	val, ok := valRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast val to Number")
+//	}
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Round(v.Decimal, val.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitRound2Function(c *parser.Round2FunctionContext) interface{} {
+//	left := c.Expression(0).Accept(a).(*Result)
+//	right := c.Expression(1).Accept(a).(*Result)
+//
+//	if hasErrors(left) || hasErrors(right) {
+//		return left.WithErrors(right)
+//	}
+//
+//	leftVal, ok := left.Value.(Number)
+//	if !ok {
+//		panic("unable to cast right to Number")
+//	}
+//	rightVal, ok := right.Value.(Number)
+//	if !ok {
+//		panic("unable to cast left to Number")
+//	}
+//
+//	intValue, _ := rightVal.Decimal.Int64()
+//	exponent := apd.New(10, int32(intValue))
+//
+//	v := newNumber(0)
+//	a.decimalCtx.Mul(v.Decimal, leftVal.Decimal, exponent)
+//	a.decimalCtx.Round(v.Decimal, v.Decimal)
+//	a.decimalCtx.Quo(v.Decimal, v.Decimal, exponent)
+//
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitLogFunction(c *parser.LogFunctionContext) interface{} {
+//	left := c.Expression(0).Accept(a).(*Result)
+//	right := c.Expression(1).Accept(a).(*Result)
+//
+//	if hasErrors(left) || hasErrors(right) {
+//		return left.WithErrors(right)
+//	}
+//
+//	leftVal, ok := left.Value.(Number)
+//	if !ok {
+//		panic("unable to cast right to Number")
+//	}
+//	rightVal, ok := right.Value.(Number)
+//	if !ok {
+//		panic("unable to cast left to Number")
+//	}
+//
+//	v := newNumber(0)
+//
+//	a.decimalCtx.Ln(v.Decimal, leftVal.Decimal)
+//	base := cachedLog(rightVal)
+//	a.decimalCtx.Quo(v.Decimal, v.Decimal, base.Decimal)
+//	return NewResult(v)
+//}
+//
+//func (a *AbacusVisitor) VisitMinFunction(c *parser.MinFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	smallest := newNumber(0)
+//	smallest.Set(tuple[0].Decimal)
+//
+//	for i := 1; i < len(tuple); i++ {
+//		curr := tuple[i]
+//		if curr.Cmp(smallest.Decimal) == -1 {
+//			smallest = curr
+//		}
+//	}
+//
+//	return NewResult(smallest)
+//}
+//
+//func (a *AbacusVisitor) VisitMaxFunction(c *parser.MaxFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	biggest := newNumber(0)
+//	biggest.Set(tuple[0].Decimal)
+//
+//	for i := 1; i < len(tuple); i++ {
+//		curr := tuple[i]
+//		if curr.Cmp(biggest.Decimal) == 1 {
+//			biggest = curr
+//		}
+//	}
+//
+//	return NewResult(biggest)
+//}
+//
+//func (a *AbacusVisitor) VisitAvgFunction(c *parser.AvgFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	sum := newNumber(0)
+//	sum.Set(tuple[0].Decimal)
+//
+//	for i := 1; i < len(tuple); i++ {
+//		curr := tuple[i]
+//		a.decimalCtx.Add(sum.Decimal, sum.Decimal, curr.Decimal)
+//	}
+//	a.decimalCtx.Quo(sum.Decimal, sum.Decimal, apd.New(int64(len(tuple)), 0))
+//	return NewResult(sum)
+//}
+//
+//func (a *AbacusVisitor) VisitUntilFunction(c *parser.UntilFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	argRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(argRes) {
+//		return argRes
+//	}
+//
+//	arg, ok := argRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast argRes to Number")
+//	}
+//	intValue, _ := arg.Int64()
+//
+//	newTuple := Tuple{}
+//	length := int64(len(tuple))
+//
+//	if intValue > length {
+//		intValue = length
+//	}
+//	for i := 0; i < int(intValue); i++ {
+//		newTuple = append(newTuple, tuple[i])
+//	}
+//
+//	if len(newTuple) == 0 {
+//		return NewResult(newNumber(0))
+//	}
+//	return NewResult(newTuple)
+//}
+//
+//func (a *AbacusVisitor) VisitFromFunction(c *parser.FromFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//	arg := tuple[len(tuple)-1]
+//	intValue, _ := arg.Int64()
+//
+//	newTuple := Tuple{}
+//	length := int64(len(tuple))
+//
+//	if intValue < 0 {
+//		intValue = 0
+//	}
+//	for i := intValue; i < length-1; i++ {
+//		newTuple = append(newTuple, tuple[i])
+//	}
+//
+//	if len(newTuple) == 0 {
+//		return NewResult(newNumber(0))
+//	}
+//	return NewResult(newTuple)
+//}
+//
+//func (a *AbacusVisitor) VisitReverseFunction(c *parser.ReverseFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	newTuple := Tuple{}
+//	for i := len(tuple) - 1; i >= 0; i-- {
+//		newTuple = append(newTuple, tuple[i])
+//	}
+//	return NewResult(newTuple)
+//}
+//
+//func (a *AbacusVisitor) VisitNthFunction(c *parser.NthFunctionContext) interface{} {
+//	tupleRes := c.Tuple().Accept(a).(*Result)
+//	if hasErrors(tupleRes) {
+//		return tupleRes
+//	}
+//	a.convertTupleResult(tupleRes)
+//
+//	tuple, ok := tupleRes.Value.(Tuple)
+//	if !ok {
+//		panic("unable to cast tupleRes to Tuple")
+//	}
+//
+//	argRes := c.Expression().Accept(a).(*Result)
+//	if hasErrors(argRes) {
+//		return argRes
+//	}
+//	arg, ok := argRes.Value.(Number)
+//	if !ok {
+//		panic("unable to cast argRes to Number")
+//	}
+//	intValue1, _ := arg.Int64()
+//
+//	if intValue1 >= int64(len(tuple)) || intValue1 < 0 {
+//		return NewResult(newNumber(0))
+//	}
+//	return NewResult(tuple[intValue1])
+//}
 
 func (a *AbacusVisitor) VisitConstant(c *parser.ConstantContext) interface{} {
 	switch c.CONSTANT().GetText() {

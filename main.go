@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/alexflint/go-arg"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
@@ -56,7 +56,7 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.3.0\n"
+	return "v1.4.0\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
