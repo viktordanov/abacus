@@ -209,10 +209,10 @@ func (a *AbacusVisitor) VisitRoot(c *parser.RootContext) interface{} {
 			return NewResult(LambdaAssignment(declaration.ctx.GetText()))
 
 		}
-		return NewResult(nil).WithErrors(nil, "undefined lambda "+c.LAMBDA_VARIABLE().GetText())
+		return NewResult(nil).WithError("undefined lambda " + c.LAMBDA_VARIABLE().GetText())
 
 	}
-	return NewResult(nil).WithErrors(nil, "syntax error")
+	return NewResult(nil).WithError("syntax error")
 }
 
 func (a *AbacusVisitor) visitTupleTail(c parser.ITupleContext, resultTuple *Tuple) {
@@ -333,7 +333,7 @@ func (a *AbacusVisitor) VisitVariablesTuple(c *parser.VariablesTupleContext) int
 		if _, ok := foundVars[variable.String()]; !ok {
 			foundVars[variable.String()] = true
 		} else {
-			return NewResult(evaledTuple).WithErrors(nil, "duplicate variable name \""+variable.String()+"\"")
+			return NewResult(evaledTuple).WithError("duplicate variable name \"" + variable.String() + "\"")
 		}
 	}
 
@@ -399,9 +399,9 @@ func (a *AbacusVisitor) VisitLambdaArguments(c *parser.LambdaArgumentsContext) i
 		} else {
 			firstChar := variable[0]
 			if firstChar >= 'A' && firstChar <= 'Z' {
-				return NewResult(evaledArgs).WithErrors(nil, "duplicate lambda name \""+variable.String()+"\"")
+				return NewResult(evaledArgs).WithError("duplicate lambda name \"" + variable.String() + "\"")
 			} else {
-				return NewResult(evaledArgs).WithErrors(nil, "duplicate variable name \""+variable.String()+"\"")
+				return NewResult(evaledArgs).WithError("duplicate variable name \"" + variable.String() + "\"")
 			}
 		}
 	}
@@ -438,7 +438,7 @@ func (a *AbacusVisitor) VisitVariableDeclaration(c *parser.VariableDeclarationCo
 	a.convertTupleResult(valuesRes)
 
 	if variablesRes.Length() != valuesRes.Length() {
-		return variablesRes.WithErrors(nil, "wrong number of valuesRes "+strconv.FormatInt(int64(valuesRes.Length()), 10)+"; expected "+strconv.FormatInt(int64(variablesRes.Length()), 10))
+		return variablesRes.WithError("wrong number of valuesRes " + strconv.FormatInt(int64(valuesRes.Length()), 10) + "; expected " + strconv.FormatInt(int64(variablesRes.Length()), 10))
 	}
 
 	variables, ok := variablesRes.Value.(VariablesTuple)
@@ -1458,7 +1458,7 @@ getDeclaration:
 	}
 	if !found {
 		if arguments.Strict {
-			return NewResult(nil).WithErrors(nil, "undefined lambda "+lambda.name)
+			return NewResult(nil).WithError("undefined lambda " + lambda.name)
 		}
 		return NewResult(newNumber(0))
 	}
@@ -1483,7 +1483,7 @@ getDeclaration:
 				s = "s"
 			}
 			if len(tuple) < count {
-				return NewResult(nil).WithErrors(nil, "expected "+strconv.FormatInt(int64(count), 10)+" parameter"+s)
+				return NewResult(nil).WithError("expected " + strconv.FormatInt(int64(count), 10) + " parameter" + s)
 			}
 		}
 
@@ -1493,11 +1493,11 @@ getDeclaration:
 			// Check type of received parameter and check against expected argument
 			if isLambdaName(argument.String()) {
 				if _, ok := tuple[i].(String); !ok {
-					return NewResult(nil).WithErrors(nil, "["+lambda.name+"] expected lambda for parameter "+strconv.Itoa(i+1)+", got number")
+					return NewResult(nil).WithError("[" + lambda.name + "] expected lambda for parameter " + strconv.Itoa(i+1) + ", got number")
 				}
 			} else {
 				if _, ok := tuple[i].(Number); !ok {
-					return NewResult(nil).WithErrors(nil, "["+lambda.name+"] expected number for parameter "+strconv.Itoa(i+1)+", got lambda")
+					return NewResult(nil).WithError("[" + lambda.name + "] expected number for parameter " + strconv.Itoa(i+1) + ", got lambda")
 				}
 			}
 			lambda.arguments[argument.String()] = tuple[i]
@@ -1583,7 +1583,7 @@ getDeclaration:
 		invokes := stack.invokes[lambda.name]
 
 		if recParameters.MaxRecurrences == 0 {
-			return NewResult(nil).WithErrors(nil, "recursion is disabled")
+			return NewResult(nil).WithError("recursion is disabled")
 		}
 
 		if shouldStop {
@@ -1667,7 +1667,7 @@ func (a *AbacusVisitor) VisitVariable(c *parser.VariableContext) interface{} {
 	}
 
 	if arguments.Strict {
-		return NewResult(nil).WithErrors(nil, "undefined global variable "+name)
+		return NewResult(nil).WithError("undefined global variable " + name)
 	}
 	return NewResult(newNumber(0))
 }

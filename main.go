@@ -176,7 +176,7 @@ func run() error {
 }
 
 func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
-	result := NewResult(nil).WithErrors(nil, "expression did not yield a result")
+	result := NewResult(nil).WithError("expression did not yield a result")
 	ok := false
 
 	expressions := strings.Split(expr, ";")
@@ -204,7 +204,7 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
 		t := visitor.Visit(tree)
 		result, ok = t.(*Result)
 		if !ok {
-			return NewResult(nil).WithErrors(nil, "expression did not yield a result")
+			return NewResult(nil).WithError("expression did not yield a result")
 		}
 	}
 	return result

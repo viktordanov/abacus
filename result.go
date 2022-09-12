@@ -17,6 +17,14 @@ type Result struct {
 func NewResult(value Formatter) *Result {
 	return &Result{Value: value, Errors: make([]error, 0)}
 }
+
+func (r *Result) WithError(ee ...string) *Result {
+	for _, e := range ee {
+		r.Errors = append(r.Errors, errors.New(e))
+	}
+	return r
+}
+
 func (r *Result) WithErrors(previous *Result, ee ...string) *Result {
 	if previous != nil {
 		for _, e := range previous.Errors {
@@ -163,7 +171,7 @@ func (r LambdaArguments) Color() string {
 }
 
 type Number struct {
-	 *apd.Decimal
+	*apd.Decimal
 }
 
 func (r Number) String() string {
