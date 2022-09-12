@@ -35,9 +35,9 @@ func (s *StringSliceArg) UnmarshalText(text []byte) error {
 	raw = strings.ReplaceAll(raw, " ", "")
 
 	*s = strings.Split(raw, ",")
-	variableNameMatching := regexp.MustCompile(`^[a-z]\w*$`).MatchString
+	variableNameMatcher := regexp.MustCompile(`^[a-z]\w*$`).MatchString
 	for _, variableName := range *s {
-		if !variableNameMatching(variableName) {
+		if !variableNameMatcher(variableName) {
 			return errors.New("variable names must begin with a latin lowercase letter and consist of a-zA-Z0-9")
 		}
 	}
