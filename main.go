@@ -24,9 +24,6 @@ var (
 	arguments   args
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
-	funcs       = []string{
-		"sqrt(", "cbrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "sign(", "abs(", "round(", "min(", "max(", "avg(", "from(", "until(", "reverse(", "nth(", "pi", "e", "phi",
-	}
 )
 
 type StringSliceArg []string
@@ -223,7 +220,13 @@ func writeHistoryFile(line *liner.State) error {
 
 func updateCompletions(line *liner.State, a *abacus.AbacusVisitor) {
 	completions := make([]string, 0)
-	completions = append(completions, funcs...)
+
+	functionNames := []string{}
+	for name := range abacus.FunctionNames {
+		functionNames = append(functionNames, string(name)+"(")
+	}
+
+	completions = append(completions, functionNames...)
 	for _, variableName := range a.VariableNames() {
 		completions = append(completions, variableName)
 	}
