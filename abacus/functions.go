@@ -476,13 +476,6 @@ func first(tuple Tuple) (Number, error) {
 	return tuple[0], nil
 }
 
-func second(tuple Tuple) (Number, error) {
-	if len(tuple) < 2 {
-		return Number{}, fmt.Errorf("tuple has less than 2 elements")
-	}
-	return tuple[1], nil
-}
-
 func last(tuple Tuple) (Number, error) {
 	if len(tuple) == 0 {
 		return Number{}, fmt.Errorf("tuple is empty")
