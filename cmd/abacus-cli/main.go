@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/viktordanov/abacus/abacus"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -127,7 +126,7 @@ func run() error {
 	}
 
 	if len(arguments.ImportDefinitions) != 0 {
-		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
+		dat, err := os.ReadFile(arguments.ImportDefinitions)
 		if err != nil {
 			return err
 		}
