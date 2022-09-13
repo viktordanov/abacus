@@ -72,7 +72,10 @@ func main() {
 
 func run() error {
 	arg.MustParse(&arguments)
-	abacusVisitor := abacus.NewAbacusVisitor(arguments.Precision, arguments.Strict)
+	abacusVisitor, err := abacus.NewAbacusVisitor(arguments.Precision, arguments.Strict)
+	if err != nil {
+		return err
+	}
 	line := liner.NewLiner()
 
 	defer line.Close()
@@ -108,14 +111,11 @@ func run() error {
 
 		switch rawValue := res.Value.(type) {
 		case abacus.Assignment:
-			updateCompletions(line, abacusVisitor)
 		case abacus.LambdaAssignment:
-			updateCompletions(line, abacusVisitor)
 		case abacus.Number:
 			for _, variableName := range arguments.LastAnswerVariables {
 				abacusVisitor.SetVariable(variableName, rawValue)
 			}
-			updateCompletions(line, abacusVisitor)
 		}
 
 		if arguments.IgnoreColor {
@@ -123,6 +123,7 @@ func run() error {
 		} else {
 			fmt.Println(res.Value.Color())
 		}
+		updateCompletions(line, abacusVisitor)
 	}
 
 	if len(arguments.ImportDefinitions) != 0 {
@@ -173,7 +174,7 @@ func run() error {
 	}
 }
 
-func evaluateExpression(expr string, visitor *abacus.AbacusVisitor) *abacus.Result {
+func evaluateExpression(expr string, visitor *abacus.Visitor) *abacus.Result {
 	result := abacus.NewResult(nil).WithError("expression did not yield a result")
 	ok := false
 
@@ -218,7 +219,7 @@ func writeHistoryFile(line *liner.State) error {
 	return err
 }
 
-func updateCompletions(line *liner.State, a *abacus.AbacusVisitor) {
+func updateCompletions(line *liner.State, a *abacus.Visitor) {
 	completions := make([]string, 0)
 
 	functionNames := []string{}
