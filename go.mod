@@ -8,10 +8,12 @@ require (
 	github.com/cockroachdb/apd v1.1.0
 	github.com/peterh/liner v1.2.1
 	github.com/thecodeteam/goodbye v0.0.0-20170927022442-a83968bda2d3
+	github.com/viktordanov/golang-lru v0.5.6
 )
 
 require (
 	github.com/alexflint/go-scalar v1.0.0 // indirect
+	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/lib/pq v1.9.0 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
