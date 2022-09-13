@@ -59,17 +59,17 @@ var FunctionNames = map[FunctionName]struct{}{
 	nth:     {},
 }
 
-func (a *AbacusVisitor) HandleFunctionInvocation(ctx *parser.FunctionInvocationContext, decimalCtx *apd.Context) interface{} {
+func (v *Visitor) HandleFunctionInvocation(ctx *parser.FunctionInvocationContext) interface{} {
 	functionName := ctx.VARIABLE().GetText()
 	if _, ok := FunctionNames[FunctionName(functionName)]; !ok {
 		return NewResult(nil).WithError(fmt.Sprintf("undefined function %s", functionName))
 	}
 
-	tupleRes := ctx.Tuple().Accept(a).(*Result)
+	tupleRes := ctx.Tuple().Accept(v).(*Result)
 	if hasErrors(tupleRes) {
 		return tupleRes
 	}
-	a.convertTupleResult(tupleRes)
+	v.convertTupleResult(tupleRes)
 
 	tuple, ok := tupleRes.Value.(Tuple)
 	if !ok {
@@ -78,173 +78,173 @@ func (a *AbacusVisitor) HandleFunctionInvocation(ctx *parser.FunctionInvocationC
 
 	switch FunctionName(functionName) {
 	case sqrt:
-		return handleSqrt(tuple, decimalCtx)
+		return v.handleSqrt(tuple)
 	case cbrt:
-		return handleCbrt(tuple, decimalCtx)
+		return v.handleCbrt(tuple)
 	case ln:
-		return handleLn(tuple, decimalCtx)
+		return v.handleLn(tuple)
 	case log:
-		return handleLog(tuple, decimalCtx)
+		return v.handleLog(tuple)
 	case log2:
-		return handleLog2(tuple, decimalCtx)
+		return v.handleLog2(tuple)
 	case log10:
-		return handleLog10(tuple, decimalCtx)
+		return v.handleLog10(tuple)
 	case floor:
-		return handleFloor(tuple, decimalCtx)
+		return v.handleFloor(tuple)
 	case ceil:
-		return handleCeil(tuple, decimalCtx)
+		return v.handleCeil(tuple)
 	case exp:
-		return handleExp(tuple, decimalCtx)
+		return v.handleExp(tuple)
 	case sin:
-		return handleSin(tuple, decimalCtx)
+		return v.handleSin(tuple)
 	case cos:
-		return handleCos(tuple, decimalCtx)
+		return v.handleCos(tuple)
 	case tan:
-		return handleTan(tuple, decimalCtx)
+		return v.handleTan(tuple)
 	case sign:
-		return handleSign(tuple, decimalCtx)
+		return v.handleSign(tuple)
 	case abs:
-		return handleAbs(tuple, decimalCtx)
+		return v.handleAbs(tuple)
 	case round:
-		return handleRound(tuple, decimalCtx)
+		return v.handleRound(tuple)
 	case min:
-		return handleMin(tuple, decimalCtx)
+		return v.handleMin(tuple)
 	case max:
-		return handleMax(tuple, decimalCtx)
+		return v.handleMax(tuple)
 	case avg:
-		return handleAvg(tuple, decimalCtx)
+		return v.handleAvg(tuple)
 	case from:
-		return handleFrom(tuple, decimalCtx)
+		return v.handleFrom(tuple)
 	case until:
-		return handleUntil(tuple, decimalCtx)
+		return v.handleUntil(tuple)
 	case reverse:
-		return handleReverse(tuple, decimalCtx)
+		return v.handleReverse(tuple)
 	case nth:
-		return handleNth(tuple, decimalCtx)
+		return v.handleNth(tuple)
 	default:
 		panic("unhandled function")
 	}
 }
 
-func handleSqrt(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleSqrt(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Sqrt(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Sqrt(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleCbrt(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleCbrt(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Cbrt(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Cbrt(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleLn(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleLn(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Ln(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Ln(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleLog(tuple Tuple, decimalCtx *apd.Context) *Result {
-	return handleLn(tuple, decimalCtx)
+func (v *Visitor) handleLog(tuple Tuple) *Result {
+	return v.handleLn(tuple)
 }
 
-func handleLog2(tuple Tuple, decimalCtx *apd.Context) *Result {
-	result := handleLn(tuple, decimalCtx)
+func (v *Visitor) handleLog2(tuple Tuple) *Result {
+	result := v.handleLn(tuple)
 	if hasErrors(result) {
 		return result
 	}
-	out := newNumber(0)
+	out := NewNumber(0)
 
-	base := cachedLog(newNumber(2))
-	_, err := decimalCtx.Quo(out.Decimal, result.Value.(Number).Decimal, base.Decimal)
+	base := calculateLog(v.ConstantsStore, v.decimalCtx, NewNumber(2))
+	_, err := v.decimalCtx.Quo(out.Decimal, result.Value.(Number).Decimal, base.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleLog10(tuple Tuple, decimalCtx *apd.Context) *Result {
-	result := handleLn(tuple, decimalCtx)
+func (v *Visitor) handleLog10(tuple Tuple) *Result {
+	result := v.handleLn(tuple)
 	if hasErrors(result) {
 		return result
 	}
-	out := newNumber(0)
+	out := NewNumber(0)
 
-	base := cachedLog(newNumber(10))
-	_, err := decimalCtx.Quo(out.Decimal, result.Value.(Number).Decimal, base.Decimal)
+	base := calculateLog(v.ConstantsStore, v.decimalCtx, NewNumber(10))
+	_, err := v.decimalCtx.Quo(out.Decimal, result.Value.(Number).Decimal, base.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleFloor(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleFloor(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Floor(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Floor(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleCeil(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleCeil(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Ceil(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Ceil(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleExp(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleExp(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Exp(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Exp(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleSin(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleSin(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
@@ -254,15 +254,15 @@ func handleSin(tuple Tuple, decimalCtx *apd.Context) *Result {
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	v := newNumber(0)
-	v.Decimal, err = v.Decimal.SetFloat64(math.Sin(toFloat))
+	out := NewNumber(0)
+	out.Decimal, err = out.Decimal.SetFloat64(math.Sin(toFloat))
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	return NewResult(v)
+	return NewResult(out)
 }
 
-func handleCos(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleCos(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
@@ -272,15 +272,15 @@ func handleCos(tuple Tuple, decimalCtx *apd.Context) *Result {
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	v := newNumber(0)
-	v.Decimal, err = v.Decimal.SetFloat64(math.Cos(toFloat))
+	out := NewNumber(0)
+	out.Decimal, err = out.Decimal.SetFloat64(math.Cos(toFloat))
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	return NewResult(v)
+	return NewResult(out)
 }
 
-func handleTan(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleTan(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
@@ -290,56 +290,56 @@ func handleTan(tuple Tuple, decimalCtx *apd.Context) *Result {
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	v := newNumber(0)
-	v.Decimal, err = v.Decimal.SetFloat64(math.Tan(toFloat))
-	if err != nil {
-		return NewResult(nil).WithError(err.Error())
-	}
-	return NewResult(v)
-}
-
-func handleSign(tuple Tuple, decimalCtx *apd.Context) *Result {
-	var value Number
-	var err error
-	if value, err = first(tuple); err != nil {
-		return NewResult(nil).WithError(err.Error())
-	}
-
-	out := newNumber(0)
-	out = newNumber(float64(value.Decimal.Cmp(out.Decimal)))
-	return NewResult(out)
-}
-
-func handleAbs(tuple Tuple, decimalCtx *apd.Context) *Result {
-	var value Number
-	var err error
-	if value, err = first(tuple); err != nil {
-		return NewResult(nil).WithError(err.Error())
-	}
-	out := newNumber(0)
-	_, err = decimalCtx.Abs(out.Decimal, value.Decimal)
+	out := NewNumber(0)
+	out.Decimal, err = out.Decimal.SetFloat64(math.Tan(toFloat))
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleRound(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleSign(tuple Tuple) *Result {
 	var value Number
 	var err error
 	if value, err = first(tuple); err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
-	out := newNumber(0)
-	_, err = decimalCtx.Round(out.Decimal, value.Decimal)
+
+	out := NewNumber(0)
+	out = NewNumber(float64(value.Decimal.Cmp(out.Decimal)))
+	return NewResult(out)
+}
+
+func (v *Visitor) handleAbs(tuple Tuple) *Result {
+	var value Number
+	var err error
+	if value, err = first(tuple); err != nil {
+		return NewResult(nil).WithError(err.Error())
+	}
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Abs(out.Decimal, value.Decimal)
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(out)
 }
 
-func handleMin(tuple Tuple, decimalCtx *apd.Context) *Result {
-	smallest := newNumber(0)
+func (v *Visitor) handleRound(tuple Tuple) *Result {
+	var value Number
+	var err error
+	if value, err = first(tuple); err != nil {
+		return NewResult(nil).WithError(err.Error())
+	}
+	out := NewNumber(0)
+	_, err = v.decimalCtx.Round(out.Decimal, value.Decimal)
+	if err != nil {
+		return NewResult(nil).WithError(err.Error())
+	}
+	return NewResult(out)
+}
+
+func (v *Visitor) handleMin(tuple Tuple) *Result {
+	smallest := NewNumber(0)
 	smallest.Set(tuple[0].Decimal)
 
 	for i := 1; i < len(tuple); i++ {
@@ -351,8 +351,8 @@ func handleMin(tuple Tuple, decimalCtx *apd.Context) *Result {
 	return NewResult(smallest)
 }
 
-func handleMax(tuple Tuple, decimalCtx *apd.Context) *Result {
-	biggest := newNumber(0)
+func (v *Visitor) handleMax(tuple Tuple) *Result {
+	biggest := NewNumber(0)
 	biggest.Set(tuple[0].Decimal)
 
 	for i := 1; i < len(tuple); i++ {
@@ -364,23 +364,23 @@ func handleMax(tuple Tuple, decimalCtx *apd.Context) *Result {
 	return NewResult(biggest)
 }
 
-func handleAvg(tuple Tuple, decimalCtx *apd.Context) *Result {
-	sum := newNumber(0)
+func (v *Visitor) handleAvg(tuple Tuple) *Result {
+	sum := NewNumber(0)
 	sum.Set(tuple[0].Decimal)
 
 	for i := 1; i < len(tuple); i++ {
 		curr := tuple[i]
 		// TODO: handle error
-		decimalCtx.Add(sum.Decimal, sum.Decimal, curr.Decimal)
+		v.decimalCtx.Add(sum.Decimal, sum.Decimal, curr.Decimal)
 	}
-	_, err := decimalCtx.Quo(sum.Decimal, sum.Decimal, apd.New(int64(len(tuple)), 0))
+	_, err := v.decimalCtx.Quo(sum.Decimal, sum.Decimal, apd.New(int64(len(tuple)), 0))
 	if err != nil {
 		return NewResult(nil).WithError(err.Error())
 	}
 	return NewResult(sum)
 }
 
-func handleFrom(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleFrom(tuple Tuple) *Result {
 	var arg Number
 	var err error
 
@@ -410,7 +410,7 @@ func handleFrom(tuple Tuple, decimalCtx *apd.Context) *Result {
 	return NewResult(newTuple)
 }
 
-func handleUntil(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleUntil(tuple Tuple) *Result {
 	var arg Number
 	var err error
 
@@ -439,7 +439,7 @@ func handleUntil(tuple Tuple, decimalCtx *apd.Context) *Result {
 	return NewResult(newTuple)
 }
 
-func handleReverse(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleReverse(tuple Tuple) *Result {
 	newTuple := make(Tuple, 0, len(tuple))
 
 	for i := len(tuple) - 1; i >= 0; i-- {
@@ -449,7 +449,7 @@ func handleReverse(tuple Tuple, decimalCtx *apd.Context) *Result {
 	return NewResult(newTuple)
 }
 
-func handleNth(tuple Tuple, decimalCtx *apd.Context) *Result {
+func (v *Visitor) handleNth(tuple Tuple) *Result {
 	var arg Number
 	var err error
 
