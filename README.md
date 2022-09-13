@@ -2,6 +2,7 @@
 <p align="center">
 Abacus is a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions
 </p>
+
 <p align="center">
 <img align="center" src="./docs/abacus.png" />
 </p>
@@ -11,7 +12,7 @@ Abacus is a simple interactive calculator CLI with support for variables, lambda
 
 abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions
 
-v1.2.3
+v1.4.0
 
 Usage: abacus [--no-color] [--allow-copy] [--strict] [--precision PRECISION] [--eval EVAL] [--import IMPORT] [--prompt-symbol PROMPT-SYMBOL] [--answer-vars ANSWER-VARS]
 
@@ -33,7 +34,19 @@ Options:
 
 ```
 
+
+
 ## Install
+
+### Arch Linux
+![AUR last modified](https://img.shields.io/aur/last-modified/abacus-git)
+![AUR version](https://img.shields.io/aur/version/abacus-git)
+
+```
+yay -S abacus-git
+```
+
+### Manually
 
 ```
 go install github.com/viktordanov/abacus@latest
