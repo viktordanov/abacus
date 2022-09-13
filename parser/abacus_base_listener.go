@@ -1,8 +1,8 @@
-// Code generated from Abacus.g4 by ANTLR 4.10.1. DO NOT EDIT.
+// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
 
 package parser // Abacus
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import "github.com/antlr/antlr4/runtime/Go/antlr/v4"
 
 // BaseAbacusListener is a complete listener for a parse tree produced by AbacusParser.
 type BaseAbacusListener struct{}
@@ -237,146 +237,8 @@ func (s *BaseAbacusListener) EnterMinusSign(ctx *MinusSignContext) {}
 // ExitMinusSign is called when production MinusSign is exited.
 func (s *BaseAbacusListener) ExitMinusSign(ctx *MinusSignContext) {}
 
-// EnterSqrtFunction is called when production SqrtFunction is entered.
-func (s *BaseAbacusListener) EnterSqrtFunction(ctx *SqrtFunctionContext) {}
+// EnterFunctionInvocation is called when production FunctionInvocation is entered.
+func (s *BaseAbacusListener) EnterFunctionInvocation(ctx *FunctionInvocationContext) {}
 
-// ExitSqrtFunction is called when production SqrtFunction is exited.
-func (s *BaseAbacusListener) ExitSqrtFunction(ctx *SqrtFunctionContext) {}
-
-// EnterCbrtFunction is called when production CbrtFunction is entered.
-func (s *BaseAbacusListener) EnterCbrtFunction(ctx *CbrtFunctionContext) {}
-
-// ExitCbrtFunction is called when production CbrtFunction is exited.
-func (s *BaseAbacusListener) ExitCbrtFunction(ctx *CbrtFunctionContext) {}
-
-// EnterLnFunction is called when production LnFunction is entered.
-func (s *BaseAbacusListener) EnterLnFunction(ctx *LnFunctionContext) {}
-
-// ExitLnFunction is called when production LnFunction is exited.
-func (s *BaseAbacusListener) ExitLnFunction(ctx *LnFunctionContext) {}
-
-// EnterLogDefFunction is called when production LogDefFunction is entered.
-func (s *BaseAbacusListener) EnterLogDefFunction(ctx *LogDefFunctionContext) {}
-
-// ExitLogDefFunction is called when production LogDefFunction is exited.
-func (s *BaseAbacusListener) ExitLogDefFunction(ctx *LogDefFunctionContext) {}
-
-// EnterLog2Function is called when production Log2Function is entered.
-func (s *BaseAbacusListener) EnterLog2Function(ctx *Log2FunctionContext) {}
-
-// ExitLog2Function is called when production Log2Function is exited.
-func (s *BaseAbacusListener) ExitLog2Function(ctx *Log2FunctionContext) {}
-
-// EnterLog10Function is called when production Log10Function is entered.
-func (s *BaseAbacusListener) EnterLog10Function(ctx *Log10FunctionContext) {}
-
-// ExitLog10Function is called when production Log10Function is exited.
-func (s *BaseAbacusListener) ExitLog10Function(ctx *Log10FunctionContext) {}
-
-// EnterFloorFunction is called when production FloorFunction is entered.
-func (s *BaseAbacusListener) EnterFloorFunction(ctx *FloorFunctionContext) {}
-
-// ExitFloorFunction is called when production FloorFunction is exited.
-func (s *BaseAbacusListener) ExitFloorFunction(ctx *FloorFunctionContext) {}
-
-// EnterCeilFunction is called when production CeilFunction is entered.
-func (s *BaseAbacusListener) EnterCeilFunction(ctx *CeilFunctionContext) {}
-
-// ExitCeilFunction is called when production CeilFunction is exited.
-func (s *BaseAbacusListener) ExitCeilFunction(ctx *CeilFunctionContext) {}
-
-// EnterExpFunction is called when production ExpFunction is entered.
-func (s *BaseAbacusListener) EnterExpFunction(ctx *ExpFunctionContext) {}
-
-// ExitExpFunction is called when production ExpFunction is exited.
-func (s *BaseAbacusListener) ExitExpFunction(ctx *ExpFunctionContext) {}
-
-// EnterSinFunction is called when production SinFunction is entered.
-func (s *BaseAbacusListener) EnterSinFunction(ctx *SinFunctionContext) {}
-
-// ExitSinFunction is called when production SinFunction is exited.
-func (s *BaseAbacusListener) ExitSinFunction(ctx *SinFunctionContext) {}
-
-// EnterCosFunction is called when production CosFunction is entered.
-func (s *BaseAbacusListener) EnterCosFunction(ctx *CosFunctionContext) {}
-
-// ExitCosFunction is called when production CosFunction is exited.
-func (s *BaseAbacusListener) ExitCosFunction(ctx *CosFunctionContext) {}
-
-// EnterTanFunction is called when production TanFunction is entered.
-func (s *BaseAbacusListener) EnterTanFunction(ctx *TanFunctionContext) {}
-
-// ExitTanFunction is called when production TanFunction is exited.
-func (s *BaseAbacusListener) ExitTanFunction(ctx *TanFunctionContext) {}
-
-// EnterRoundDefFunction is called when production RoundDefFunction is entered.
-func (s *BaseAbacusListener) EnterRoundDefFunction(ctx *RoundDefFunctionContext) {}
-
-// ExitRoundDefFunction is called when production RoundDefFunction is exited.
-func (s *BaseAbacusListener) ExitRoundDefFunction(ctx *RoundDefFunctionContext) {}
-
-// EnterSignFunction is called when production SignFunction is entered.
-func (s *BaseAbacusListener) EnterSignFunction(ctx *SignFunctionContext) {}
-
-// ExitSignFunction is called when production SignFunction is exited.
-func (s *BaseAbacusListener) ExitSignFunction(ctx *SignFunctionContext) {}
-
-// EnterAbsFunction is called when production AbsFunction is entered.
-func (s *BaseAbacusListener) EnterAbsFunction(ctx *AbsFunctionContext) {}
-
-// ExitAbsFunction is called when production AbsFunction is exited.
-func (s *BaseAbacusListener) ExitAbsFunction(ctx *AbsFunctionContext) {}
-
-// EnterRound2Function is called when production Round2Function is entered.
-func (s *BaseAbacusListener) EnterRound2Function(ctx *Round2FunctionContext) {}
-
-// ExitRound2Function is called when production Round2Function is exited.
-func (s *BaseAbacusListener) ExitRound2Function(ctx *Round2FunctionContext) {}
-
-// EnterLogFunction is called when production LogFunction is entered.
-func (s *BaseAbacusListener) EnterLogFunction(ctx *LogFunctionContext) {}
-
-// ExitLogFunction is called when production LogFunction is exited.
-func (s *BaseAbacusListener) ExitLogFunction(ctx *LogFunctionContext) {}
-
-// EnterMinFunction is called when production MinFunction is entered.
-func (s *BaseAbacusListener) EnterMinFunction(ctx *MinFunctionContext) {}
-
-// ExitMinFunction is called when production MinFunction is exited.
-func (s *BaseAbacusListener) ExitMinFunction(ctx *MinFunctionContext) {}
-
-// EnterMaxFunction is called when production MaxFunction is entered.
-func (s *BaseAbacusListener) EnterMaxFunction(ctx *MaxFunctionContext) {}
-
-// ExitMaxFunction is called when production MaxFunction is exited.
-func (s *BaseAbacusListener) ExitMaxFunction(ctx *MaxFunctionContext) {}
-
-// EnterAvgFunction is called when production AvgFunction is entered.
-func (s *BaseAbacusListener) EnterAvgFunction(ctx *AvgFunctionContext) {}
-
-// ExitAvgFunction is called when production AvgFunction is exited.
-func (s *BaseAbacusListener) ExitAvgFunction(ctx *AvgFunctionContext) {}
-
-// EnterUntilFunction is called when production UntilFunction is entered.
-func (s *BaseAbacusListener) EnterUntilFunction(ctx *UntilFunctionContext) {}
-
-// ExitUntilFunction is called when production UntilFunction is exited.
-func (s *BaseAbacusListener) ExitUntilFunction(ctx *UntilFunctionContext) {}
-
-// EnterFromFunction is called when production FromFunction is entered.
-func (s *BaseAbacusListener) EnterFromFunction(ctx *FromFunctionContext) {}
-
-// ExitFromFunction is called when production FromFunction is exited.
-func (s *BaseAbacusListener) ExitFromFunction(ctx *FromFunctionContext) {}
-
-// EnterReverseFunction is called when production ReverseFunction is entered.
-func (s *BaseAbacusListener) EnterReverseFunction(ctx *ReverseFunctionContext) {}
-
-// ExitReverseFunction is called when production ReverseFunction is exited.
-func (s *BaseAbacusListener) ExitReverseFunction(ctx *ReverseFunctionContext) {}
-
-// EnterNthFunction is called when production NthFunction is entered.
-func (s *BaseAbacusListener) EnterNthFunction(ctx *NthFunctionContext) {}
-
-// ExitNthFunction is called when production NthFunction is exited.
-func (s *BaseAbacusListener) ExitNthFunction(ctx *NthFunctionContext) {}
+// ExitFunctionInvocation is called when production FunctionInvocation is exited.
+func (s *BaseAbacusListener) ExitFunctionInvocation(ctx *FunctionInvocationContext) {}

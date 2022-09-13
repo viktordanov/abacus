@@ -1,8 +1,8 @@
-// Code generated from Abacus.g4 by ANTLR 4.10.1. DO NOT EDIT.
+// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
 
 package parser // Abacus
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import "github.com/antlr/antlr4/runtime/Go/antlr/v4"
 
 // A complete Visitor for a parse tree produced by AbacusParser.
 type AbacusVisitor interface {
@@ -116,75 +116,6 @@ type AbacusVisitor interface {
 	// Visit a parse tree produced by AbacusParser#MinusSign.
 	VisitMinusSign(ctx *MinusSignContext) interface{}
 
-	// Visit a parse tree produced by AbacusParser#SqrtFunction.
-	VisitSqrtFunction(ctx *SqrtFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#CbrtFunction.
-	VisitCbrtFunction(ctx *CbrtFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#LnFunction.
-	VisitLnFunction(ctx *LnFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#LogDefFunction.
-	VisitLogDefFunction(ctx *LogDefFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#Log2Function.
-	VisitLog2Function(ctx *Log2FunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#Log10Function.
-	VisitLog10Function(ctx *Log10FunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#FloorFunction.
-	VisitFloorFunction(ctx *FloorFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#CeilFunction.
-	VisitCeilFunction(ctx *CeilFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#ExpFunction.
-	VisitExpFunction(ctx *ExpFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#SinFunction.
-	VisitSinFunction(ctx *SinFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#CosFunction.
-	VisitCosFunction(ctx *CosFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#TanFunction.
-	VisitTanFunction(ctx *TanFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#RoundDefFunction.
-	VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#SignFunction.
-	VisitSignFunction(ctx *SignFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#AbsFunction.
-	VisitAbsFunction(ctx *AbsFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#Round2Function.
-	VisitRound2Function(ctx *Round2FunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#LogFunction.
-	VisitLogFunction(ctx *LogFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#MinFunction.
-	VisitMinFunction(ctx *MinFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#MaxFunction.
-	VisitMaxFunction(ctx *MaxFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#AvgFunction.
-	VisitAvgFunction(ctx *AvgFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#UntilFunction.
-	VisitUntilFunction(ctx *UntilFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#FromFunction.
-	VisitFromFunction(ctx *FromFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#ReverseFunction.
-	VisitReverseFunction(ctx *ReverseFunctionContext) interface{}
-
-	// Visit a parse tree produced by AbacusParser#NthFunction.
-	VisitNthFunction(ctx *NthFunctionContext) interface{}
+	// Visit a parse tree produced by AbacusParser#FunctionInvocation.
+	VisitFunctionInvocation(ctx *FunctionInvocationContext) interface{}
 }

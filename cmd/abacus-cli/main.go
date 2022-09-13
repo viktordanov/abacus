@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/viktordanov/abacus/abacus"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/alexflint/go-arg"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/peterh/liner"
 	"github.com/thecodeteam/goodbye"
 	"github.com/viktordanov/abacus/parser"
@@ -23,9 +23,6 @@ var (
 	arguments   args
 	homeDir, _  = os.UserHomeDir()
 	historyFile = filepath.Join(homeDir, ".abacus_history")
-	funcs       = []string{
-		"sqrt(", "cbrt(", "ln(", "log(", "log2(", "log10(", "floor(", "ceil(", "exp(", "sin(", "cos(", "tan(", "sign(", "abs(", "round(", "min(", "max(", "avg(", "from(", "until(", "reverse(", "nth(", "pi", "e", "phi",
-	}
 )
 
 type StringSliceArg []string
@@ -35,9 +32,9 @@ func (s *StringSliceArg) UnmarshalText(text []byte) error {
 	raw = strings.ReplaceAll(raw, " ", "")
 
 	*s = strings.Split(raw, ",")
-	variableNameMatching := regexp.MustCompile(`^[a-z]\w*$`).MatchString
+	variableNameMatcher := regexp.MustCompile(`^[a-z]\w*$`).MatchString
 	for _, variableName := range *s {
-		if !variableNameMatching(variableName) {
+		if !variableNameMatcher(variableName) {
 			return errors.New("variable names must begin with a latin lowercase letter and consist of a-zA-Z0-9")
 		}
 	}
@@ -56,7 +53,7 @@ type args struct {
 }
 
 func (args) Version() string {
-	return "v1.3.0\n"
+	return "v1.4.0\n"
 }
 func (args) Description() string {
 	return "abacus - a simple interactive calculator CLI with support for variables, lambdas, comparison checks, and math functions\n"
@@ -74,7 +71,10 @@ func main() {
 
 func run() error {
 	arg.MustParse(&arguments)
-	abacusVisitor := NewAbacusVisitor(arguments.Precision)
+	abacusVisitor, err := abacus.NewAbacusVisitor(arguments.Precision, arguments.Strict)
+	if err != nil {
+		return err
+	}
 	line := liner.NewLiner()
 
 	defer line.Close()
@@ -98,26 +98,23 @@ func run() error {
 		return err
 	}
 
-	handleAndPrintAnswer := func(res *Result) {
+	handleAndPrintAnswer := func(res *abacus.Result) {
 		if len(res.Errors) != 0 {
 			for _, e := range res.Errors {
-				fmt.Print(Red)
+				fmt.Print(abacus.Red)
 				fmt.Print(e.Error())
-				fmt.Println(Reset)
+				fmt.Println(abacus.Reset)
 			}
 			return
 		}
 
 		switch rawValue := res.Value.(type) {
-		case Assignment:
-			updateCompletions(line, abacusVisitor)
-		case LambdaAssignment:
-			updateCompletions(line, abacusVisitor)
-		case Number:
+		case abacus.Assignment:
+		case abacus.LambdaAssignment:
+		case abacus.Number:
 			for _, variableName := range arguments.LastAnswerVariables {
-				abacusVisitor.variables[variableName] = rawValue
+				abacusVisitor.SetVariable(variableName, rawValue)
 			}
-			updateCompletions(line, abacusVisitor)
 		}
 
 		if arguments.IgnoreColor {
@@ -125,10 +122,11 @@ func run() error {
 		} else {
 			fmt.Println(res.Value.Color())
 		}
+		updateCompletions(line, abacusVisitor)
 	}
 
 	if len(arguments.ImportDefinitions) != 0 {
-		dat, err := ioutil.ReadFile(arguments.ImportDefinitions)
+		dat, err := os.ReadFile(arguments.ImportDefinitions)
 		if err != nil {
 			return err
 		}
@@ -175,8 +173,8 @@ func run() error {
 	}
 }
 
-func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
-	result := NewResult(nil).WithErrors(nil, "expression did not yield a result")
+func evaluateExpression(expr string, visitor *abacus.Visitor) *abacus.Result {
+	result := abacus.NewResult(nil).WithError("expression did not yield a result")
 	ok := false
 
 	expressions := strings.Split(expr, ";")
@@ -202,9 +200,9 @@ func evaluateExpression(expr string, visitor *AbacusVisitor) *Result {
 		p.BuildParseTrees = true
 		tree := p.Root()
 		t := visitor.Visit(tree)
-		result, ok = t.(*Result)
+		result, ok = t.(*abacus.Result)
 		if !ok {
-			return NewResult(nil).WithErrors(nil, "expression did not yield a result")
+			return abacus.NewResult(nil).WithError("expression did not yield a result")
 		}
 	}
 	return result
@@ -220,15 +218,21 @@ func writeHistoryFile(line *liner.State) error {
 	return err
 }
 
-func updateCompletions(line *liner.State, a *AbacusVisitor) {
+func updateCompletions(line *liner.State, a *abacus.Visitor) {
 	completions := make([]string, 0)
-	completions = append(completions, funcs...)
-	for k := range a.variables {
-		completions = append(completions, k)
+
+	functionNames := []string{}
+	for name := range abacus.FunctionNames {
+		functionNames = append(functionNames, string(name)+"(")
 	}
 
-	for k := range a.lambdaDeclarations {
-		completions = append(completions, k+"(")
+	completions = append(completions, functionNames...)
+	for _, variableName := range a.VariableNames() {
+		completions = append(completions, variableName)
+	}
+
+	for _, lambdaName := range a.LambdaNames() {
+		completions = append(completions, lambdaName+"(")
 	}
 
 	line.SetCompleter(func(line string) (c []string) {

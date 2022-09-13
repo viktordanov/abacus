@@ -1,8 +1,8 @@
-// Code generated from Abacus.g4 by ANTLR 4.10.1. DO NOT EDIT.
+// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
 
 package parser // Abacus
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import "github.com/antlr/antlr4/runtime/Go/antlr/v4"
 
 // AbacusListener is a complete listener for a parse tree produced by AbacusParser.
 type AbacusListener interface {
@@ -116,77 +116,8 @@ type AbacusListener interface {
 	// EnterMinusSign is called when entering the MinusSign production.
 	EnterMinusSign(c *MinusSignContext)
 
-	// EnterSqrtFunction is called when entering the SqrtFunction production.
-	EnterSqrtFunction(c *SqrtFunctionContext)
-
-	// EnterCbrtFunction is called when entering the CbrtFunction production.
-	EnterCbrtFunction(c *CbrtFunctionContext)
-
-	// EnterLnFunction is called when entering the LnFunction production.
-	EnterLnFunction(c *LnFunctionContext)
-
-	// EnterLogDefFunction is called when entering the LogDefFunction production.
-	EnterLogDefFunction(c *LogDefFunctionContext)
-
-	// EnterLog2Function is called when entering the Log2Function production.
-	EnterLog2Function(c *Log2FunctionContext)
-
-	// EnterLog10Function is called when entering the Log10Function production.
-	EnterLog10Function(c *Log10FunctionContext)
-
-	// EnterFloorFunction is called when entering the FloorFunction production.
-	EnterFloorFunction(c *FloorFunctionContext)
-
-	// EnterCeilFunction is called when entering the CeilFunction production.
-	EnterCeilFunction(c *CeilFunctionContext)
-
-	// EnterExpFunction is called when entering the ExpFunction production.
-	EnterExpFunction(c *ExpFunctionContext)
-
-	// EnterSinFunction is called when entering the SinFunction production.
-	EnterSinFunction(c *SinFunctionContext)
-
-	// EnterCosFunction is called when entering the CosFunction production.
-	EnterCosFunction(c *CosFunctionContext)
-
-	// EnterTanFunction is called when entering the TanFunction production.
-	EnterTanFunction(c *TanFunctionContext)
-
-	// EnterRoundDefFunction is called when entering the RoundDefFunction production.
-	EnterRoundDefFunction(c *RoundDefFunctionContext)
-
-	// EnterSignFunction is called when entering the SignFunction production.
-	EnterSignFunction(c *SignFunctionContext)
-
-	// EnterAbsFunction is called when entering the AbsFunction production.
-	EnterAbsFunction(c *AbsFunctionContext)
-
-	// EnterRound2Function is called when entering the Round2Function production.
-	EnterRound2Function(c *Round2FunctionContext)
-
-	// EnterLogFunction is called when entering the LogFunction production.
-	EnterLogFunction(c *LogFunctionContext)
-
-	// EnterMinFunction is called when entering the MinFunction production.
-	EnterMinFunction(c *MinFunctionContext)
-
-	// EnterMaxFunction is called when entering the MaxFunction production.
-	EnterMaxFunction(c *MaxFunctionContext)
-
-	// EnterAvgFunction is called when entering the AvgFunction production.
-	EnterAvgFunction(c *AvgFunctionContext)
-
-	// EnterUntilFunction is called when entering the UntilFunction production.
-	EnterUntilFunction(c *UntilFunctionContext)
-
-	// EnterFromFunction is called when entering the FromFunction production.
-	EnterFromFunction(c *FromFunctionContext)
-
-	// EnterReverseFunction is called when entering the ReverseFunction production.
-	EnterReverseFunction(c *ReverseFunctionContext)
-
-	// EnterNthFunction is called when entering the NthFunction production.
-	EnterNthFunction(c *NthFunctionContext)
+	// EnterFunctionInvocation is called when entering the FunctionInvocation production.
+	EnterFunctionInvocation(c *FunctionInvocationContext)
 
 	// ExitRoot is called when exiting the root production.
 	ExitRoot(c *RootContext)
@@ -296,75 +227,6 @@ type AbacusListener interface {
 	// ExitMinusSign is called when exiting the MinusSign production.
 	ExitMinusSign(c *MinusSignContext)
 
-	// ExitSqrtFunction is called when exiting the SqrtFunction production.
-	ExitSqrtFunction(c *SqrtFunctionContext)
-
-	// ExitCbrtFunction is called when exiting the CbrtFunction production.
-	ExitCbrtFunction(c *CbrtFunctionContext)
-
-	// ExitLnFunction is called when exiting the LnFunction production.
-	ExitLnFunction(c *LnFunctionContext)
-
-	// ExitLogDefFunction is called when exiting the LogDefFunction production.
-	ExitLogDefFunction(c *LogDefFunctionContext)
-
-	// ExitLog2Function is called when exiting the Log2Function production.
-	ExitLog2Function(c *Log2FunctionContext)
-
-	// ExitLog10Function is called when exiting the Log10Function production.
-	ExitLog10Function(c *Log10FunctionContext)
-
-	// ExitFloorFunction is called when exiting the FloorFunction production.
-	ExitFloorFunction(c *FloorFunctionContext)
-
-	// ExitCeilFunction is called when exiting the CeilFunction production.
-	ExitCeilFunction(c *CeilFunctionContext)
-
-	// ExitExpFunction is called when exiting the ExpFunction production.
-	ExitExpFunction(c *ExpFunctionContext)
-
-	// ExitSinFunction is called when exiting the SinFunction production.
-	ExitSinFunction(c *SinFunctionContext)
-
-	// ExitCosFunction is called when exiting the CosFunction production.
-	ExitCosFunction(c *CosFunctionContext)
-
-	// ExitTanFunction is called when exiting the TanFunction production.
-	ExitTanFunction(c *TanFunctionContext)
-
-	// ExitRoundDefFunction is called when exiting the RoundDefFunction production.
-	ExitRoundDefFunction(c *RoundDefFunctionContext)
-
-	// ExitSignFunction is called when exiting the SignFunction production.
-	ExitSignFunction(c *SignFunctionContext)
-
-	// ExitAbsFunction is called when exiting the AbsFunction production.
-	ExitAbsFunction(c *AbsFunctionContext)
-
-	// ExitRound2Function is called when exiting the Round2Function production.
-	ExitRound2Function(c *Round2FunctionContext)
-
-	// ExitLogFunction is called when exiting the LogFunction production.
-	ExitLogFunction(c *LogFunctionContext)
-
-	// ExitMinFunction is called when exiting the MinFunction production.
-	ExitMinFunction(c *MinFunctionContext)
-
-	// ExitMaxFunction is called when exiting the MaxFunction production.
-	ExitMaxFunction(c *MaxFunctionContext)
-
-	// ExitAvgFunction is called when exiting the AvgFunction production.
-	ExitAvgFunction(c *AvgFunctionContext)
-
-	// ExitUntilFunction is called when exiting the UntilFunction production.
-	ExitUntilFunction(c *UntilFunctionContext)
-
-	// ExitFromFunction is called when exiting the FromFunction production.
-	ExitFromFunction(c *FromFunctionContext)
-
-	// ExitReverseFunction is called when exiting the ReverseFunction production.
-	ExitReverseFunction(c *ReverseFunctionContext)
-
-	// ExitNthFunction is called when exiting the NthFunction production.
-	ExitNthFunction(c *NthFunctionContext)
+	// ExitFunctionInvocation is called when exiting the FunctionInvocation production.
+	ExitFunctionInvocation(c *FunctionInvocationContext)
 }

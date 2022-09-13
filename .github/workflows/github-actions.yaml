@@ -4,9 +4,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Testing Abacus"
+      - run: echo "Running tests"
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.0'
       - name: Run tests
         run: go test -v -covermode=atomic -race ./...
   build-and-release:
@@ -16,12 +18,14 @@ jobs:
     steps:
       - run: echo "Building Abacus"
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.0'
       - name: Build step
         run: |
-          GOOS=windows GOARCH=amd64 go build -o abacus-windows-amd64.exe
-          GOOS=linux   GOARCH=amd64 go build -o abacus-linux-amd64
-          GOOS=darwin  GOARCH=amd64 go build -o abacus-macos-amd64
+          GOOS=windows GOARCH=amd64 go build -o abacus-windows-amd64.exe ./cmd/abacus-cli 
+          GOOS=linux   GOARCH=amd64 go build -o abacus-linux-amd64 ./cmd/abacus-cli
+          GOOS=darwin  GOARCH=amd64 go build -o abacus-macos-amd64 ./cmd/abacus-cli
       - name: Set version tag
         run: echo "VERSION_TAG=$(./abacus-linux-amd64 --version)" >> $GITHUB_ENV
       - uses: ncipollo/release-action@v1

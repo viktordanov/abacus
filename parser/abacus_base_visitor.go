@@ -1,8 +1,8 @@
-// Code generated from Abacus.g4 by ANTLR 4.10.1. DO NOT EDIT.
+// Code generated from java-escape by ANTLR 4.11.1. DO NOT EDIT.
 
 package parser // Abacus
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import "github.com/antlr/antlr4/runtime/Go/antlr/v4"
 
 type BaseAbacusVisitor struct {
 	*antlr.BaseParseTreeVisitor
@@ -152,98 +152,6 @@ func (v *BaseAbacusVisitor) VisitMinusSign(ctx *MinusSignContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAbacusVisitor) VisitSqrtFunction(ctx *SqrtFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitCbrtFunction(ctx *CbrtFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitLnFunction(ctx *LnFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitLogDefFunction(ctx *LogDefFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitLog2Function(ctx *Log2FunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitLog10Function(ctx *Log10FunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitFloorFunction(ctx *FloorFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitCeilFunction(ctx *CeilFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitExpFunction(ctx *ExpFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitSinFunction(ctx *SinFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitCosFunction(ctx *CosFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitTanFunction(ctx *TanFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitRoundDefFunction(ctx *RoundDefFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitSignFunction(ctx *SignFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitAbsFunction(ctx *AbsFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitRound2Function(ctx *Round2FunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitLogFunction(ctx *LogFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitMinFunction(ctx *MinFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitMaxFunction(ctx *MaxFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitAvgFunction(ctx *AvgFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitUntilFunction(ctx *UntilFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitFromFunction(ctx *FromFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitReverseFunction(ctx *ReverseFunctionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseAbacusVisitor) VisitNthFunction(ctx *NthFunctionContext) interface{} {
+func (v *BaseAbacusVisitor) VisitFunctionInvocation(ctx *FunctionInvocationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
