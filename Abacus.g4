@@ -108,34 +108,6 @@ sign
     | '-' # MinusSign;
 
 
-//function
-//    : 'sqrt' LPAREN expression RPAREN                       # SqrtFunction
-//    | 'cbrt' LPAREN expression RPAREN                       # CbrtFunction
-//    | 'ln' LPAREN expression RPAREN                         # LnFunction
-//    | 'log' LPAREN expression RPAREN                        # LogDefFunction
-//    | 'log2' LPAREN expression RPAREN                       # Log2Function
-//    | 'log10' LPAREN expression RPAREN                      # Log10Function
-//    | 'floor' LPAREN expression RPAREN                      # FloorFunction
-//    | 'ceil' LPAREN expression RPAREN                       # CeilFunction
-//    | 'exp' LPAREN expression RPAREN                        # ExpFunction
-//    | 'sin' LPAREN expression RPAREN                        # SinFunction
-//    | 'cos' LPAREN expression RPAREN                        # CosFunction
-//    | 'tan' LPAREN expression RPAREN                        # TanFunction
-//    | 'round' LPAREN expression RPAREN                      # RoundDefFunction
-//    | 'sign' LPAREN expression RPAREN                       # SignFunction
-//    | 'abs' LPAREN expression RPAREN                        # AbsFunction
-//    | 'round' LPAREN expression ',' expression RPAREN       # Round2Function
-//    | 'log' LPAREN expression ',' expression RPAREN         # LogFunction
-//    | 'min' LPAREN tuple RPAREN                             # MinFunction
-//    | 'max' LPAREN tuple RPAREN                             # MaxFunction
-//    | 'avg' LPAREN tuple RPAREN                             # AvgFunction
-//    | 'until' LPAREN tuple ',' expression RPAREN            # UntilFunction
-//    | 'from' LPAREN tuple RPAREN                            # FromFunction
-//    | 'reverse' LPAREN tuple RPAREN                         # ReverseFunction
-//    | 'nth' LPAREN tuple ',' expression  RPAREN             # NthFunction
-//    ;
-
-
 function
     : VARIABLE LPAREN tuple RPAREN  # FunctionInvocation
     ;
