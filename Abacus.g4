@@ -120,14 +120,21 @@ SCIENTIFIC_NUMBER
    : NUMBER (('e' | 'E') SIGN? NUMBER)?
    ;
 
+NUMBER
+   : WHOLE_NUMBER
+   | DECIMAL_NUMBER
+   ;
 
-fragment SIGN:
-'+'|'-';
-
-fragment NUMBER
+fragment WHOLE_NUMBER
    : DIGITS+ (POINT DIGITS +)?
    ;
 
+fragment DECIMAL_NUMBER
+   : POINT DIGITS+
+   ;
+
+fragment SIGN:
+'+'|'-';
 
 VARIABLE
    :  VALID_ID_START VALID_ID_CHAR*
