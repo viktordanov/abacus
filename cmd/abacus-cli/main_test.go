@@ -30,6 +30,11 @@ func Test_evaluateExpression(t *testing.T) {
 		{expr: "2", want: abacus.NewNumber(2), visitor: visitor},
 		{expr: "2.139487526 + 9.4777777", want: abacus.NewNumber(11.617265226), visitor: visitor},
 	}
+	expressionTests := testArgs{
+		{expr: "2", want: abacus.NewNumber(2), visitor: visitor},
+		{expr: "0.2", want: abacus.NewNumber(0.2), visitor: visitor},
+		{expr: ".2", want: abacus.NewNumber(0.2), visitor: visitor},
+	}
 	multiplicationTests := testArgs{
 		{expr: "2*2", want: abacus.NewNumber(4), visitor: visitor},
 		{expr: "2*2*2", want: abacus.NewNumber(8), visitor: visitor},
@@ -70,6 +75,7 @@ func Test_evaluateExpression(t *testing.T) {
 	}
 
 	runTestSuite(t, "Addition & Subtraction", additionTests)
+	runTestSuite(t, "Expressions", expressionTests)
 	runTestSuite(t, "Multiplication & Division", multiplicationTests)
 	runTestSuite(t, "Exponentiation", exponentiationTests)
 	runTestSuite(t, "Variables", variableTests)
